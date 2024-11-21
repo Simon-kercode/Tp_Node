@@ -26,10 +26,10 @@ class CompteController {
         res.redirect('/')
     }
     static afficheAll(req, res) {
-        Compte.loadAll(CompteController.serviceStockage).then(comptes => {
-            console.log(comptes);
+        Compte.loadAll(CompteController.serviceStockage).then(users => {
+            console.log(users);
 
-            res.render("allCompte", { comptes: comptes })
+            res.render("panier", { users: users })
         })
     }
     static credit(req, res) {

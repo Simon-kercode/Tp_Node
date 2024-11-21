@@ -3,7 +3,7 @@ const Controller = require('../controller/controller')
 
 const router = express.Router()
 
-router.get("/", Controller.affiche)
+router.get("/", Controller.afficheAll)
 
 
 module.exports = router
