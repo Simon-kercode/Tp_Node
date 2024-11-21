@@ -1,17 +1,35 @@
 const express = require('express')
 const app = express()
 const port = 3000
-const compteRouter = require('./src/route/compteRoutes')
+const route = require('./src/routeur/route')
+const MysqlService = require('./src/service/MySqlService')
+const CompteController = require('./src/controller/controller')
 
 app.set('views', './src/view');
 app.set('view engine', 'ejs');
 
-app.use(express.static("./public"))
+CompteController.setService(new MysqlService(
+    "127.0.0.1",
+    3306,
+    "root",
+    "",
+    "Tp_Node",
+    "_user",
+    [
+        "nom",
+        "prenom",
+        "mail",
+        "pwd",
+        "isAdmin"
+    ]
+))
+
+// app.use(express.static("./public"))
 app.use(express.urlencoded({
     extended: true
 }))
 
-app.use("/", compteRouter)
+app.use("/", route)
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
