@@ -22,7 +22,17 @@ class Produit {
         prix = this.#prix
     }
 
-    
+    loadAll(){
+        
+    }
+
+    loadById(Id){
+        
+    }
+    loadByCategorie(categorie){
+        
+    }
+
 }
 
 module.exports = Produit

@@ -1,5 +1,8 @@
-const Compte = require('../model/compte')
-const data = require("../data/compte.json")
+const Categorie = require('../model/categorie')
+const Commande = require('../model/commande')
+const Produit = require('../model/produit')
+const User = require('../model/user')
+
 
 const compte = new Compte(data.num, data.nom)
 if (data.solde < 0) {

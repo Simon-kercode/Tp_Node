@@ -1,15 +1,13 @@
 class Categorie extends Produit {
-    #nom
-    constructor(nom){
-        this.#nom
+    #nomCategorie
+    constructor(nomCategorie){
+        this.#nomCategorie = nomCategorie
     }
 
-    get nom(){
-        return this.#nom
+    get nomCategorie(){
+        return this.#nomCategorie
     }
-    set nom(nom){
-        nom = this.#nom
+    set nomCategorie(nomCategorie){
+        nomCategorie = this.#nomCategorie
     }
-
-
 }

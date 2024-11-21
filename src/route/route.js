@@ -1,10 +1,9 @@
 const express = require('express')
-const CompteController = require('../controller/compteController')
+const Controller = require('../controller/controller')
 
 const router = express.Router()
 
-router.get("/", CompteController.affiche)
-router.post("/credit", CompteController.credit)
-router.post("/debit", CompteController.debit)
+router.get("/", Controller.affiche)
+
 
 module.exports = router
