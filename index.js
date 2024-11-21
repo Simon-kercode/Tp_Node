@@ -8,21 +8,21 @@ const CompteController = require('./src/controller/controller')
 app.set('views', './src/view');
 app.set('view engine', 'ejs');
 
-CompteController.setService(new MysqlService(
-    "127.0.0.1",
-    3306,
-    "root",
-    "",
-    "Tp_Node",
-    "_user",
-    [
-        "nom",
-        "prenom",
-        "mail",
-        "pwd",
-        "isAdmin"
-    ]
-))
+// CompteController.setService(new MysqlService(
+//     "127.0.0.1",
+//     3306,
+//     "root",
+//     "",
+//     "Tp_Node",
+//     "_user",
+//     [
+//         "nom",
+//         "prenom",
+//         "mail",
+//         "pwd",
+//         "isAdmin"
+//     ]
+// ))
 
 // app.use(express.static("./public"))
 app.use(express.urlencoded({

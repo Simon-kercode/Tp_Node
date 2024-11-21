@@ -1,4 +1,13 @@
-const service = require("../service/MySqlService")
+const MySqlService = require("../service/MySqlService")
+const service = new MySqlService(
+    'localhost',
+    3306,
+    'root',
+    '',
+    'Tp_Node',
+    '_user',
+    ['id', 'nom', 'prenom', 'mail', 'pwd', 'isAdmin']
+);
 
 class User {
     #nom
@@ -19,7 +28,7 @@ class User {
         const result = []
         data.forEach(element => {
             const user = new User(element.nom, element.prenom, element.mail, element.pwd)
-            user.#nom = element.nom
+            user.nom = element.nom
             user.id = element.id
 
             result.push(user)
