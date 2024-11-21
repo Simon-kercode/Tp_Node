@@ -1,8 +1,9 @@
 const express = require('express')
-const CompteController = require('../controller/controller')
+const Controller = require('../controller/controller')
 
 const router = express.Router()
 
-router.get("/", CompteController.afficheAll)
+router.get("/", Controller.affiche)
+
 
 module.exports = router
