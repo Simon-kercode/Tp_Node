@@ -1,4 +1,5 @@
-const MySqlService = require("../service/MySqlService")
+const MySqlService = require("../service/MySqlService");
+const Crud = require("./CRUD");
 const service = new MySqlService(
     'localhost',
     3306,
@@ -9,31 +10,23 @@ const service = new MySqlService(
     ['id', 'nom', 'prenom', 'mail', 'pwd', 'isAdmin']
 );
 
-class User {
+class User extends Crud {
     #nom
     #prenom
     #mail
     #pwd
     #isAdmin
 
-    constructor(n, p, m, pwd) {
-        this.#nom = n,
-        this.#prenom = p,
-        this.#mail = m
-        this.#pwd = pwd,
-        this.#isAdmin = false
+    constructor(data) {
+        super(data);
+        this.#nom = data.nom || '';
+        this.#prenom = data.prenom || '';
+        this.#mail = data.mail || '';
+        this.#pwd = data.pwd || '';
+        this.id_user = data.id_user;
     }
     static async loadAll() {
-        const data = await service.getAll()
-        const result = []
-        data.forEach(element => {
-            const user = new User(element.nom, element.prenom, element.mail, element.pwd)
-            user.nom = element.nom
-            user.id = element.id
-
-            result.push(user)
-        });
-        return result
+        return super.loadAll(service, User);
     }
 
     getNom() {

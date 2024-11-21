@@ -1,37 +1,52 @@
-class Produit {
+const MySqlService = require("../service/MySqlService");
+const Crud = require("./CRUD");
+const service = new MySqlService(
+    'localhost',
+    3306,
+    'root',
+    '',
+    'Tp_Node',
+    'produit',
+    ['id_produit', 'nom', 'prix']
+);
+
+
+class Produit extends Crud {
     #nom
     #prix
-
-
-    constructor(nom, prix) {
-        this.#nom = nom
-        this.#prix = prix
+    constructor(data) {
+        super(data)
+        this.#nom = data.nom || ''
+        this.#prix = data.prix || ''
     }
 
-    get nom() {
-        return this.#nom
-    }
-    get prix() {
-        return this.#prix
+    static async loadAll() {
+        return super.loadAll(service, Produit);
     }
 
-    set nom(nom){
-        nom = this.#nom
-    }
-    set prix(prix){
-        prix = this.#prix
-    }
-
-    loadAll(){
-        
-    }
-
+    
     loadById(Id){
         
     }
     loadByCategorie(categorie){
         
     }
+
+    getNom() {
+        return this.#nom
+    }
+    getPrix() {
+        return this.#prix
+    }
+
+    setNom(nom){
+        nom = this.#nom
+    }
+    setPrix(prix){
+        prix = this.#prix
+    }
+
+   
 
 }
 

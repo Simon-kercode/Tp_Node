@@ -1,51 +1,72 @@
 const Compte = require('../model/user')
+const Produit = require('../model/produit')
 
-// const data = require("../data/compte.json")
 
-class CompteController {
-    static serviceStockage = null
+// class CompteController {
+//     static serviceStockage = null
+
+//     static setService(service) {
+//         console.log("service ok !", service);
+
+//         CompteController.serviceStockage = service
+//     }
+
+//     static affiche(req, res) {
+//         const id = req.params.id
+//         Compte.loadbyId(CompteController.serviceStockage, id).then(compte => {
+//             console.log(compte.toString());
+//             res.render("compte", { compte: compte })
+//         })
+//     }
+//     static ajoutForm(req, res) {
+//         res.render("ajoutForm")
+//     }
+//     static ajoutCompte(req, res) {
+//         Compte.add(req.body.numero, req.body.nom)
+//         res.redirect('/')
+//     }
+//     static afficheAll(req, res) {
+//         Compte.loadAll(CompteController.serviceStockage).then(users => {
+//             console.log(users);
+
+//             res.render("panier", { users: users })
+//         })
+//     }
+//     static afficheAll(req, res) {
+//         Produit.loadAll(CompteController.serviceStockage).then(produits => {
+//             console.log(produits);
+
+//             res.render("panier", { produits: produits })
+//         })
+//     }
+// }
+
+// module.exports = CompteController
+class GenericController {
+    static serviceStockage = null;
 
     static setService(service) {
-        console.log("service ok !", service);
-
-        CompteController.serviceStockage = service
+        GenericController.serviceStockage = service;
     }
 
-    static affiche(req, res) {
-        const id = req.params.id
-        Compte.loadbyId(CompteController.serviceStockage, id).then(compte => {
-            console.log(compte.toString());
-            res.render("compte", { compte: compte })
-        })
-    }
-    static ajoutForm(req, res) {
-        res.render("ajoutForm")
-    }
-    static ajoutCompte(req, res) {
-        Compte.add(req.body.numero, req.body.nom)
-        res.redirect('/')
-    }
-    static afficheAll(req, res) {
-        Compte.loadAll(CompteController.serviceStockage).then(users => {
-            console.log(users);
+    static afficheAll(ModelClass, viewName) {
+        return async (req, res) => {
+            try {
+                if (!GenericController.serviceStockage) {
+                    throw new Error("Service de stockage non initialisé");
+                }
 
-            res.render("panier", { users: users })
-        })
-    }
-    static credit(req, res) {
-        const id = req.params.id
-        Compte.loadbyId(CompteController.serviceStockage, id).then(compte => {
-            compte.credit(req.body.credit)
-            res.redirect(`/compte/${id}`)
-        })
-    }
-    static debit(req, res) {
-        const id = req.params.id
-        Compte.loadbyId(CompteController.serviceStockage, id).then(compte => {
-            compte.debit(req.body.debit)
-            res.redirect(`/compte/${id}`)
-        })
+                const items = await ModelClass.loadAll(GenericController.serviceStockage);
+                console.log(items);
+
+                const modelName = ModelClass.name.toLowerCase() + 's'; // ex: 'users', 'produits'
+                res.render(viewName, { [modelName]: items });
+            } catch (error) {
+                console.error(`Erreur lors du chargement des ${ModelClass.name}:`, error);
+                res.status(500).send("Erreur serveur");
+            }
+        };
     }
 }
 
-module.exports = CompteController
+module.exports = GenericController;
