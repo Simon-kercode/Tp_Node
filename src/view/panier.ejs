@@ -10,21 +10,11 @@
 
 <body>
     <h1>
-        Compte numéro : <%= compte.numero %> de :
-            <%= compte.nom %>
+        Compte numéro : <%= user.nom %><%= user.prenom %>
     </h1>
-    <p>Votre solde : <%= compte.solde %> €
+    <p>
+        Votre email : <%= user.mail %> 
     </p>
-    <div class="ligne">
-        <form action="/credit" method="post">
-            <input type="text" name="credit">
-            <input type="submit" value="Crediter">
-        </form>
-        <form action="/debit" method="post">
-            <input type="text" name="debit">
-            <input type="submit" value="Debiter">
-        </form>
-    </div>
 </body>
 
 </html>
