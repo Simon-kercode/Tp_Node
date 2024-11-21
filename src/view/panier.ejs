@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panier</title>
+    <link rel="stylesheet" href="./css/index.css">
+</head>
+
+<body>
+    <h1>
+        Compte numéro : <%= compte.numero %> de :
+            <%= compte.nom %>
+    </h1>
+    <p>Votre solde : <%= compte.solde %> €
+    </p>
+    <div class="ligne">
+        <form action="/credit" method="post">
+            <input type="text" name="credit">
+            <input type="submit" value="Crediter">
+        </form>
+        <form action="/debit" method="post">
+            <input type="text" name="debit">
+            <input type="submit" value="Debiter">
+        </form>
+    </div>
+</body>
+
+</html>
