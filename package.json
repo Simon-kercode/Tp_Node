@@ -1,0 +1,12 @@
+{
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./index.js"
+  },
+  "keywords": [],
+  "dependencies": {
+    "express": "^4.21.1",
+    "node": "^20.18.1"
+  }
+}
