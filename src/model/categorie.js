@@ -7,8 +7,9 @@ class Categorie extends Produit {
     get nom(){
         return this.#nom
     }
-
     set nom(nom){
         nom = this.#nom
     }
+
+
 }
