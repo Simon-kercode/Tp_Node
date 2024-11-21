@@ -15,6 +15,7 @@ class User {
     #mail
     #pwd
     #isAdmin
+    #id
 
     constructor(n, p, m, pwd) {
         this.#nom = n,
@@ -28,14 +29,25 @@ class User {
         const result = []
         data.forEach(element => {
             const user = new User(element.nom, element.prenom, element.mail, element.pwd)
+            user.id_user = element.id_user
             user.nom = element.nom
-            user.id = element.id
-
+            user.prenom = element.prenom
+            user.mail = element.mail
+            
             result.push(user)
         });
         return result
     }
-
+    static async loadById(id) {
+        const data = await service.getById(id)
+        return data
+    }
+    static async add() {
+        service.add(new User(nom, prenom, mail, pwd))
+    }
+    static async modify() {
+        
+    }
     getNom() {
         return this.#nom
     }

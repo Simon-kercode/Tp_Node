@@ -5,14 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panier</title>
-    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="../public/style.css">
 </head>
 
 <body>
-    <h1>
-        Compte numéro : <%= users.nom %>
-            <%= users.prenom %>
-    </h1>
+    <% users.forEach(user => { %>
+        <h1>
+            Compte numéro : <%= user.nom %> <%= user.prenom %>
+        </h1>
+        <p>
+            Votre email : <%= user.mail %> 
+        </p>
+        <p>
+            Votre id : <%= user.id_user %> 
+        </p>
+    <% }); %>
 </body>
 
 </html>
