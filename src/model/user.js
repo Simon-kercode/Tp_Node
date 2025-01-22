@@ -29,7 +29,9 @@ class User {
         data.forEach(element => {
             const user = new User(element.nom, element.prenom, element.mail, element.pwd)
             user.nom = element.nom
-            user.id = element.id
+            user.prenom = element.prenom
+            user.mail = element.mail
+            user.id_user = element.id_user
 
             result.push(user)
         });

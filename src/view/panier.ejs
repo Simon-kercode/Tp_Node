@@ -9,12 +9,14 @@
 </head>
 
 <body>
+    <% users.forEach(user => { %>
     <h1>
         Compte numéro : <%= user.nom %><%= user.prenom %>
     </h1>
     <p>
         Votre email : <%= user.mail %> 
     </p>
+    <% }); %>
 </body>
 
 </html>
