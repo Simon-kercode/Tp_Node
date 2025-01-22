@@ -1,25 +1,7 @@
-const MySqlService = require("../service/MySqlService");
-const Crud = require("./CRUD");
-const service = new MySqlService(
-    'localhost',
-    3306,
-    'root',
-    '',
-    'Tp_Node',
-    'catégorie',
-    ['id_categorie', 'nom']
-);
-
-
-class Categorie extends Crud {
+class Categorie extends Produit {
     #nomCategorie
-    constructor(data){
-        super(data)
-        this.#nomCategorie = data.nomCategorie || ''
-    }
-
-    static async loadAll() {
-        return super.loadAll(service, Categorie);
+    constructor(nomCategorie){
+        this.#nomCategorie = nomCategorie
     }
 
     get nomCategorie(){

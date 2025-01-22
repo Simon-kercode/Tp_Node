@@ -1,30 +1,13 @@
-const MySqlService = require("../service/MySqlService");
-const Crud = require("./CRUD");
-const service = new MySqlService(
-    'localhost',
-    3306,
-    'root',
-    '',
-    'Tp_Node',
-    'commande',
-    ['id_commande', 'statut', 'total', 'date_commande', 'moyen_paiement', 'id_user']
-);
-
-
-class Commande extends Crud{
+class Commande {
     #statut
     #total
     #date_commande
     #moyen_paiement
 
-    constructor(data) {
-        super(data);
-        this.#statut = data.statut || ''
-        this.#total = data.total || ''
-        this.#date_commande = data.date_commande || ''
-    }
-    static async loadAll() {
-        return super.loadAll(service, Commande);
+    constructor(statut, total, date_commande) {
+        this.#statut = statut
+        this.#total = total
+        this.#date_commande = date_commande
     }
 
     get statut() {
