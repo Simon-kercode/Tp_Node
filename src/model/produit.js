@@ -64,20 +64,28 @@ class Produit {
         return idCategorie;
     }
     static async add(nom, prix, id_categorie) {
+        console.log('nom', nom, "prix", prix);
+        
         const produit = new Produit(nom, prix);
-
+        console.log('produit' , produit);
+        
         const result = await produitService.addProduit({
-            nom: produit.nom,
-            prix: produit.prix
+            nom: produit.getNom(),
+            prix: produit.getPrix()
         });
 
-        const id_produit = result.insertId;
-        console.log(id_produit);
-        
-        this.addAppartenir(id_produit, id_categorie);
+        if (result && result.insertId) {
+            const id_produit = result.insertId;
+            console.log('Nouvel id produit :', id_produit);
+
+            await this.addAppartenir(id_produit, id_categorie);
+        }
+        else {
+            throw new Error("Erreur lors de la création du produit");
+        }
     }
-    static addAppartenir(id_produit, id_categorie) {
-        serviceAppartenir.add({id_produit, id_categorie})
+    static async addAppartenir(id_produit, id_categorie) {
+        await serviceAppartenir.add({id_produit, id_categorie})
     }
     static modify(id, data) {
         serviceProduit.update(id, data);

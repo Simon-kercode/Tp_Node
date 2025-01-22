@@ -38,7 +38,7 @@ class MySqlService {
     }
     
     async add(data) {
-        console.log(data);
+        console.log('data to add :', data);
         const db = getDB();
         const placeholders = this.#tableStruct.map(() => '?').join(', ');
         const values = this.#tableStruct.map(col => data[col]);

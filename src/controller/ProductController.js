@@ -14,11 +14,11 @@ class ProductController {
             else res.render("accueil", {products: "Aucun produit enregistré"});
         })
     }
-    static ajoutProduit(req, res) {
+    static async ajoutProduit(req, res) {
+        console.log(req.body);
         
-        ProductModel.add(req.body.nom, req.body.prix, req.body.id_categorie);
-        ProductModel.addAppartenir(req.body.id_produit, req.body.id_categorie);
-        res.redirect('accueil');
+        const id_produit = await ProductModel.add(req.body.productName, req.body.productPrice, req.body.category);
+        res.redirect('/');
     }
 }
 

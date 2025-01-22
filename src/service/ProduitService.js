@@ -25,15 +25,15 @@ class ProduitService {
             throw error;
         }
     }
-    async addProduit(nom, prix) {
+    async addProduit(data) {
+        
         const db = getDB();
         try {
-            const query = `
-                INSERT INTO produit (nom, prix) VALUES (?, ?)
-            `;
-            const values = [nom, prix]
+            const query = `INSERT INTO produit (nom, prix) VALUES (?, ?)`;
+            const values = [data.nom, data.prix]
+
             const [results] = await db.query(query, values);
-            console.log("resultats :", results);
+            console.log("resultats de l'insertion :", results);
             
             return results;
         } catch (error) {
