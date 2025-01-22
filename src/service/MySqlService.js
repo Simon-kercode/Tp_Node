@@ -1,46 +1,26 @@
 const fs = require("node:fs/promises")
-const mysql = require('mysql2/promise')
+const {getDB} = require('../../config/db')
 
 class MySqlService {
-    #host
-    #port
-    #username
-    #pwd
-    #db
     #tableName
-    #con
     #tableStruct
 
-    constructor(host, port, username, pwd, db, tableName, tableStruct) {
-        this.#host = host
-        this.#port = port
-        this.#username = username
-        this.#pwd = pwd
-        this.#db = db
+    constructor(tableName, tableStruct) {
         this.#tableName = tableName
         this.#tableStruct = [...tableStruct]
-        this.init()
-    }
-
-    async init() {
-        this.#con = await mysql.createConnection({
-            host: this.#host,
-            user: this.#username,
-            database: this.#db,
-            port: this.#port,
-            password: this.#pwd
-        });
     }
 
     async getAll() {
-        const [results, fields] = await this.#con.query(
+        const db = getDB();
+        const [results, fields] = await db.query(
             'SELECT * FROM `' + this.#tableName + '`'
         );
+        
         return results
     }
 
     async getById(id) {
-        const [results, fields] = await this.#con.query(
+        const [results, fields] = await db.query(
             'SELECT * FROM `' + this.#tableName + '` WHERE id=?',
             [id]
         );
@@ -50,7 +30,7 @@ class MySqlService {
     async update(id, data) {
         const tmpListe = this.#tableStruct.map(col => `${col}='${data[col]}'`)
 
-        const [results, fields] = await this.#con.query(
+        const [results, fields] = await db.query(
             'UPDATE `' + this.#tableName + '` SET ' + tmpListe.join(", ") + ' WHERE id=?',
             [id]
         );
@@ -61,13 +41,13 @@ class MySqlService {
 
         const tmpListe = this.#tableStruct.map(col => `'${data[col]}'`)
 
-        const [results, fields] = await this.#con.query(
+        const [results, fields] = await db.query(
             'INSERT INTO `' + this.#tableName + '` (' + this.#tableStruct.join(', ') + ') VALUES(' + tmpListe.join(", ") + ')'
         );
     }
 
     async delete(id) {
-        const [results, fields] = await this.#con.query(
+        const [results, fields] = await db.query(
             'DELETE FROM `' + this.#tableName + '` WHERE id=?',
             [id]
         );

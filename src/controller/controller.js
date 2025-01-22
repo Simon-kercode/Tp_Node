@@ -1,32 +1,30 @@
-const Compte = require('../model/user')
+const UserModel = require('../model/user')
 
-// const data = require("../data/compte.json")
-
-class CompteController {
+class UserController {
     static serviceStockage = null
 
     static setService(service) {
         console.log("service ok !", service);
 
-        CompteController.serviceStockage = service
+        UserController.serviceStockage = service
     }
 
     static affiche(req, res) {
         const id = req.params.id
-        Compte.loadbyId(CompteController.serviceStockage, id).then(compte => {
-            console.log(compte.toString());
-            res.render("compte", { compte: compte })
+        UserController.loadbyId(UserController.serviceStockage, id).then(user => {
+            console.log(user.toString());
+            res.render("user", { user: user })
         })
     }
     static ajoutForm(req, res) {
         res.render("ajoutForm")
     }
-    static ajoutCompte(req, res) {
-        Compte.add(req.body.numero, req.body.nom)
+    static ajoutUser(req, res) {
+        User.add(req.body.numero, req.body.nom)
         res.redirect('/')
     }
     static afficheAll(req, res) {
-        Compte.loadAll(CompteController.serviceStockage).then(users => {
+        UserModel.loadAll(UserController.serviceStockage).then(users => {
             console.log(users);
 
             res.render("panier", { users: users })
@@ -34,18 +32,18 @@ class CompteController {
     }
     static credit(req, res) {
         const id = req.params.id
-        Compte.loadbyId(CompteController.serviceStockage, id).then(compte => {
-            compte.credit(req.body.credit)
-            res.redirect(`/compte/${id}`)
+        UserModel.loadbyId(UserController.serviceStockage, id).then(user => {
+            user.credit(req.body.credit)
+            res.redirect(`/user/${id}`)
         })
     }
     static debit(req, res) {
         const id = req.params.id
-        Compte.loadbyId(CompteController.serviceStockage, id).then(compte => {
-            compte.debit(req.body.debit)
-            res.redirect(`/compte/${id}`)
+        UserModel.loadbyId(UserController.serviceStockage, id).then(user => {
+            user.debit(req.body.debit)
+            res.redirect(`/user/${id}`)
         })
     }
 }
 
-module.exports = CompteController
+module.exports = UserController
