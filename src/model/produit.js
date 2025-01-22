@@ -1,27 +1,20 @@
-const MySqlService = require("../service/MySqlService")
+const MySqlService = require("../service/MySqlService");
+const ProduitService = require("../service/ProduitService");
+const Categorie = require("./categorie");
+
 const serviceProduit = new MySqlService(
-    'localhost',
-    3306,
-    'root',
-    '',
-    'Tp_Node',
     'produit',
-    ['id', 'nom', 'prix']
+    ['id_produit', 'nom', 'prix']
 );
 const serviceAppartenir = new MySqlService(
-    'localhost',
-    3306,
-    'root',
-    '',
-    'Tp_Node',
     'appartenir',
     ['id_produit', 'id_categorie']
 )
+const produitService = new ProduitService
 
 class Produit {
     #nom
     #prix
-    static instance
 
     constructor(nom, prix) {
         this.#nom = nom
@@ -42,14 +35,16 @@ class Produit {
         prix = this.#prix
     }
 
-    async loadAll(){
-        const data = await service.getAll()
+    static async loadAll(){
+        const dataProduit = await produitService.getAllProduitsWithCategories()
+        
         const result = []
-        data.forEach(element => {
-            const produit = new Produit(element.nom, element.prix)
+        dataProduit.forEach(element => {
+            const produit = new Produit(element.produit_nom, element.prix)
             produit.id_produit = element.id_produit
-            produit.nom = element.nom
-            produit.prenom = element.prenom
+            produit.nom = element.produit_nom
+            produit.prix = element.prix
+            produit.nom_categorie = element.categorie_nom
             
             result.push(produit)
         });
@@ -61,23 +56,31 @@ class Produit {
         return data
     }
     static async loadByCategorie(id_categorie){
-        const data = await service.getById(id_categorie)
+        const data = await service.getById("id_categorie", id_categorie)
         return data
+    }
+    static async getCategorie(id_produit) {
+        const idCategorie = await serviceAppartenir.getById("id_produit", id_produit)
+        return idCategorie;
     }
     static async add(nom, prix, id_categorie) {
         const produit = new Produit(nom, prix);
 
-        const result = await serviceProduit.add({
+        const result = await produitService.addProduit({
             nom: produit.nom,
             prix: produit.prix
         });
 
         const id_produit = result.insertId;
-
+        console.log(id_produit);
+        
         this.addAppartenir(id_produit, id_categorie);
     }
     static addAppartenir(id_produit, id_categorie) {
         serviceAppartenir.add({id_produit, id_categorie})
+    }
+    static modify(id, data) {
+        serviceProduit.update(id, data);
     }
 }
 

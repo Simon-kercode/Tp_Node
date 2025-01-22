@@ -15,6 +15,7 @@ class MySqlService {
         const [results, fields] = await db.query(
             'SELECT * FROM `' + this.#tableName + '`'
         );
+        console.log(results);
         
         return results
     }
@@ -38,12 +39,15 @@ class MySqlService {
     
     async add(data) {
         console.log(data);
+        const db = getDB();
+        const placeholders = this.#tableStruct.map(() => '?').join(', ');
+        const values = this.#tableStruct.map(col => data[col]);
 
-        const tmpListe = this.#tableStruct.map(col => `'${data[col]}'`)
-
-        const [results, fields] = await db.query(
-            'INSERT INTO `' + this.#tableName + '` (' + this.#tableStruct.join(', ') + ') VALUES(' + tmpListe.join(", ") + ')'
+        const [results] = await db.query(
+            `INSERT INTO \`${this.#tableName}\` (${this.#tableStruct.join(', ')}) VALUES (${placeholders})`,
+            values
         );
+        return results;
     }
 
     async delete(id) {

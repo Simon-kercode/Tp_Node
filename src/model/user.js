@@ -40,8 +40,10 @@ class User {
     static async add() {
         service.add(new User(nom, prenom, mail, pwd))
     }
-    static async modify() {
-        
+    static async modify(id, data) {
+       const isUpdate = service.update(id, data);
+
+       return isUpdate ? 'Utilisateur mis à jour' : 'Erreur lors de la mise à jour'
     }
     getNom() {
         return this.#nom

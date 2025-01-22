@@ -3,15 +3,9 @@ const UserModel = require('../model/user')
 class UserController {
     static serviceStockage = null
 
-    static setService(service) {
-        console.log("service ok !", service);
-
-        UserController.serviceStockage = service
-    }
-
     static affiche(req, res) {
         const id = req.params.id
-        UserController.loadbyId(UserController.serviceStockage, id).then(user => {
+        UserController.loadbyId(id).then(user => {
             console.log(user.toString());
             res.render("user", { user: user })
         })
@@ -24,7 +18,7 @@ class UserController {
         res.redirect('/')
     }
     static afficheAll(req, res) {
-        UserModel.loadAll(UserController.serviceStockage).then(users => {
+        UserModel.loadAll().then(users => {
             console.log(users);
 
             res.render("panier", { users: users })
@@ -32,14 +26,14 @@ class UserController {
     }
     static credit(req, res) {
         const id = req.params.id
-        UserModel.loadbyId(UserController.serviceStockage, id).then(user => {
+        UserModel.loadById(id).then(user => {
             user.credit(req.body.credit)
             res.redirect(`/user/${id}`)
         })
     }
     static debit(req, res) {
         const id = req.params.id
-        UserModel.loadbyId(UserController.serviceStockage, id).then(user => {
+        UserModel.loadById(id).then(user => {
             user.debit(req.body.debit)
             res.redirect(`/user/${id}`)
         })
