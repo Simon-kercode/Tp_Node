@@ -30,9 +30,9 @@ class User {
         data.forEach(element => {
             const user = new User(element.nom, element.prenom, element.mail, element.pwd)
             user.id_user = element.id_user
-            user.nom = element.nom
-            user.prenom = element.prenom
-            user.mail = element.mail
+            user.#nom = element.nom
+            user.#prenom = element.prenom
+            user.#mail = element.mail
             
             result.push(user)
         });
