@@ -10,23 +10,23 @@ class Commande {
         this.#date_commande = date_commande
     }
 
-    get statut() {
+    getStatut() {
         return this.#statut
     }
-    get total() {
+    getTotal() {
         return this.#total
     }
-    get date_commande() {
+    getDate_commande() {
         return this.#date_commande
     }
 
-    set statut(statut){
+    setStatut(statut){
         statut = this.#statut
     }
-    set total(total){
+    setTotal(total){
         total = this.#total
     }
-    set date_commande(date_commande){
+    setDate_commande(date_commande){
         date_commande = this.#date_commande
     }
 }

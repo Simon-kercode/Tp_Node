@@ -18,6 +18,7 @@ class Categorie {
     setNomCategorie(nom){
         nom= this.categorieNom
     }
+    
     static async loadAll(){
         const data = await service.getAll()
         const result = []
