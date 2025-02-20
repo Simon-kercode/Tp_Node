@@ -2,8 +2,8 @@
     const express = require('express')
     const app = express()
     const port = 3000
-    const route = require('./src/routeur/route')
-    const { initDB }  = require('./config/db')
+    const route = require('./backend/routeur/route')
+    const { initDB }  = require('./backend/config/db')
 
     app.set('views', './src/view');
     app.set('view engine', 'ejs');
