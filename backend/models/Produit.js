@@ -1,5 +1,5 @@
 const MySqlService = require("../service/MySqlService");
-const Categorie = require("./categorie");
+const Categorie = require("./Categorie");
 const {getDB} = require('../config/db')
 
 const serviceProduit = new MySqlService(
@@ -69,6 +69,19 @@ class Produit {
         }
         catch (error) {
             console.error("Erreur lors de la récupération des produits avec catégories :", error)
+            throw error;
+        }
+    }
+
+    static async getBydId(id) {
+        const db = getDB();
+        try {
+            const query = `SELECT * FROM produit WHERE id_produit = id`;
+            const [results] = await db.query(query);
+            return results;
+        }
+        catch (error) {
+            console.error(`Erreur lors de la récupération du produit n°${id} :`, error);
             throw error;
         }
     }
