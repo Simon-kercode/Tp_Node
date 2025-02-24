@@ -5,7 +5,7 @@ class ProduitController {
     static async getAll(req, res) {
         try {
             const produitsData = await Produit.getAll();
-            const produits = produitsData.map(produit => new Produit(produit.nom, produit.prix, produit.id_produit));
+            const produits = produitsData.map(produit => new Produit(produit.nom, produit.prix));
             res.json(produits);
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la récupération des produits.", error });

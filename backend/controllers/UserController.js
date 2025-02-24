@@ -1,11 +1,11 @@
-const User = require('../models/User.js')
+const User = require('../models/User')
 
 class UserController {
 
     static async getAll(req, res) {
         try {
             const usersData = await User.getAll();
-            const users = usersData.map(user => new User(user.nom, user.prix, user.id_user));
+            const users = usersData.map(user => new User(user.nom, user.prix));
             res.json(users);
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la récupération des utilisateurs.", error });

@@ -1,11 +1,11 @@
 const Categorie = require('../models/Categorie')
 
-class CategoryController {
+class CategorieController {
 
     static async getAll(req, res) {
         try {
             const categoriesData = await Category.getAll();
-            const categories = categoriesData.map(category => new Categorie(category.nom, category.id_categorie));
+            const categories = categoriesData.map(categorie => new Categorie(categorie.nom));
             res.json(categories);
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la récupération des catégories.", error });
@@ -14,9 +14,9 @@ class CategoryController {
 
     static async getById(req, res) {
         try {
-            const category = await Categorie.getById(req.params.id);
-            if (!category) return res.status(404).json({ message: "Catégorie non trouvée" });
-            res.json(category);
+            const categorie = await Categorie.getById(req.params.id);
+            if (!categorie) return res.status(404).json({ message: "Catégorie non trouvée" });
+            res.json(categorie);
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la récupération de la catégorie", error });
         }
@@ -25,9 +25,9 @@ class CategoryController {
     static async create(req, res) {
         try {
             const { nom } = req.body;
-            const category = new Categorie(nom);
-            await category.create();
-            res.status(201).json(category);
+            const categorie = new Categorie(nom);
+            await Categorie.create();
+            res.status(201).json(categorie);
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la création de la catégorie.", error });
         }
@@ -35,12 +35,12 @@ class CategoryController {
 
     static async update(req, res) {
         try {
-            const category = await Categorie.getById(req.params.id);
-            if (!category) return res.status(404).json({ message: "Catégorie non trouvée" });
+            const categorie = await Categorie.getById(req.params.id);
+            if (!categorie) return res.status(404).json({ message: "Catégorie non trouvée" });
             const data = req.body;
-            const updatedCategory = await Categorie.update(req.params.id, data);
+            const updatedCategorie = await Categorie.update(req.params.id, data);
 
-            res.json({ message: "Catégorie mise à jour", category: updatedCategory });
+            res.json({ message: "Catégorie mise à jour", categorie: updatedCategorie });
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la mise à jour de la catégorie.", error });
         }
@@ -48,8 +48,8 @@ class CategoryController {
 
     static async delete(req, res) {
         try {
-            const category = await Categorie.getById(req.params.id);
-            if (!category) return res.status(404).json({ message: "Catégorie non trouvée" });
+            const categorie = await Categorie.getById(req.params.id);
+            if (!categorie) return res.status(404).json({ message: "Catégorie non trouvée" });
 
             await Categorie.delete(req.params.id);
             res.json({ message: "Catégorie supprimée avec succès" });
@@ -59,4 +59,4 @@ class CategoryController {
     }
 }
 
-module.exports = CategoryController;
+module.exports = CategorieController;

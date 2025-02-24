@@ -1,5 +1,4 @@
 const MySqlService = require("../service/MySqlService");
-const Categorie = require("./Categorie");
 const {getDB} = require('../config/db')
 
 const serviceProduit = new MySqlService(
