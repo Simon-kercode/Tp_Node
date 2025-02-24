@@ -13,6 +13,7 @@ class ProduitController {
     }
 
     static async getById(req, res) {
+        
         try {
             const produit = await Produit.getById(req.params.id);
             if (!produit) return res.status(404).json({ message: "Produit non trouvé" });
@@ -26,6 +27,7 @@ class ProduitController {
     static async getAllWithCategories(req, res) {
         try {
             const produitsData = await Produit.getAllWithCategories();
+            console.log("Produits récupérés :", produitsData);
             const produits = produitsData.map(element => {
                 const produit = new Produit(element.produit_nom, element.prix);
                 produit.id_produit = element.id_produit;
@@ -41,9 +43,9 @@ class ProduitController {
 
     static async create(req, res) {
         try {
-            const { nom, prix } = req.body;
+            const { nom, prix, categories } = req.body;
             const produit = new Produit(nom, prix);
-            await produit.create();
+            await produit.create(nom, prix, categories);
             res.status(201).json(produit);
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la création du produit.", error });

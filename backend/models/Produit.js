@@ -36,7 +36,7 @@ class Produit {
     static async getAll() {
         const db = getDB();
         try {
-            const query = 'SELECT * FROM produits';
+            const query = 'SELECT * FROM produit';
 
             const [results] = await db.query(query);
             console.log("resultats :", results);
@@ -60,7 +60,7 @@ class Produit {
                         c.nom AS categorie_nom
                     FROM produit p
                     JOIN appartenir a ON p.id_produit = a.id_produit
-                    JOIN categorie c ON a.id_categorie = c.id_categorie;
+                    JOIN categorie c ON a.id_categorie = c.id_categorie
                 `;
                 const [results] = await db.query(query);
                 console.log("resultats :", results);   
@@ -72,11 +72,12 @@ class Produit {
         }
     }
 
-    static async getBydId(id) {
+    static async getById(id) {
         const db = getDB();
         try {
-            const query = `SELECT * FROM produit WHERE id_produit = id`;
-            const [results] = await db.query(query);
+            const query = `SELECT * FROM produit WHERE id_produit = ?`;
+            const values = [id];
+            const [results] = await db.query(query, values);
             return results;
         }
         catch (error) {
@@ -109,7 +110,7 @@ class Produit {
                 return results;
 
             } catch (error) {
-                console.error("Erreur lors de la récupération des produits avec catégories :", error);
+                console.error("Erreur lors de la création du produit :", error);
                 throw error;
             }
     }
