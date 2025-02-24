@@ -14,7 +14,14 @@ app.use(cookieParser());
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 
 const produitRoutes = require('./routes/produitRoutes');
+const userRoutes = require('./routes/userRoutes');
+const categorieRoutes = require('./routes/categorieRoutes');
+const commandeRoutes = require('./routes/produitRoutes');
+
 app.use('/produits', produitRoutes);
+app.use('/users', userRoutes);
+app.use('/categories', categorieRoutes);
+app.use('/commandes', commandeRoutes);
 
 try {
     await initDB();
