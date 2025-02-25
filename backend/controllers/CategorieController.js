@@ -1,14 +1,15 @@
+const { log } = require('console');
 const Categorie = require('../models/Categorie')
 
 class CategorieController {
 
     static async getAll(req, res) {
         try {
-            const categoriesData = await Category.getAll();
-            const categories = categoriesData.map(categorie => new Categorie(categorie.nom));
+            const categoriesData = await Categorie.getAll();
+            const categories = categoriesData.map(categorie => new Categorie(categorie.id_categorie, categorie.nom));
             res.json(categories);
         } catch (error) {
-            res.status(500).json({ message: "Erreur lors de la récupération des catégories.", error });
+            res.status(500).json({ message: "Erreur lors de la récupération des catégories.", error});
         }
     }
 
@@ -26,7 +27,7 @@ class CategorieController {
         try {
             const { nom } = req.body;
             const categorie = new Categorie(nom);
-            await Categorie.create();
+            await Categorie.create(nom);
             res.status(201).json(categorie);
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la création de la catégorie.", error });

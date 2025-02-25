@@ -24,12 +24,9 @@ class UserController {
 
     static async create(req, res) {
         try {
-            const { nom, prix } = req.body;
-            // ###########################################################################
-            // !!!!!!!!!!!!!!!!!!!!!!!!!!!! TODO : HASH DU PWD !!!!!!!!!!!!!!!!!!!!!!!!!!!
-            // ###########################################################################
+            const { nom, prenom, mail, pwd } = req.body;
             const user = new User(nom, prenom, mail, pwd);
-            await user.create();
+            await User.create({nom, prenom, mail, pwd});
             res.status(201).json(user);
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la création de l'utilisateur.", error });
@@ -37,12 +34,12 @@ class UserController {
     }
 
     static async update(req, res) {
+        
         try {
             const user = await User.getById(req.params.id);
             if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
             const data = req.body;
             const updatedUser = await User.update(req.params.id, data);
-
 
             res.json({ message: "Utilisateur mis à jour", user: updatedUser });
         } catch (error) {
@@ -55,7 +52,7 @@ class UserController {
             const user = await User.getById(req.params.id);
             if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
 
-            await user.delete(req.params.id);
+            await User.delete(req.params.id);
             res.json({ message: "Utilisateur supprimé avec succès" });
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la suppression de l'utilisateur.", error });

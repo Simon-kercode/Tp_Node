@@ -1,4 +1,5 @@
 const MySqlService = require("../service/MySqlService")
+const {getDB} = require('../config/db')
 const service = new MySqlService(
     'catégorie',
     ['id', 'nom']
@@ -22,8 +23,9 @@ class Categorie {
     static async getAll() {
         const db = getDB();
         try {
+            
             const query = 'SELECT * FROM categorie';
-
+            
             const [results] = await db.query(query);
             console.log("resultats :", results);
             
@@ -38,12 +40,13 @@ class Categorie {
     static async getById(id) {
         const db = getDB();
         try {
-            const query = `SELECT * FROM commande WHERE id_commande = id`;
-            const [results] = await db.query(query);
+            const query = `SELECT * FROM categorie WHERE id_categorie = ?`;
+            const values = [id]
+            const [results] = await db.query(query, values);
             return results;
         }
         catch (error) {
-            console.error(`Erreur lors de la récupération de la commande n°${id} :`, error);
+            console.error(`Erreur lors de la récupération de la catégorie n°${id} :`, error);
             throw error;
         }
     }
@@ -52,7 +55,7 @@ class Categorie {
         const db = getDB();
 
         try {
-            const query = `INSERT INTO categorie (nom) VALUES ?`;
+            const query = `INSERT INTO categorie (nom) VALUES (?)`;
             const values = [nom];
 
             const [results] = await db.query(query, values);
@@ -68,7 +71,7 @@ class Categorie {
         const db = getDB();
 
         try {
-             const query = `DELETE FROM _user WHERE id_categorie = ?`
+             const query = `DELETE FROM categorie WHERE id_categorie = ?`
              const values = [id];
 
              const [results] = await db.query(query, values);
@@ -80,20 +83,20 @@ class Categorie {
         }
     }
 
-    static async update(id, nom) {
+    static async update(id, data) {
 
         const db = getDB();
 
         try {
             const values = [];
 
-            if (nom) {
+            if (data.nom) {
                 values.push(data.nom);
             }
             else throw new Error("Aucune donnée valide à mettre à jour.");
 
             values.push(id);
-            const query = `UPDATE _user SET nom = ? WHERE id_user = ?`;
+            const query = `UPDATE categorie SET nom = ? WHERE id_categorie = ?`;
             const results = await db.query(query, values);
 
             return results
@@ -103,24 +106,5 @@ class Categorie {
             throw error;
         }
     }
-
-
-
-    // static async loadAll(){
-    //     const data = await service.getAll()
-    //     const result = []
-    //     data.forEach(element => {
-    //         const categorie = new Categorie(element.nom)
-    //         categorie.id_categorie = element.id_categorie
-    //         categorie.nom = element.nom
-            
-    //         result.push(categorie)
-    //     });
-    //     return result
-    // }
-    // static async loadById(id){
-    //     const data = await this.service.getById(id)
-    //     return data
-    // }
 }
 module.exports = Categorie

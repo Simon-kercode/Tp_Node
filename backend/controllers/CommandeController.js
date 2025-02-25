@@ -26,7 +26,7 @@ class CommandeController {
         try {
             const { statut, total, date_commande } = req.body;
             const commande = new Commande(statut, total, date_commande);
-            await commande.create();
+            await Commande.create();
             res.status(201).json(commande);
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la création de la commande.", error });

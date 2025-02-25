@@ -89,8 +89,7 @@ class Produit {
     static async create(nom, prix, categories = []) {
             const db = getDB();
             try {
-                const results = [];
-                const queryProduit = `INSERT INTO produit (nom, prix) VALUES ?`;
+                const queryProduit = `INSERT INTO produit (nom, prix) VALUES (?, ?)`;
                 const valuesProduit = [nom, prix]
     
                 const [resultsProduit] = await db.query(queryProduit, valuesProduit);
@@ -98,17 +97,16 @@ class Produit {
                 const produitId = resultsProduit.insertId;
 
                 if (categories.length) {
-                    const queryCategorie = `INSERT INTO appartenir (id_produit, id_categorie) VALUES ?`
-                    const valuesCategorie = categories.map(categorieId => [produitId, categorieId])
+                    const queryCategorie = `INSERT INTO appartenir (id_produit, id_categorie) VALUES ${categories.map(() => "(?, ?)").join(", ")}`;
+                    const valuesCategorie = categories.flatMap(categorieId => [produitId, categorieId]);  
                     const [resultsCategorie] = await db.query(queryCategorie, valuesCategorie);
-
-                    results = [...resultsProduit, ...resultsCategorie];
+                    console.log({produit: resultsProduit, categorie: resultsCategorie});
+                    
+                    return {produit: resultsProduit, categorie: resultsCategorie};
                 }
                 else {
-                    results = [...resultsProduit];
+                    return {produit: resultsProduit};
                 }
-                return results;
-
             } catch (error) {
                 console.error("Erreur lors de la création du produit :", error);
                 throw error;
@@ -119,12 +117,12 @@ class Produit {
         const db = getDB();
 
         try {
-            const queryProduit = `DELETE FROM appartenir WHERE id_produit = ?`
-            const queryAppartenir = `DELETE FROM produit WHERE id_produit = ?`
+            const queryProduit = `DELETE FROM produit WHERE id_produit = ?`
+            const queryAppartenir = `DELETE FROM appartenir WHERE id_produit = ?`
             const values = [id]
-            const [resultsCategorie] = await db.query(queryAppartenir, values);
+            await db.query(queryAppartenir, values);
             const [resultsProduit] = await db.query(queryProduit, values);
-            return [...resultsCategorie, ...resultsProduit];
+            return resultsProduit;
         }
         catch (error) {
             console.error('Erreur lors de la suppression du produit : ', error);
@@ -155,7 +153,7 @@ class Produit {
             }
 
             values.push(id);
-            const query = `UPDATE produits SET ${fields.join(", ")} WHERE id_produit = ?`;
+            const query = `UPDATE produit SET ${fields.join(", ")} WHERE id_produit = ?`;
             const results = await db.query(query, values);
 
             return results
@@ -171,11 +169,11 @@ class Produit {
 
         try {
             // On supprime les ancienntes associations pour éviter les doublons
-            await db.query('DELETE FROM appartenir WHERE id_produit = ?', [id]);
+            await db.query('DELETE FROM appartenir WHERE id_produit = ?', [id_produit]);
 
             if (categories.length) {
-                const query = `INSERT FROM appartenir (id_produit, id_categorie) VALUES ?`
-                const values = categories.map(categorieId => [id_produit, categorieId]);
+                const query = `INSERT INTO appartenir (id_produit, id_categorie) VALUES ${categories.map(() => "(?, ?)").join(", ")}`
+                const values = categories.flatMap(categorieId => [id_produit, categorieId]);
                 const [results] = await db.query(query, values);
                 return results;
             }
@@ -184,48 +182,6 @@ class Produit {
             console.error('Erreur lors de la mise à jour des catégories du produit : ', error);
             throw error;
         }
-    }
-
-
-
-
-    // ANCIENNE VERSION ==========================
-
-    static async loadAll(){
-        const dataProduit = await this.getAllWithCategories()
-        
-        const result = []
-        // ================== a mettre dans le controlleur ===============
-        dataProduit.forEach(element => {
-            const produit = new Produit(element.produit_nom, element.prix)
-            produit.id_produit = element.id_produit
-            produit.nom = element.produit_nom
-            produit.prix = element.prix
-            produit.nom_categorie = element.categorie_nom
-            
-            result.push(produit)
-        });
-        return result
-    }
-
-    static async loadById(id){
-        const data = await this.service.getById(id)
-        return data
-    }
-    static async loadByCategorie(id_categorie){
-        const data = await service.getById("id_categorie", id_categorie)
-        return data
-    }
-    static async getCategorie(id_produit) {
-        const idCategorie = await serviceAppartenir.getById("id_produit", id_produit)
-        return idCategorie;
-    }
-
-    // static async addAppartenir(id_produit, id_categorie) {
-    //     await serviceAppartenir.add({id_produit, id_categorie})
-    // }
-    static modify(id, data) {
-        serviceProduit.update(id, data);
     }
 }
 

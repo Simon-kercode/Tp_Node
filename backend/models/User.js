@@ -1,4 +1,5 @@
 const { getDB } = require("../config/db");
+const bcrypt = require("bcryptjs");
 const MySqlService = require("../service/MySqlService")
 const service = new MySqlService(
     '_user',
@@ -58,6 +59,8 @@ class User {
             const query = `SELECT * FROM _user`;
 
             const [results] = await db.query(query);
+            console.log(results);
+            
             return results;
         }
         catch (error) {
@@ -66,11 +69,12 @@ class User {
         }
     }
 
-    static async getBydId(id) {
+    static async getById(id) {
         const db = getDB();
         try {
-            const query = `SELECT * FROM _user WHERE id_user = id`;
-            const [results] = await db.query(query);
+            const query = `SELECT * FROM _user WHERE id_user = ?`;
+            const values = [id];
+            const [results] = await db.query(query, values);
             return results;
         }
         catch (error) {
@@ -83,8 +87,9 @@ class User {
         const db = getDB();
 
         try {
-            const query = `INSERT INTO _user (nom, prenom, mail, pwd) VALUES ?`;
-            const values = [data.nom, data.prenom, data.mail, data.pwd];
+            const query = `INSERT INTO _user (nom, prenom, mail, pwd) VALUES (?, ?, ?, ?)`; 
+            const hashedPwd = await bcrypt.hash(data.pwd, 10);
+            const values = [data.nom, data.prenom, data.mail, hashedPwd];
 
             const [results] = await db.query(query, values);
             return results;
@@ -124,16 +129,17 @@ class User {
                 values.push(data.nom);
             }
             if (data.prenom) {
-                fields.push("prix = ?");
-                values.push(data.prix);
+                fields.push("prenom = ?");
+                values.push(data.prenom);
             }
             if (data.mail) {
                 fields.push("mail = ?");
                 values.push(data.mail);
             }
             if (data.pwd) {
+                const hashedPwd = await bcrypt.hash(data.pwd, 10)
                 fields.push("pwd = ?");
-                values.push(data.pwd);
+                values.push(hashedPwd);
             }
             if (fields.length === 0) {
                 throw new Error("Aucune donnée valide à mettre à jour.");

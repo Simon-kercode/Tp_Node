@@ -45,7 +45,7 @@ class ProduitController {
         try {
             const { nom, prix, categories } = req.body;
             const produit = new Produit(nom, prix);
-            await produit.create(nom, prix, categories);
+            await Produit.create(nom, prix, categories);
             res.status(201).json(produit);
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la création du produit.", error });
@@ -70,7 +70,7 @@ class ProduitController {
             const produit = await Produit.getById(req.params.id);
             if (!produit) return res.status(404).json({ message: "Produit non trouvé" });
 
-            await produit.delete(req.params.id);
+            await Produit.delete(req.params.id);
             res.json({ message: "Produit supprimé avec succès" });
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la suppression du produit.", error });

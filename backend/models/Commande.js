@@ -54,8 +54,9 @@ class Commande {
     static async getById(id) {
         const db = getDB();
         try {
-            const query = `SELECT * FROM commande WHERE id_commande = id`;
-            const [results] = await db.query(query);
+            const query = `SELECT * FROM commande WHERE id_commande = ?`;
+            const values = [id];
+            const [results] = await db.query(query, values);
             return results;
         }
         catch (error) {
@@ -68,7 +69,7 @@ class Commande {
         const db = getDB();
 
         try {
-            const query = `INSERT INTO commande (statut, total, date_commande, moyen_paiement) VALUES ?`;
+            const query = `INSERT INTO commande (statut, total, date_commande, moyen_paiement) VALUES (?, ?, ?, ?)`;
             const values = [data.statut, data.total, data.date_commande, data.moyen_paiment];
 
             const [results] = await db.query(query, values);
