@@ -21,7 +21,6 @@ class UserController {
             res.status(500).json({ message: `Erreur lors de la récupération de l'utilisateur`, error });
         }
     }
-
     static async create(req, res) {
         try {
             const { nom, prenom, mail, pwd } = req.body;

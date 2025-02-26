@@ -82,11 +82,29 @@ class User {
             throw error;
         }
     }
-
+    static async getByEmail(email) {
+        const db = getDB();
+        try {
+            const query = `SELECT * FROM _user WHERE mail = ?`;
+            const values = [email];
+            const [results] = await db.query(query, values);
+            return results;
+        }
+        catch (error) {
+            console.error(`Erreur lors de la récupération de l'utilisateur :`, error);
+            throw error;
+        }
+    }
     static async create(data) {
         const db = getDB();
 
         try {
+            if (!data.nom || !data.prenom || !data.mail || !data.pwd) {
+                throw new Error("Tous les champs sont obligatoires");
+            }
+            if (!/\S+@\S+\.\S+/.test(data.mail)) {
+                throw new Error("L'adresse e-mail est invalide");
+            }
             const query = `INSERT INTO _user (nom, prenom, mail, pwd) VALUES (?, ?, ?, ?)`; 
             const hashedPwd = await bcrypt.hash(data.pwd, 10);
             const values = [data.nom, data.prenom, data.mail, hashedPwd];

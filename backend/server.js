@@ -17,11 +17,13 @@ const produitRoutes = require('./routes/produitRoutes');
 const userRoutes = require('./routes/userRoutes');
 const categorieRoutes = require('./routes/categorieRoutes');
 const commandeRoutes = require('./routes/commandeRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 app.use('/produits', produitRoutes);
 app.use('/users', userRoutes);
 app.use('/categories', categorieRoutes);
 app.use('/commandes', commandeRoutes);
+app.use('/auth', authRoutes);
 
 try {
     await initDB();
