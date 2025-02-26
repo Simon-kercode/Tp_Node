@@ -1,13 +1,17 @@
+const {getDB} = require('../config/db');
+
 class Commande {
     #statut
     #total
     #date_commande
     #moyen_paiement
+    #id_user
 
-    constructor(statut, total, date_commande) {
+    constructor(statut, total, date_commande, id_user) {
         this.#statut = statut
         this.#total = total
         this.#date_commande = date_commande
+        this.#id_user = id_user
     }
 
     getStatut() {
@@ -21,6 +25,9 @@ class Commande {
     }
     getMoyen_paiement() {
         return this.#moyen_paiement ?? "Aucun moyen de paiement enregistré";
+    }
+    getId_user() {
+        return this.#id_user
     }
 
     setStatut(statut){
@@ -41,13 +48,16 @@ class Commande {
     static async getAll() {
         const db = getDB();
         try {
+            console.log('arrivé');
             const query = `SELECT * FROM commande`;
 
             const [results] = await db.query(query);
+            console.log(results);
+            
             return results;
         }
         catch (error) {
-            console.error("Erreur lors de la récupération des commandes :", error);
+            console.error({message: "Erreur lors de la récupération des commandes :", error: error.message || error});
             throw error;
         }
     }
@@ -69,11 +79,20 @@ class Commande {
         const db = getDB();
 
         try {
-            const query = `INSERT INTO commande (statut, total, date_commande, moyen_paiement) VALUES (?, ?, ?, ?)`;
-            const values = [data.statut, data.total, data.date_commande, data.moyen_paiment];
+            const queryCommande = `INSERT INTO commande (statut, total, date_commande, moyen_paiement, id_user) VALUES (?, ?, ?, ?, ?)`;
+            const valuesCommande = [data.statut, data.total, data.date_commande, data.moyen_paiement, data.id_user];
 
-            const [results] = await db.query(query, values);
-            return results;
+            const [resultsCommande] = await db.query(queryCommande, valuesCommande);
+            const commandeId = resultsCommande.insertId;
+
+            if (data.produits.length) {
+                const queryProduit = `INSERT INTO contenir (id_produit, id_commande) VALUES ${data.produits.map(() => "(?, ?)").join(", ")}`;
+                const valuesProduit = data.produits.flatMap(produitId => [produitId, commandeId]);
+                const [resultsProduit] = await db.query(queryProduit, valuesProduit);
+
+                return {commande: resultsCommande, produit: resultsProduit};
+            }
+            else return {commande: resultsCommande};
         }
         catch (error) {
             console.error("Erreur lors de la création de l'utilisateur : ", error);
@@ -103,21 +122,21 @@ class Commande {
             const fields = [];
             const values = [];
 
-            if (data.nom) {
+            if (data.statut) {
                 fields.push("statut = ?");
-                values.push(data.nom);
+                values.push(data.statut);
             }
-            if (data.prenom) {
+            if (data.total) {
                 fields.push("total = ?");
-                values.push(data.prix);
+                values.push(data.total);
             }
-            if (data.mail) {
+            if (data.date_commande) {
                 fields.push("date_commande = ?");
-                values.push(data.mail);
+                values.push(data.date_commande);
             }
-            if (data.pwd) {
+            if (data.moyen_paiement) {
                 fields.push("moyen_paiement = ?");
-                values.push(data.pwd);
+                values.push(data.moyen_paiement);
             }
             if (fields.length === 0) {
                 throw new Error("Aucune donnée valide à mettre à jour.");

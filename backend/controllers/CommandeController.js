@@ -23,10 +23,11 @@ class CommandeController {
     }
 
     static async create(req, res) {
+        
         try {
-            const { statut, total, date_commande } = req.body;
-            const commande = new Commande(statut, total, date_commande);
-            await Commande.create();
+            const { statut, total, date_commande, moyen_paiement, id_user, produits } = req.body;
+            const commande = new Commande(statut, total, date_commande, moyen_paiement,id_user);
+            await Commande.create({statut, total, date_commande, moyen_paiement, id_user, produits});
             res.status(201).json(commande);
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la création de la commande.", error });
