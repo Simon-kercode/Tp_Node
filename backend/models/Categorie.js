@@ -1,9 +1,4 @@
-const MySqlService = require("../service/MySqlService")
 const {getDB} = require('../config/db')
-const service = new MySqlService(
-    'catégorie',
-    ['id', 'nom']
-);
 
 class Categorie {
 

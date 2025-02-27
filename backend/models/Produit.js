@@ -1,14 +1,4 @@
-const MySqlService = require("../service/MySqlService");
 const {getDB} = require('../config/db')
-
-const serviceProduit = new MySqlService(
-    'produit',
-    ['id_produit', 'nom', 'prix']
-);
-const serviceAppartenir = new MySqlService(
-    'appartenir',
-    ['id_produit', 'id_categorie']
-)
 
 class Produit {
     #nom

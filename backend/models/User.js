@@ -1,10 +1,5 @@
 const { getDB } = require("../config/db");
 const bcrypt = require("bcryptjs");
-const MySqlService = require("../service/MySqlService")
-const service = new MySqlService(
-    '_user',
-    ['id', 'nom', 'prenom', 'mail', 'pwd', 'isAdmin']
-);
 
 class User {
     #nom
@@ -160,6 +155,10 @@ class User {
                 fields.push("pwd = ?");
                 values.push(hashedPwd);
             }
+            if (data.isAdmin) {
+                fields.push("isAdmin = ?");
+                values.push(data.isAdmin);
+            }
             if (fields.length === 0) {
                 throw new Error("Aucune donnée valide à mettre à jour.");
             }
@@ -175,34 +174,6 @@ class User {
             throw error;
         }
     }
-
-    // static async loadAll() {
-    //     const data = await service.getAll()
-    //     const result = []
-    //     data.forEach(element => {
-    //         const user = new User(element.nom, element.prenom, element.mail, element.pwd)
-    //         user.id_user = element.id_user
-    //         user.nom = element.nom
-    //         user.prenom = element.prenom
-    //         user.mail = element.mail
-            
-    //         result.push(user)
-    //     });
-    //     return result
-    // }
-    // static async loadById(id) {
-    //     const data = await service.getById(id)
-    //     return data
-    // }
-    // static async add() {
-    //     service.add(new User(nom, prenom, mail, pwd))
-    // }
-    // static async modify(id, data) {
-    //    const isUpdate = service.update(id, data);
-
-    //    return isUpdate ? 'Utilisateur mis à jour' : 'Erreur lors de la mise à jour'
-    // }
-
 }
 
 module.exports = User

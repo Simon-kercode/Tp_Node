@@ -5,13 +5,9 @@ const User = require("../models/User");
 exports.login = async (req, res) => {
     try {
         const { mail, pwd } = req.body;
-        console.log(req.body);
         
         // Vérification de l'utilisateur
-        console.log('email envoyé :', mail);
-        
         const user = await User.getByEmail(mail);
-        console.log(user);
         
         if (!user) return res.status(401).json({ message: "Utilisateur non trouvé" });
 
@@ -22,11 +18,10 @@ exports.login = async (req, res) => {
         
         // Création du token
         const token = jwt.sign(
-            { id: user.id_user, email: user.mail },
+            { id: user.id_user, email: user.mail, role: user.isAdmin },
             process.env.JWT_SECRET,
-            { expiresIn: "1h" }
+            { expiresIn: "2h" }
         );
-        console.log(token);
         
         res.json({ message: "Connexion réussie", token });
     } catch (error) {

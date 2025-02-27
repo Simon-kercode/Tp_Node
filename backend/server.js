@@ -18,12 +18,14 @@ const userRoutes = require('./routes/userRoutes');
 const categorieRoutes = require('./routes/categorieRoutes');
 const commandeRoutes = require('./routes/commandeRoutes');
 const authRoutes = require('./routes/authRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 app.use('/produits', produitRoutes);
 app.use('/users', userRoutes);
 app.use('/categories', categorieRoutes);
 app.use('/commandes', commandeRoutes);
 app.use('/auth', authRoutes);
+app.use('/admin', adminRoutes);
 
 try {
     await initDB();

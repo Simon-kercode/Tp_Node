@@ -16,3 +16,12 @@ exports.authMiddleware = (req, res, next) => {
     }    
 }
 
+exports.roleMiddleware = (requiredRole) => (req, res, next) =>{
+    console.log(req.user);
+    
+    if (!req.user || req.user.role !== requiredRole) {
+        return res.status(403).json({message: "Accès interdit !"});
+    }
+    next();
+}
+
