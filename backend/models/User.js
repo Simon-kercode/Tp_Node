@@ -88,7 +88,8 @@ class User {
             const query = `SELECT * FROM _user WHERE mail = ?`;
             const values = [email];
             const [results] = await db.query(query, values);
-            return results;
+            
+            return results[0];
         }
         catch (error) {
             console.error(`Erreur lors de la récupération de l'utilisateur :`, error);
