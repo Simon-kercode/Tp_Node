@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Hôte : 127.0.0.1
--- Généré le : jeu. 21 nov. 2024 à 10:00
+-- Hôte : localhost:3306
+-- Généré le : jeu. 27 fév. 2025 à 23:04
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -24,10 +24,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Structure de la table `apppartenir`
+-- Structure de la table `appartenir`
 --
 
-CREATE TABLE `apppartenir` (
+CREATE TABLE `appartenir` (
   `id_produit` int(11) NOT NULL,
   `id_categorie` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -35,12 +35,12 @@ CREATE TABLE `apppartenir` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `catégorie`
+-- Structure de la table `categorie`
 --
 
 CREATE TABLE `categorie` (
   `id_categorie` int(11) NOT NULL,
-  `nom` varchar(50) DEFAULT NULL
+  `nom` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -51,10 +51,10 @@ CREATE TABLE `categorie` (
 
 CREATE TABLE `commande` (
   `id_commande` int(11) NOT NULL,
-  `statut` varchar(50) DEFAULT NULL,
-  `total` decimal(15,2) DEFAULT NULL,
-  `date_commande` datetime DEFAULT NULL,
-  `moyen_paiement` varchar(50) DEFAULT NULL,
+  `statut` varchar(50) NOT NULL,
+  `total` decimal(15,2) NOT NULL,
+  `date_commande` datetime NOT NULL
+  `moyen_paiement` varchar(50) NOT NULL,
   `id_user` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -77,8 +77,8 @@ CREATE TABLE `contenir` (
 
 CREATE TABLE `produit` (
   `id_produit` int(11) NOT NULL,
-  `nom` varchar(50) DEFAULT NULL,
-  `prix` decimal(15,2) DEFAULT NULL
+  `nom` varchar(50) NOT NULL,
+  `prix` decimal(15,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -89,11 +89,11 @@ CREATE TABLE `produit` (
 
 CREATE TABLE `_user` (
   `id_user` int(11) NOT NULL,
-  `isAdmin` tinyint(1) DEFAULT NULL,
-  `nom` varchar(50) DEFAULT NULL,
-  `prenom` varchar(50) DEFAULT NULL,
-  `mail` varchar(320) DEFAULT NULL,
-  `pwd` varchar(50) DEFAULT NULL
+  `isAdmin` tinyint(1) NOT NULL DEFAULT 0,
+  `nom` varchar(50) NOT NULL,
+  `prenom` varchar(50) NOT NULL,
+  `mail` varchar(320) NOT NULL,
+  `pwd` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -101,14 +101,14 @@ CREATE TABLE `_user` (
 --
 
 --
--- Index pour la table `apppartenir`
+-- Index pour la table `appartenir`
 --
-ALTER TABLE `apppartenir`
+ALTER TABLE `appartenir`
   ADD PRIMARY KEY (`id_produit`,`id_categorie`),
   ADD KEY `id_categorie` (`id_categorie`);
 
 --
--- Index pour la table `catégorie`
+-- Index pour la table `categorie`
 --
 ALTER TABLE `categorie`
   ADD PRIMARY KEY (`id_categorie`);
@@ -140,15 +140,43 @@ ALTER TABLE `_user`
   ADD PRIMARY KEY (`id_user`);
 
 --
+-- AUTO_INCREMENT pour les tables déchargées
+--
+
+--
+-- AUTO_INCREMENT pour la table `categorie`
+--
+ALTER TABLE `categorie`
+  MODIFY `id_categorie` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT pour la table `commande`
+--
+ALTER TABLE `commande`
+  MODIFY `id_commande` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT pour la table `produit`
+--
+ALTER TABLE `produit`
+  MODIFY `id_produit` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT pour la table `_user`
+--
+ALTER TABLE `_user`
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- Contraintes pour les tables déchargées
 --
 
 --
--- Contraintes pour la table `apppartenir`
+-- Contraintes pour la table `appartenir`
 --
-ALTER TABLE `apppartenir`
-  ADD CONSTRAINT `apppartenir_ibfk_1` FOREIGN KEY (`id_produit`) REFERENCES `produit` (`id_produit`),
-  ADD CONSTRAINT `apppartenir_ibfk_2` FOREIGN KEY (`id_categorie`) REFERENCES `categorie` (`id_categorie`);
+ALTER TABLE `appartenir`
+  ADD CONSTRAINT `appartenir_ibfk_1` FOREIGN KEY (`id_produit`) REFERENCES `produit` (`id_produit`) ON DELETE CASCADE,
+  ADD CONSTRAINT `appartenir_ibfk_2` FOREIGN KEY (`id_categorie`) REFERENCES `categorie` (`id_categorie`) ON DELETE CASCADE;
 
 --
 -- Contraintes pour la table `commande`
