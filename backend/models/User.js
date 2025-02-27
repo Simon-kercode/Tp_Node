@@ -98,8 +98,11 @@ class User {
             if (!data.nom || !data.prenom || !data.mail || !data.pwd) {
                 throw new Error("Tous les champs sont obligatoires");
             }
-            if (!/\S+@\S+\.\S+/.test(data.mail)) {
+            if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(data.mail)) {
                 throw new Error("L'adresse e-mail est invalide");
+            }
+            if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(data.pwd)) {
+                throw new Error("Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.")
             }
             const query = `INSERT INTO _user (nom, prenom, mail, pwd) VALUES (?, ?, ?, ?)`; 
             const hashedPwd = await bcrypt.hash(data.pwd, 10);
