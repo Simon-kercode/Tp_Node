@@ -13,7 +13,7 @@ class User {
         this.#nom = n,
         this.#prenom = p,
         this.#mail = m
-        this.#pwd = pwd,
+        this.#pwd = this.#pwd,
         this.#isAdmin = false
     }
     getNom() {
@@ -54,7 +54,7 @@ class User {
             const query = `SELECT * FROM _user`;
 
             const [results] = await db.query(query);
-            console.log(results);
+            // console.log(results);
             
             return results;
         }

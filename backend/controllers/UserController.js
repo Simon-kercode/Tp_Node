@@ -5,10 +5,14 @@ class UserController {
     static async getAll(req, res) {
         try {
             const usersData = await User.getAll();
-            const users = usersData.map(user => new User(user.nom, user.prenom, user.mail));
+            console.log(usersData);
+            
+            const users = usersData.map(user =>new User(user.nom, user.prenom, user.mail));
+            console.log(users);
+            
             res.json(users);
         } catch (error) {
-            res.status(500).json({ message: "Erreur lors de la récupération des utilisateurs.", error });
+            res.status(500).json({ message: "Erreur lors de la récupération des utilisateurs.", error: error.message });
         }
     }
 
@@ -18,7 +22,7 @@ class UserController {
             if (!user)  return res.status(404).json({ message: "Utilisateur non trouvé" });
             res.json(user);
         } catch (error) {
-            res.status(500).json({ message: `Erreur lors de la récupération de l'utilisateur`, error });
+            res.status(500).json({ message: `Erreur lors de la récupération de l'utilisateur`, error: error.message });
         }
     }
     static async create(req, res) {
@@ -39,7 +43,7 @@ class UserController {
             await User.create({nom, prenom, mail, pwd});
             res.status(201).json(user);
         } catch (error) {
-            res.status(500).json({ message: "Erreur lors de la création de l'utilisateur.", error });
+            res.status(500).json({ message: "Erreur lors de la création de l'utilisateur.", error: error.message });
         }
     }
 
@@ -53,7 +57,7 @@ class UserController {
 
             res.json({ message: "Utilisateur mis à jour", user: updatedUser });
         } catch (error) {
-            res.status(500).json({ message: "Erreur lors de la mise à jour de l'utilisateur.", error });
+            res.status(500).json({ message: "Erreur lors de la mise à jour de l'utilisateur.", error: error.message });
         }
     }
 
@@ -65,7 +69,7 @@ class UserController {
             await User.delete(req.params.id);
             res.json({ message: "Utilisateur supprimé avec succès" });
         } catch (error) {
-            res.status(500).json({ message: "Erreur lors de la suppression de l'utilisateur.", error });
+            res.status(500).json({ message: "Erreur lors de la suppression de l'utilisateur.", error: error.message });
         }
     }
 }
