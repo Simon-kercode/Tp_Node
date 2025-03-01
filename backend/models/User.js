@@ -9,7 +9,7 @@ class User {
     #isAdmin
     #id
 
-    constructor(n, p, m, pwd) {
+    constructor(n, p, m) {
         this.#nom = n,
         this.#prenom = p,
         this.#mail = m
@@ -95,15 +95,6 @@ class User {
         const db = getDB();
 
         try {
-            if (!data.nom || !data.prenom || !data.mail || !data.pwd) {
-                throw new Error("Tous les champs sont obligatoires");
-            }
-            if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(data.mail)) {
-                throw new Error("L'adresse e-mail est invalide");
-            }
-            if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(data.pwd)) {
-                throw new Error("Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.")
-            }
             const query = `INSERT INTO _user (nom, prenom, mail, pwd) VALUES (?, ?, ?, ?)`; 
             const hashedPwd = await bcrypt.hash(data.pwd, 10);
             const values = [data.nom, data.prenom, data.mail, hashedPwd];

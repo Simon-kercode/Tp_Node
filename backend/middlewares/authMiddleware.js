@@ -13,7 +13,8 @@ exports.authMiddleware = (req, res, next) => {
         next();
     } catch (error) {
         res.status(401).json({ message: "Token invalide" });
-    }    
+    }
+    next();    
 }
 
 exports.roleMiddleware = (requiredRole) => (req, res, next) =>{

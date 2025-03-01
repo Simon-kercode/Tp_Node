@@ -114,6 +114,7 @@ class Commande {
             throw error;
         }
     }
+    // TODO : update table contenir
     static async update(id, data) {
 
         const db = getDB();
