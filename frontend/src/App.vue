@@ -1,13 +1,19 @@
 <template>
   <v-app>
-    <Header />
-    <v-btn>Clique ici !</v-btn>  
+    <v-container>
+      <Header />
+    </v-container>
+      
+        <Footer />
+
+    
   </v-app>
 
 </template>
 
 <script setup>
 import Header from './components/Header.vue';
+import Footer from './components/Footer.vue';
 </script>
 
 <style scoped>

@@ -1,24 +1,30 @@
 <template>
     <v-app-bar>
-      <!-- Logo et Titre -->
-      <template v-slot:prepend>
-        <v-app-bar-nav-icon v-if="isMobile" @click="drawer = !drawer"></v-app-bar-nav-icon>
-        <v-img :src="logo" contain height="50" width="50"></v-img>
-      </template>
+        <v-container class="d-flex align-center justify-space-between">
+            <!-- Logo et Titre -->
+            <div class="d-flex align-center">
+                <v-app-bar-nav-icon v-if="isMobile" @click="drawer = !drawer"></v-app-bar-nav-icon>
+                <v-img :src="logo" contain height="50" width="50" class=" me-3"></v-img>
+                <v-spacer></v-spacer>
+                <v-app-bar-title style="min-width: 120px;">PawShop</v-app-bar-title>
+            </div>
+            <!-- Liens desktop -->
+            <div class="d-flex align-center">
+                <v-btn v-if="!isMobile" variant="text" to="/">Accueil</v-btn>
+                <v-btn v-if="!isMobile" variant="text" to="/boutique">Boutique</v-btn>
+                <v-btn v-if="!isMobile" variant="text" to="/contact">Contact</v-btn>                
+            </div>
+            <!-- Icones -->
+            <div class="d-flex align-center">
+                <v-btn>
+                    <v-icon size="32">mdi-account</v-icon>
+                </v-btn>
+                <v-btn>
+                    <v-icon size="32">mdi-cart</v-icon>
+                </v-btn>
+            </div>            
+        </v-container>
 
-      <v-app-bar-title>PawShop</v-app-bar-title>
-      <!-- Liens desktop -->
-        <v-btn v-if="!isMobile" variant="text" to="/">Accueil</v-btn>
-        <v-btn v-if="!isMobile" variant="text" to="/boutique">Boutique</v-btn>
-        <v-btn v-if="!isMobile" variant="text" to="/contact">Contact</v-btn>
-      <template v-slot:append>
-        <v-btn>
-            <v-icon size="32">mdi-account</v-icon>
-        </v-btn>
-        <v-btn>
-            <v-icon size="32">mdi-cart</v-icon>
-        </v-btn>
-      </template>
     </v-app-bar>
   
     <!-- Menu Burger -->
