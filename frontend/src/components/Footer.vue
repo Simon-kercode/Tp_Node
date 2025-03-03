@@ -1,5 +1,5 @@
 <template>
-    <v-footer class="bg-footer d-flex flex-column" style="margin-top: 500px;">
+    <v-footer class="bg-footer d-flex flex-column">
         <v-container class="d-flex align-center justify-space-between">
             <v-row>
                 <v-col cols="12" sm="6" md="4">
@@ -64,7 +64,7 @@
 <style scoped>
     .bg-footer{
         background-color: #3A3330;
-        max-height: 300px;
+        height: auto;
     }
     .card-footer {
         background-color: #3A3330;

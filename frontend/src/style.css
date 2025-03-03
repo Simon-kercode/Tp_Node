@@ -1,13 +1,14 @@
 :root {
   --bg-orange: #F69946;
+  --bg-beige: #FCF9F4;
 }
 html, body, #app {
   height: 100%;
   margin: 0;
   overflow: hidden;
 }
-/*
-.v-application {
+
+::deep.v-application {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -19,4 +20,14 @@ html, body, #app {
 
 .detail-item {
   color: var(--bg-orange);
+}
+.detail-item-background {
+  background-color: var(--bg-orange);
+}
+.fond-clair {
+  background-color: var(--bg-beige);
+}
+a {
+  color: var(--bg-orange);
+  text-decoration: none;
 }
