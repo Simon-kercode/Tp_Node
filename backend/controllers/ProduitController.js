@@ -2,6 +2,10 @@ const Produit = require('../models/Produit');
 
 class ProduitController {
 
+    /**
+     * Récupère tous les produits depuis la base de données.
+     * Retourne un tableau d'objets produit au format JSON.
+     */
     static async getAll(req, res) {
         try {
             const produitsData = await Produit.getAll();
@@ -12,6 +16,10 @@ class ProduitController {
         }
     }
 
+    /**
+     * Récupère un produit spécifique par son ID.
+     * Retourne le produit trouvé ou une erreur 404 s'il n'existe pas.
+     */
     static async getById(req, res) {
         
         try {
@@ -24,6 +32,10 @@ class ProduitController {
         }
     }
 
+    /**
+     * Récupère tous les produits avec leur catégorie associée.
+     * Retourne une liste de produits avec les informations de la catégorie.
+     */
     static async getAllWithCategories(req, res) {
         try {
             const produitsData = await Produit.getAllWithCategories();
@@ -41,6 +53,10 @@ class ProduitController {
         }
     }
 
+    /**
+     * Crée un nouveau produit avec les données fournies.
+     * Retourne le produit créé.
+     */
     static async create(req, res) {
         try {
             const { nom, prix, categories } = req.body;
@@ -52,6 +68,10 @@ class ProduitController {
         }
     }
 
+    /**
+     * Met à jour un produit existant en fonction de l'ID fourni.
+     * Retourne le produit mis à jour ou une erreur 404 si le produit n'existe pas.
+     */
     static async update(req, res) {
         try {
             const produit = await Produit.getById(req.params.id);
@@ -65,6 +85,10 @@ class ProduitController {
         }
     }
 
+    /**
+     * Supprime un produit en fonction de l'ID fourni.
+     * Retourne un message de confirmation ou une erreur 404 si le produit n'existe pas.
+     */
     static async delete(req, res) {
         try {
             const produit = await Produit.getById(req.params.id);

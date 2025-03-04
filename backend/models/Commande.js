@@ -1,6 +1,7 @@
 const {getDB} = require('../config/db');
 
 class Commande {
+    // Déclaration des propriétés privées
     #statut
     #total
     #date_commande
@@ -14,6 +15,7 @@ class Commande {
         this.#id_user = id_user
     }
 
+    // Méthodes getter pour accéder aux attributs privés
     getStatut() {
         return this.#statut
     }
@@ -30,6 +32,7 @@ class Commande {
         return this.#id_user
     }
 
+    // Méthodes setter pour modifier les valeurs des attributs
     setStatut(statut){
         statut = this.#statut
     }
@@ -43,8 +46,7 @@ class Commande {
         this.#moyen_paiement = moyen_paiement;
     }
 
-    // TODO: vérifier moyen paiement en fonction du statut
-
+    // Méthode statique pour récupérer toutes les commandes
     static async getAll() {
         const db = getDB();
         try {
@@ -61,6 +63,8 @@ class Commande {
             throw error;
         }
     }
+
+    // Méthode pour récupérer une commande par son ID
     static async getById(id) {
         const db = getDB();
         try {
@@ -75,6 +79,7 @@ class Commande {
         }
     }
 
+    // Méthode pour créer une nouvelle commande
     static async create(data) {
         const db = getDB();
 
@@ -99,6 +104,8 @@ class Commande {
             throw error;
         }
     }
+    
+    // Méthode pour supprimer une commande par son ID
     static async delete(id) {
         const db = getDB();
 
@@ -139,6 +146,9 @@ class Commande {
                 fields.push("moyen_paiement = ?");
                 values.push(data.moyen_paiement);
             }
+            if (data.produits){
+                this.updateCommande(id, data.produits)
+            }
             if (fields.length === 0) {
                 throw new Error("Aucune donnée valide à mettre à jour.");
             }
@@ -155,6 +165,26 @@ class Commande {
         }
     }
 
+    static async updateCommande(id_commande, produits) {
+        const db = getDB();
+
+        try {
+            // On supprime les ancienntes associations pour éviter les doublons
+            await db.query('DELETE FROM contenir WHERE id_commande = ?', [id_commande]);
+
+            if (produits.length) {
+                const query = `INSERT INTO contenir (id_commande, id_produit) VALUES ${produits.map(() => "(?, ?)").join(", ")}`
+                const values = produits.flatMap(produitsId => [id_commande, produitsId]);
+                const [results] = await db.query(query, values);
+                return results;
+            }
+        }
+        catch (error) {
+            console.error('Erreur lors de la mise à jour des catégories du commande : ', error);
+            throw error;
+        }
+    }
 }
+
 
 module.exports = Commande

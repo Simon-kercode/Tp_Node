@@ -1,6 +1,7 @@
 const {getDB} = require('../config/db')
 
 class Produit {
+    // Déclaration des propriétés privées
     #nom
     #prix
 
@@ -9,6 +10,7 @@ class Produit {
         this.#prix = prix
     }
 
+    // Méthodes getter pour accéder aux attributs privés
     getNom() {
         return this.#nom;
     }
@@ -16,6 +18,7 @@ class Produit {
         return this.#prix;
     }
 
+    // Méthodes setter pour modifier les valeurs des attributs
     setNom(nom){
         this.#nom = nom;
     }
@@ -23,6 +26,7 @@ class Produit {
         this.#prix = prix;
     }
 
+    // Récupérer tous les produits
     static async getAll() {
         const db = getDB();
         try {
@@ -38,6 +42,8 @@ class Produit {
             throw error;
         }
     }
+
+    // Récupérer tous les produits avec leurs catégories associées
     static async getAllWithCategories() {
         const db = getDB();
         try {
@@ -62,6 +68,7 @@ class Produit {
         }
     }
 
+    // Récupérer un produit par son ID
     static async getById(id) {
         const db = getDB();
         try {
@@ -76,6 +83,7 @@ class Produit {
         }
     }
 
+    // Créer un nouveau produit avec des catégories associées 
     static async create(nom, prix, categories = []) {
             const db = getDB();
             try {
@@ -102,7 +110,8 @@ class Produit {
                 throw error;
             }
     }
-    
+
+    // Supprimer un produit ainsi que ses liens dans la table "appartenir"
     static async delete(id) {
         const db = getDB();
 
@@ -120,6 +129,7 @@ class Produit {
         }
     }
 
+    // Mettre à jour un produit avec de nouvelles informations
     static async update(id, data) {
         const db = getDB();
 
@@ -127,6 +137,7 @@ class Produit {
             const fields = [];
             const values = [];
 
+            // Mise à jour des champs fournis
             if (data.nom) {
                 fields.push("nom = ?");
                 values.push(data.nom);
@@ -153,7 +164,8 @@ class Produit {
             throw error;
         }
     }
-    
+
+    // Mettre à jour les catégories associées à un produit
     static async updateCategories(id_produit, categories) {
         const db = getDB();
 

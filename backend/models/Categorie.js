@@ -1,5 +1,6 @@
 const {getDB} = require('../config/db')
 
+// Création de la class ainsi que son attribut 
 class Categorie {
 
     categorieNom
@@ -8,13 +9,17 @@ class Categorie {
         this.categorieNom = nom
     }
 
+    // Méthode pour récupérer le nom de la catégorie
     getNom(){
         return this.categorieNom
     }
+
+    // Méthode pour changer le nom de la catégorie
     setNomCategorie(nom){
-        nom= this.categorieNom
+        this.categorieNom = nom
     }
-    
+
+    // Récupérer toutes les catégories depuis la base de données
     static async getAll() {
         const db = getDB();
         try {
@@ -32,6 +37,7 @@ class Categorie {
         }
     }
 
+    // Récupérer une catégorie par son ID
     static async getById(id) {
         const db = getDB();
         try {
@@ -46,6 +52,7 @@ class Categorie {
         }
     }
     
+    // Ajouter une nouvelle catégorie
     static async create(nom) {
         const db = getDB();
 
@@ -62,6 +69,7 @@ class Categorie {
         }
     }
 
+    // Supprimer une catégorie par son ID
     static async delete(id) {
         const db = getDB();
 
@@ -78,6 +86,7 @@ class Categorie {
         }
     }
 
+    // Mettre à jour une catégorie
     static async update(id, data) {
 
         const db = getDB();
