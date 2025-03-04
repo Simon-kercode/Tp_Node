@@ -11,7 +11,7 @@ const port = process.env.PORT;
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 const produitRoutes = require('./routes/produitRoutes');
 const userRoutes = require('./routes/userRoutes');
