@@ -80,6 +80,7 @@ class User {
     static async getByEmail(email) {
         const db = getDB();
         try {
+            console.log("Recherche de l'utilisateur avec l'email :", email);
             const query = `SELECT * FROM _user WHERE mail = ?`;
             const values = [email];
             const [results] = await db.query(query, values);

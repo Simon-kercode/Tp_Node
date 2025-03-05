@@ -21,6 +21,6 @@ export const emailRule = (value) => {
 
 export const passwordRule = (value) => {
     if (!value) return "Veuillez entrer un mot de passe";
-    const regex = !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
     return regex.test(value) || "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.";
 }

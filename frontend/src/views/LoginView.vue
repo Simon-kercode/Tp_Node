@@ -1,6 +1,6 @@
 <template>
       <v-container class="fill-height d-flex align-center justify-center">
-    <v-card class="w-75 mx-auto py-5">
+    <v-card class="w-75 w-md-50 mx-auto py-5">
         <div class="text-center">
             <img :src="logo" alt="Logo PawShop" width="90">        
         </div>
@@ -16,17 +16,17 @@
         <v-window v-model="tab">
             <v-window-item value="login">
                 <div >
-                    <v-form @submit.prevent="login" class="w-75 mx-auto">
+                    <v-form @submit.prevent="login(loginEmail, loginPassword)" class="w-75 mx-auto">
                         
                         <v-card-text>
                             <v-text-field
-                                v-model="email"
+                                v-model="loginEmail"
                                 label="Email"
                                 :rules="[emailRule]"
                                 required
                             ></v-text-field>
                             <v-text-field
-                                v-model="password"
+                                v-model="loginPassword"
                                 label="Mot de passe"
                                 type="password"
                                 :rules="[passwordRule]"
@@ -35,20 +35,20 @@
                         </v-card-text>
                         <v-card-actions class="d-flex flex-column ">
                             <v-btn
-                            text="M'identifier"
-                            variant="flat"
-                            color="#F69946"
-                            width="100%"
-                            rounded
-                            type="submit"
-                            class="mb-3 text-white"
+                                text="M'identifier"
+                                variant="flat"
+                                color="#F69946"
+                                width="100%"
+                                rounded
+                                type="submit"
+                                class="mb-3 text-white"
                             ></v-btn>
                             <v-btn
-                            text="Mot de passe oublié ?"
-                            variant="tonal"
-                            color="warning"
-                            width="100%"
-                            rounded
+                                text="Mot de passe oublié ?"
+                                variant="tonal"
+                                color="warning"
+                                width="100%"
+                                rounded
                             ></v-btn>
                         </v-card-actions>
                     </v-form>  
@@ -71,13 +71,13 @@
                             required
                         ></v-text-field>
                         <v-text-field 
-                            v-model="email" 
+                            v-model="registerEmail" 
                             label="Email"
                             :rules="[emailRule]"
                             required
                         ></v-text-field>
                         <v-text-field 
-                            v-model="password" 
+                            v-model="registerPassword" 
                             label="Mot de passe" 
                             type="password"
                             :rules="[passwordRule]"
@@ -113,20 +113,29 @@
 
 <script setup>
     import { ref, computed } from 'vue';
+    import { useRouter } from 'vue-router';
+    import { useAuthStore } from '../stores/authStore';
     import logo from '../assets/images/logo.png'
     import { emailRule, passwordRule, requiredRule, minRule } from '../utils/formRules';
+    
 
+    const authStore = useAuthStore();
+    const router = useRouter();
+    
     const tab = ref("login");
-    const email = ref("");
-    const password= ref("");
+    const loginEmail = ref("");
+    const loginPassword= ref("");
     const name = ref("");
     const firstname = ref("");
+    const registerEmail = ref("");
+    const registerPassword = ref("");
     const confirmPassword = ref("");
 
     const title = computed(() => tab.value === "login" ? "Je suis déjà client(e)" : "Nouveau client")
 
-    function login() {
-        console.log('Plop');
+    function login(email, password) {
+        authStore.login(email, password);
+        router.push({name: 'Home'})
     }
     function register() {
         console.log('Ploup');

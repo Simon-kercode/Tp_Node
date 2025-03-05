@@ -29,7 +29,7 @@
                 </v-col>
                 <v-col cols="12" md="4">
                     <v-card class="card-footer" variant="text">
-                        <v-card-title>Heures d'ourvertures :</v-card-title>
+                        <v-card-title>Heures d'ouvertures :</v-card-title>
                         <v-card-text class="text-start w-75">
                             <div class="d-flex justify-space-between">
                                 <span>Lun - Ven :</span>

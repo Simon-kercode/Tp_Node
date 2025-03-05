@@ -24,7 +24,6 @@
                 </v-btn>
             </div>            
         </v-container>
-
     </v-app-bar>
   
     <!-- Menu Burger -->

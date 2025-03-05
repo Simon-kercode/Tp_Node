@@ -43,8 +43,6 @@ class Commande {
         this.#moyen_paiement = moyen_paiement;
     }
 
-    // TODO: vérifier moyen paiement en fonction du statut
-
     static async getAll() {
         const db = getDB();
         try {
@@ -139,6 +137,9 @@ class Commande {
                 fields.push("moyen_paiement = ?");
                 values.push(data.moyen_paiement);
             }
+            if (data.produits) {
+                this.updateCommande(id, data.produits);
+            }
             if (fields.length === 0) {
                 throw new Error("Aucune donnée valide à mettre à jour.");
             }
@@ -151,6 +152,25 @@ class Commande {
         }
         catch (error) {
             console.error("Erreur lors de la mise à jour de la commande : ", error);
+            throw error;
+        }
+    }
+    static async updateCommande(id_commande, produits) {
+        const db = getDB();
+
+        try {
+            // On supprime les ancienntes associations pour éviter les doublons
+            await db.query('DELETE FROM contenir WHERE id_commande = ?', [id_commande]);
+
+            if (produits.length) {
+                const query = `INSERT INTO contenir (id_commande, id_produit) VALUES ${produits.map(() => "(?, ?)").join(", ")}`
+                const values = produits.flatMap(produitsId => [id_commande, produitsId]);
+                const [results] = await db.query(query, values);
+                return results;
+            }
+        }
+        catch (error) {
+            console.error('Erreur lors de la mise à jour des catégories du commande : ', error);
             throw error;
         }
     }

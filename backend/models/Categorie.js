@@ -12,7 +12,7 @@ class Categorie {
         return this.categorieNom
     }
     setNomCategorie(nom){
-        nom= this.categorieNom
+        this.categorieNom = nom;
     }
     
     static async getAll() {
