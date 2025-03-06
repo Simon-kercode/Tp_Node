@@ -1,4 +1,6 @@
+// Pour générer et vérifier des tokens JWT
 const jwt = require("jsonwebtoken");
+// Pour hacher et comparer les mots de passe
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 

@@ -2,6 +2,7 @@ const { getDB } = require("../config/db");
 const bcrypt = require("bcryptjs");
 
 class User {
+    // Déclaration des propriétés privées
     #nom
     #prenom
     #mail
@@ -13,9 +14,10 @@ class User {
         this.#nom = n,
         this.#prenom = p,
         this.#mail = m
-        this.#pwd = this.#pwd,
+        this.#pwd = this.#pwd, // Important : initialisation de #pwd à undefined
         this.#isAdmin = false
     }
+    // Méthodes getter pour accéder aux attributs privés
     getNom() {
         return this.#nom
     }
@@ -28,10 +30,13 @@ class User {
     getRule() {
         return this.#isAdmin
     }
+
+    // Conversion de l'objet User en chaîne de caractères
     toString() {
         return `Nom : ${this.#nom}\nPrenom : ${$this.#prenom}\n Email : ${this.#mail}`
     }
 
+    // Méthodes setter pour modifier les valeurs des attributs
     setNom(nom) {
         this.#nom = nom
     }
@@ -48,6 +53,7 @@ class User {
         this.#isAdmin = rule
     }
 
+    // Méthode pour récupérer tous les utilisateurs
     static async getAll() {
         const db = getDB();
         try {
@@ -64,6 +70,7 @@ class User {
         }
     }
 
+    // Récupérer un utilisateur par son ID
     static async getById(id) {
         const db = getDB();
         try {
@@ -77,6 +84,8 @@ class User {
             throw error;
         }
     }
+
+    // Récupérer un utilisateur par son adresse mail
     static async getByEmail(email) {
         const db = getDB();
         try {
@@ -92,6 +101,8 @@ class User {
             throw error;
         }
     }
+
+    // Créer un nouvel utilisateur
     static async create(data) {
         const db = getDB();
 
@@ -109,6 +120,7 @@ class User {
         }
     }
 
+    // Supprimer un utilisateur par son ID
     static async delete(id) {
         const db = getDB();
 
@@ -125,6 +137,7 @@ class User {
         }
     }
 
+    // Mettre à jour un utilisateur avec les nouvelles informations
     static async update(id, data) {
 
         const db = getDB();
@@ -146,7 +159,7 @@ class User {
                 values.push(data.mail);
             }
             if (data.pwd) {
-                const hashedPwd = await bcrypt.hash(data.pwd, 10)
+                const hashedPwd = await bcrypt.hash(data.pwd, 10) // Hachage du nouveau mot de passe
                 fields.push("pwd = ?");
                 values.push(hashedPwd);
             }

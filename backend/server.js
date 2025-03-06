@@ -31,7 +31,7 @@ app.get("/csrf-token", (req, res) => {
 
 const produitRoutes = require('./routes/produitRoutes');
 const userRoutes = require('./routes/userRoutes');
-const categorieRoutes = require('./routes/categorieRoutes');
+const categorieRoutes = require('./routes/categorieRoutes');    
 const commandeRoutes = require('./routes/commandeRoutes');
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');

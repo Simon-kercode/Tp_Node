@@ -2,6 +2,10 @@ const Commande = require('../models/Commande')
 
 class CommandeController {
 
+    /**
+     * Récupère toutes les commandes de la base de données.
+     * Retourne un tableau d'objets commande au format JSON.
+     */
     static async getAll(req, res) {
         try {
             const commandesData = await Commande.getAll();
@@ -12,6 +16,10 @@ class CommandeController {
         }
     }
 
+    /**
+     * Récupère une commande spécifique par son ID.
+     * Retourne la commande si elle est trouvée, sinon une erreur 404.
+     */
     static async getById(req, res) {
         try {
             const commande = await Commande.getById(req.params.id);
@@ -22,6 +30,10 @@ class CommandeController {
         }
     }
 
+    /**
+     * Crée une nouvelle commande avec les données fournies dans le corps de la requête.
+     * Retourne la commande créée.
+     */
     static async create(req, res) {
         
         try {
@@ -34,6 +46,10 @@ class CommandeController {
         }
     }
 
+    /**
+     * Met à jour une commande existante en fonction de l'ID fourni.
+     * Retourne la commande mise à jour ou une erreur 404 si elle n'existe pas.
+     */
     static async update(req, res) {
         try {
             const commande = await Commande.getById(req.params.id);
@@ -47,6 +63,10 @@ class CommandeController {
         }
     }
 
+    /**
+     * Supprime une commande en fonction de l'ID fourni.
+     * Retourne un message de confirmation ou une erreur 404 si la commande n'existe pas.
+     */
     static async delete(req, res) {
         try {
             const commande = await Commande.getById(req.params.id);

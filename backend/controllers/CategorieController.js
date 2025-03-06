@@ -2,6 +2,11 @@ const Categorie = require('../models/Categorie')
 
 class CategorieController {
 
+
+    /**
+     * Récupère toutes les catégories de la base de données.
+     * Retourne un tableau d'objets catégorie au format JSON.
+     */
     static async getAll(req, res) {
         try {
             const categoriesData = await Categorie.getAll();
@@ -12,6 +17,10 @@ class CategorieController {
         }
     }
 
+    /**
+     * Récupère une catégorie spécifique par son ID.
+     * Retourne la catégorie si elle est trouvée, sinon une erreur 404.
+     */
     static async getById(req, res) {
         try {
             const categorie = await Categorie.getById(req.params.id);
@@ -22,6 +31,10 @@ class CategorieController {
         }
     }
 
+    /**
+     * Crée une nouvelle catégorie avec le nom fourni dans le corps de la requête.
+     * Retourne la catégorie créée.
+     */
     static async create(req, res) {
         try {
             const { nom } = req.body;
@@ -33,6 +46,10 @@ class CategorieController {
         }
     }
 
+     /**
+     * Met à jour une catégorie existante en fonction de l'ID fourni.
+     * Retourne la catégorie mise à jour ou une erreur 404 si elle n'existe pas.
+     */
     static async update(req, res) {
         try {
             const categorie = await Categorie.getById(req.params.id);
@@ -46,6 +63,10 @@ class CategorieController {
         }
     }
 
+    /**
+     * Supprime une catégorie en fonction de l'ID fourni.
+     * Retourne un message de confirmation ou une erreur 404 si la catégorie n'existe pas.
+     */
     static async delete(req, res) {
         try {
             const categorie = await Categorie.getById(req.params.id);

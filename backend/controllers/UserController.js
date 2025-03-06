@@ -3,6 +3,7 @@ const User = require('../models/User')
 
 class UserController {
 
+    // Récupérer tous les utilisateurs
     static async getAll(req, res) {
         try {
             const usersData = await User.getAll();
@@ -17,6 +18,7 @@ class UserController {
         }
     }
 
+    // Récupérer tous l'utilisateur via son id 
     static async getById(req, res) {
         try {
             const user = await User.getById(req.params.id);
@@ -31,9 +33,11 @@ class UserController {
         if (!req.body.nom || !req.body.prenom || !req.body.mail || !req.body.pwd) {
             return res.status(400).json({ message: "Tous les champs sont obligatoires." });
         }
+        // Validation de l'adresse e-mail avec une expression régulière
         if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(req.body.mail)) {
             return res.status(400).json({ message: "L'adresse e-mail est invalide." });
         }
+        // Vérification de la complexité du mot de passe (majuscule, minuscule, chiffre, caractère spécial, minimum 8 caractères)
         if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(req.body.pwd)) {
             return res.status(400).json({
                 message: "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial."
@@ -50,6 +54,7 @@ class UserController {
         }
     }
 
+    // Mettre à jour un utilisateur
     static async update(req, res) {
         
         try {
@@ -64,6 +69,7 @@ class UserController {
         }
     }
 
+    // Supprimer un utilisateur
     static async delete(req, res) {
         try {
             const user = await User.getById(req.params.id);
