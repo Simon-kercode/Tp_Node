@@ -56,16 +56,16 @@
             </v-window-item>
 
             <v-window-item value="register">
-                <v-form @submit.prevent="register" class="w-75 mx-auto">
+                <v-form @submit.prevent="register(registerName, registerFirstname, registerEmail, registerPassword, confirmPassword)" class="w-75 mx-auto">
                     <v-card-text>
                         <v-text-field 
-                            v-model="name" 
+                            v-model="registerName" 
                             label="Nom"
                             :rules="[requiredRule('Un nom'), minRule(3)]"
                             required
                         ></v-text-field>
                         <v-text-field 
-                            v-model="firstname" 
+                            v-model="registerFirstname" 
                             label="Prenom"
                             :rules="[requiredRule('Un prénom'), minRule(3)]"
                             required
@@ -80,14 +80,16 @@
                             v-model="registerPassword" 
                             label="Mot de passe" 
                             type="password"
-                            :rules="[passwordRule]"
+                            :rules="[passwordRule, passwordCheck]"
+                            :error-messages="registerError"
                             required
                         ></v-text-field>
                         <v-text-field 
                             v-model="confirmPassword" 
                             label="Confirmer le mot de passe" 
                             type="password"
-                            :rules="[passwordRule]"
+                            :rules="[passwordRule, passwordCheck]"
+                            :error-messages="registerError"
                             required
                         ></v-text-field>
                     </v-card-text>
@@ -125,21 +127,30 @@
     const tab = ref("login");
     const loginEmail = ref("");
     const loginPassword= ref("");
-    const name = ref("");
-    const firstname = ref("");
+    const registerName = ref("");
+    const registerFirstname = ref("");
     const registerEmail = ref("");
     const registerPassword = ref("");
     const confirmPassword = ref("");
 
+    const registerError = ref("");
     const title = computed(() => tab.value === "login" ? "Je suis déjà client(e)" : "Nouveau client")
 
-    function login(email, password) {
-        authStore.login(email, password);
-        router.push({name: 'Home'})
+    async function login(email, password) {
+        const logged = await authStore.login(email, password);
+        if (logged) router.push({name: 'Home'})
     }
-    function register() {
-        console.log('Ploup');
+    async function register(name, firstname, email, password, password2) {
+        if (password !== password2) {
+            return
+        }
+        const newUser = await authStore.register(name, firstname, email, password);
         
+        if (newUser) router.push({name: 'Home'});
+    }
+    function passwordCheck() {
+        registerError.value = registerPassword.value !== confirmPassword.value ? "Les mots de passe doivent être identiques" : ""
+        return true
     }
 </script>
 

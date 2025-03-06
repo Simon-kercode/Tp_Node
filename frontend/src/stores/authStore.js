@@ -1,6 +1,5 @@
 import {defineStore} from 'pinia';
 import axios from 'axios';
-// import { useRouter } from 'vue-router';
 
 export const useAuthStore = defineStore("auth", {
     state: () => ({
@@ -10,24 +9,54 @@ export const useAuthStore = defineStore("auth", {
     actions: {
         async login(email, password) {
             console.log("Données envoyées au backend :", { mail: email, pwd: password });
-            // const router = useRouter();
+
             try {
+                const csrfToken = await this.getCsrfToken();
                 const response = await axios.post(
                     "http://localhost:3000/auth/login",
-                    { mail: email, pwd: password },
-                    // Envoie les cookies avec la requête
-                    { withCredentials: true }
+                    { 
+                        mail: email, 
+                        pwd: password 
+                    },
+                    { 
+                        withCredentials: true,
+                        headers: {'X-CSRF-Token': csrfToken}
+                     }
                 );
 
                 console.log(response.data.message);
-                // Récupere l'utilisateur après connexion
-                await this.getUser(); 
-
-                // if (this.user !== null) {
-                //     route.path = "Home";
-                // }
+                if (response.status === 201) {
+                    // Récupere l'utilisateur après connexion
+                    await this.getUser();
+                    return true                  
+                }
             } catch (error) {
                 console.error("Erreur de connexion :", error.response?.data?.message);
+                return false
+            }
+        },
+        async register(name, firstname, email, password) {
+            try {
+                const csrfToken = await this.getCsrfToken();
+                const response = await axios.post(
+                    "http://localhost:3000/users",
+                    {
+                        nom: name,
+                        prenom: firstname,
+                        mail: email,
+                        pwd: password,
+                    },
+                    {
+                        withCredentials: true,
+                        headers: {'X-CSRF-Token': csrfToken}
+                    }
+                    
+                );
+                console.log(response);
+                if (response.status === 201) return true;
+            } catch(error) {
+                console.error("Erreur lors de la création utilisateur :", error.response?.data?.message);
+                return false
             }
         },
 
@@ -53,7 +82,17 @@ export const useAuthStore = defineStore("auth", {
             } catch (error) {
                 console.error("Erreur de déconnexion :", error);
             }
-        }
+        },
+    
+    // Récupère le token csrf
+    async getCsrfToken() {
+        const response = await axios.get("http://localhost:3000/csrf-token", 
+        { withCredentials: true }
+        );
+        console.log("Token csrf: ", response.data.csrfToken);
+        
+        return response.data.csrfToken;
+    }
     
     }
 });

@@ -29,7 +29,7 @@ exports.login = async (req, res) => {
         // stockage du token dans un cookie HTTPONLY
         res.cookie("jwt", token, {
             httpOnly: true, // Empêche l'accès au cookie via JavaScript
-            secure: process.env.NODE_ENV === "production", // true en production (HTTPS obligatoire)
+            secure: process.env.NODE_ENV === "production", // true en production
             sameSite: "Strict", // Protection contre les attaques CSRF
             maxAge: 2 * 60 * 60 * 1000, // Expiration du cookie (2h)
         });
