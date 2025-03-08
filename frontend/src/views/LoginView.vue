@@ -120,7 +120,6 @@
     import logo from '../assets/images/logo.png'
     import { emailRule, passwordRule, requiredRule, minRule } from '../utils/formRules';
     
-
     const authStore = useAuthStore();
     const router = useRouter();
     
@@ -139,6 +138,10 @@
     async function login(email, password) {
         const logged = await authStore.login(email, password);
         if (logged) router.push({name: 'Home'})
+        else {
+            loginEmail.value = ""
+            loginPassword.value = ""
+        }
     }
     async function register(name, firstname, email, password, password2) {
         if (password !== password2) {
@@ -146,7 +149,9 @@
         }
         const newUser = await authStore.register(name, firstname, email, password);
         
-        if (newUser) router.push({name: 'Home'});
+        if (newUser) {
+            login(email, password);
+        }
     }
     function passwordCheck() {
         registerError.value = registerPassword.value !== confirmPassword.value ? "Les mots de passe doivent être identiques" : ""
