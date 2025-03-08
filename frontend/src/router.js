@@ -1,8 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import LoginView from './views/LoginView.vue';
+import HomeView from './views/HomeView.vue';
 
 const routes = [
     { path: '/login', component: LoginView, name: 'Login' },
+    { path: '/', component: HomeView, name: 'Home'},
 ];
 
 const router = createRouter({
@@ -10,4 +12,4 @@ const router = createRouter({
     routes,
   });
 
-  export default router;
+export default router;

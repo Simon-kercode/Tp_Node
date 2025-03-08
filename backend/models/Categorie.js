@@ -16,7 +16,7 @@ class Categorie {
 
     // Méthode pour changer le nom de la catégorie
     setNomCategorie(nom){
-        this.categorieNom = nom
+        this.categorieNom = nom;
     }
 
     // Récupérer toutes les catégories depuis la base de données

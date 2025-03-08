@@ -1,3 +1,4 @@
+const { application } = require('express');
 const User = require('../models/User')
 
 class UserController {
@@ -28,7 +29,7 @@ class UserController {
         }
     }
     static async create(req, res) {
-        // Vérifications des champs obligatoires
+        
         if (!req.body.nom || !req.body.prenom || !req.body.mail || !req.body.pwd) {
             return res.status(400).json({ message: "Tous les champs sont obligatoires." });
         }
@@ -44,9 +45,10 @@ class UserController {
         }
         try {
             const { nom, prenom, mail, pwd } = req.body;
-            const user = new User(nom, prenom, mail, pwd);
-            await User.create({nom, prenom, mail, pwd});
-            res.status(201).json(user);
+
+            const user = await User.create({nom, prenom, mail, pwd});
+
+            res.status(201).json({id: user.id, nom: user.nom, prenom: user.prenom, email: user.mail});
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la création de l'utilisateur.", error: error.message });
         }

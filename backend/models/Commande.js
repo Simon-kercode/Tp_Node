@@ -146,8 +146,8 @@ class Commande {
                 fields.push("moyen_paiement = ?");
                 values.push(data.moyen_paiement);
             }
-            if (data.produits){
-                this.updateCommande(id, data.produits)
+            if (data.produits) {
+                this.updateCommande(id, data.produits);
             }
             if (fields.length === 0) {
                 throw new Error("Aucune donnée valide à mettre à jour.");
