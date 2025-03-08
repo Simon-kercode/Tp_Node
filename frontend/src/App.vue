@@ -13,17 +13,23 @@
 </template>
 
 <script setup>
-import {ref, computed} from 'vue';
+import {ref, computed, onMounted} from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from './stores/store';
+import { useProductStore } from './stores/productStore';
 import Header from './components/Header.vue';
 import Footer from './components/Footer.vue';
 import Snackbar from './components/Snackbar.vue';
 
 const route = useRoute();
 const isAuthPage = computed(() => route.path === '/login');
-const store = useStore()
+const store = useStore();
+const productStore = useProductStore();
 
+onMounted(() => {
+  productStore.getListProducts();
+
+})
 </script>
 
 <style scoped>

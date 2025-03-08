@@ -46,8 +46,9 @@
   <script setup>
 
 import { useRouter } from 'vue-router';
-const router = useRouter();
 import { ref, computed } from 'vue';
+
+const router = useRouter();
 
 const products = ref([
   { id: 1, name: "Croquettes Premium", description: "Pour chiens adultes", price: 29.99, image: "https://i.pinimg.com/736x/dc/ce/c6/dccec64215e05c2860e87ac69d02df34.jpg", category: "Nourriture", animal: "Chien" },
