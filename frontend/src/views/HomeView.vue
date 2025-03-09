@@ -1,5 +1,6 @@
 <template>
     <div>
+      <Categories />
       <BestSeller />
       <v-card class="pa-4 ma-2 custom-card"></v-card>
       <OurProducts />
@@ -8,6 +9,7 @@
   
 <script setup>
 
+import Categories from '../components/Categories.vue';
 import BestSeller from '../components/BestSeller.vue'
 import OurProducts from '../components/OurProducts.vue';
 

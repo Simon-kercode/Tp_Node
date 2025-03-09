@@ -59,16 +59,23 @@ class Produit {
                     SELECT 
                         p.id_produit, 
                         p.nom AS produit_nom, 
-                        p.prix, 
-                        c.id_categorie, 
-                        c.nom AS categorie_nom
+                        p.prix,
+                        p.description,
+                        p.illustration, 
+                        GROUP_CONCAT(c.id_categorie) AS id_categories,
+                        GROUP_CONCAT(c.nom) AS categories_noms
                     FROM produit p
                     JOIN appartenir a ON p.id_produit = a.id_produit
                     JOIN categorie c ON a.id_categorie = c.id_categorie
+                    GROUP BY p.id_produit
                 `;
                 const [results] = await db.query(query);
-                console.log("resultats :", results);   
-                return results;         
+                console.log("resultats getAllWithCategories:", results);   
+                return results.map(product => ({
+                    ...product,
+                    id_categories: product.id_categories ? product.id_categories.split(",") : [],
+                    categories_noms: product.categories_noms ? product.categories_noms.split(",") : []
+                }));         
         }
         catch (error) {
             console.error("Erreur lors de la récupération des produits avec catégories :", error)

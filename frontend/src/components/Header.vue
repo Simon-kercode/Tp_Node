@@ -4,9 +4,12 @@
             <!-- Logo et Titre -->
             <div class="d-flex align-center">
                 <v-app-bar-nav-icon v-if="isMobile" @click="toggleDrawer"></v-app-bar-nav-icon>
-                <v-img :src="logo" contain height="50" width="50" class=" me-3"></v-img>
-                <v-spacer></v-spacer>
-                <v-app-bar-title style="min-width: 120px;">PawShop</v-app-bar-title>
+                <router-link to="/" class="d-flex align-center">
+                  <v-img :src="logo" contain height="50" width="50" class="me-3"></v-img>
+                  <v-spacer></v-spacer>
+                  <v-app-bar-title style="min-width: 120px;" class="text-black">PawShop</v-app-bar-title>                  
+              </router-link>
+
             </div>
             <!-- Liens desktop -->
             <div class="d-flex align-center">

@@ -41,13 +41,8 @@ class ProduitController {
         try {
             const produitsData = await Produit.getAllWithCategories();
             console.log("Produits récupérés :", produitsData);
-            const produits = produitsData.map(element => {
-                const produit = new Produit(element.produit_nom, element.prix);
-                produit.id_produit = element.id_produit;
-                produit.nom_categorie = element.categorie_nom;
-                return produit;
-            });
-            res.json(produits);
+
+            res.json(produitsData);
         }
         catch (error) {
             res.status(500).json({ message: "Erreur lors de la récupération des produits", error });

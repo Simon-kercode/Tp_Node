@@ -1,8 +1,11 @@
 <template>
       <v-container class="fill-height d-flex align-center justify-center">
     <v-card class="w-75 w-md-50 mx-auto py-5">
-        <div class="text-center">
-            <img :src="logo" alt="Logo PawShop" width="90">        
+        <div class="d-flex justify-center">
+            <router-link to="/" class="d-flex align-center">
+                <v-img :src="logo" height="90" width="90" class="me-3" alt="Logo Pawshop"></v-img>  
+                <v-card-title class="text-black">Pawshop</v-card-title>          
+            </router-link>             
         </div>
         <div class="w-75 mx-auto">
           <v-card-title>{{ title }}</v-card-title>  

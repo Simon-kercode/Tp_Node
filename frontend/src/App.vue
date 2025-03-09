@@ -28,6 +28,7 @@ const productStore = useProductStore();
 
 onMounted(async () => {
   await productStore.getListProducts();
+  await productStore.getListCategories();
   store.allDataLoaded = true;
 })
 </script>
