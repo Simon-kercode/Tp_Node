@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app v-if="store.allDataLoaded">
     <v-container>
       <Header v-if="!isAuthPage"/>
     </v-container>
@@ -26,9 +26,9 @@ const isAuthPage = computed(() => route.path === '/login');
 const store = useStore();
 const productStore = useProductStore();
 
-onMounted(() => {
-  productStore.getListProducts();
-
+onMounted(async () => {
+  await productStore.getListProducts();
+  store.allDataLoaded = true;
 })
 </script>
 

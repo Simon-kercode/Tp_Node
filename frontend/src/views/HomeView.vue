@@ -6,18 +6,10 @@
     </div>
   </template>
   
-<script>
+<script setup>
 
 import BestSeller from '../components/BestSeller.vue'
 import OurProducts from '../components/OurProducts.vue';
-  
-  export default {
-    name: 'Home',
-    components: {
-        BestSeller,
-        OurProducts
-    }
-  }
 
 </script>
 

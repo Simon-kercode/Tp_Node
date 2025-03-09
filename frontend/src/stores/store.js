@@ -5,6 +5,7 @@ export const useStore = defineStore("store", {
     state: () => ({
         msgSnackBar: {color: "", text: ""},
         snackbarState: false,
+        allDataLoaded: false,
     }),
     actions: {
         sendSnackBar({ color, text, timeout = 5000 }) {
