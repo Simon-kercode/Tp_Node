@@ -19,9 +19,24 @@
             </div>
             <!-- Icones -->
             <div class="d-flex align-center">
-                <v-btn to="/login">
+              <v-menu v-if="isAuthenticated" offset-y>
+                <template v-slot:activator="{ props }">
+                  <v-btn v-bind="props">
                     <v-icon size="32">mdi-account</v-icon>
-                </v-btn>
+                  </v-btn>
+                </template>
+                <v-list>
+                  <v-list-item>
+                    <v-list-item-title>Mon Profil</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item @click="handleLogout">
+                    <v-list-item-title>Déconnexion</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+              <v-btn v-else to="/login">
+                <v-icon size="32" >mdi-account</v-icon>
+              </v-btn>
                 <v-btn>
                     <v-icon size="32">mdi-cart</v-icon>
                 </v-btn>
@@ -42,14 +57,24 @@
   <script setup>
   import { ref, computed } from 'vue'
   import { useDisplay } from 'vuetify'
+  import { useAuthStore } from '../stores/authStore';
   import logo from '../assets/images/logo.png';
   
   const { mobile } = useDisplay() // Détecte si on est sur mobile
   const isMobile = computed(() => mobile.value) // Variable réactive pour mobile
   const drawer = ref(false) // Gère l'ouverture du menu mobile
+  const authStore = useAuthStore();
+
+  const isAuthenticated = computed(() => authStore.user !== null);
 
   function toggleDrawer() {
     drawer.value = !drawer.value
+  }
+
+  function handleLogout() {
+    console.log("Tentative de déco");
+    
+    authStore.logout()
   }
   </script>
 

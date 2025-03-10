@@ -31,7 +31,6 @@ import brosse from "../assets/images/brosse-nettoyante.jpg"
 
 const productStore = useProductStore();
 const {__ListProducts} = productStore;
-const {__ListCategories} = storeToRefs(productStore)
 const { mobile } = useDisplay() // Détecte si on est sur mobile
 const isMobile = computed(() => mobile.value) // Variable réactive pour mobile
 

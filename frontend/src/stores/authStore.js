@@ -93,10 +93,16 @@ export const useAuthStore = defineStore("auth", {
         },
     async logout() {
             try {
-                await axios.post("http://localhost:3000/auth/logout", {}, { withCredentials: true });
+                console.log('arrivé ici front');
+                
+                await axios.post("http://localhost:3000/auth/logout", {}, {
+                     withCredentials: true, 
+                     headers: {'X-CSRF-Token': csrfToken} 
+                    });
+                    console.log('arrivé ici front deuxieme fois');
                 this.user = null;
             } catch (error) {
-                console.error("Erreur de déconnexion :", error);
+                console.error("Erreur lors de la déconnexion :", error.response?.data?.message);
             }
         },
     

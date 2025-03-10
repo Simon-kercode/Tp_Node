@@ -50,11 +50,9 @@
   </template>
   
   <script setup>
-  import { useRouter } from 'vue-router';
   import { useProductStore } from '../stores/productStore';
-  import { ref, computed, watch } from 'vue';
+  import { ref, computed, watch} from 'vue';
   
-  const router = useRouter();
   const productStore = useProductStore();
   const { __ListProducts, __ListCategories } = productStore;
   
@@ -69,29 +67,33 @@
     ? [productStore.activFilter]
     : []
   );
-  const selectedAnimal = ref([]);
+  const selectedAnimal = ref(
+    productStore.activFilter && animals.value.some(animal => animal.nom === productStore.activFilter) 
+    ? [productStore.activFilter]
+    : []
+  );
   
   watch(() => __ListProducts, (newProducts) => {
     products.value = newProducts;
   }, { immediate: true });
 
-const filteredProducts = computed(() => {
-  // Récupere les filtres sélectionnés et let met en minuscules
-  const lowercasedCategories = selectedCategory.value.map(category => category.toLowerCase());
-  const lowercasedAnimals = selectedAnimal.value.map(animal => animal.toLowerCase());
+  const filteredProducts = computed(() => {
+    // Récupere les filtres sélectionnés et let met en minuscules
+    const lowercasedCategories = selectedCategory.value.map(category => category.toLowerCase());
+    const lowercasedAnimals = selectedAnimal.value.map(animal => animal.toLowerCase());
 
-  // Filtrage des produits
-  let filteredProducts = __ListProducts.filter(product => {
-    // Filtre par catégorie
-    const categoryMatch = lowercasedCategories.length === 0 || product.categories_noms.some(category => lowercasedCategories.includes(category.toLowerCase()));
-    
-    // Filtre par animal
-    const animalMatch = lowercasedAnimals.length === 0 || product.categories_noms.some(category => lowercasedAnimals.includes(category.toLowerCase()));
+    // Filtrage des produits
+    let filteredProducts = __ListProducts.filter(product => {
+      // Filtre par catégorie
+      const categoryMatch = lowercasedCategories.length === 0 || product.categories_noms.some(category => lowercasedCategories.includes(category.toLowerCase()));
+      
+      // Filtre par animal
+      const animalMatch = lowercasedAnimals.length === 0 || product.categories_noms.some(category => lowercasedAnimals.includes(category.toLowerCase()));
 
-    return categoryMatch && animalMatch;
+      return categoryMatch && animalMatch;
+    });
+    return filteredProducts.length ? filteredProducts : [...__ListProducts];
   });
-  return filteredProducts.length ? filteredProducts : [...__ListProducts];
-});
 
   function addToCart(product) {
     // ajout dans le panier, a faire

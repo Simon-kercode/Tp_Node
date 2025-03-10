@@ -1,29 +1,28 @@
 <template>
     <h2 class="text-center mb-5">NOS CATEGORIES</h2>
-    <v-row class="border border-lg fond-sombre mb-5 px-5">  
-
-        <v-col 
-        v-for="categorie in __ListCategories" 
-        :key="categorie.id_categorie" 
-        class="d-flex justify-center px-5"
-        cols="6"
-        sm="4"
-        md="2"
-        >
-            <v-btn 
-            text
-            class="category-link text-white"
-            variant="flat"
-            color="#F69946"
-            :width="isMobile ? '100%' : '150'"
-            to="boutique"
-            @click="productStore.setActiveFilter((categorie.nom).toLowerCase())"
+        <v-row class="border border-lg fond-sombre mb-5 px-5">  
+            <v-col 
+            v-for="categorie in __ListCategories" 
+            :key="categorie.id_categorie" 
+            class="d-flex justify-center px-5"
+            cols="6"
+            md="4"
+            lg="2"
             >
-            {{ categorie.nom }}
-            </v-btn>
-        </v-col>
+                <v-btn 
+                text
+                class="category-link text-white"
+                variant="flat"
+                color="#F69946"
+                :width="isMobile ? '100%' : '200'"
+                to="boutique"
+                @click="productStore.setActiveFilter(categorie.nom)"
+                >
+                {{ categorie.nom }}
+                </v-btn>
+            </v-col>
+        </v-row>         
 
-    </v-row> 
 </template>
 
 <script setup>
