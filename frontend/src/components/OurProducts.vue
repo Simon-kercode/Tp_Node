@@ -1,7 +1,7 @@
 <template>
   <v-container class="mb-5">
       <h2 class="text-center mb-5">AUTRES PRODUITS LES PLUS VENDUS</h2>
-      <v-row justify="center" class="products">
+      <v-row justify="center">
         <v-col cols="12" md="3" v-for="product in products" :key="product.id_produit">
           <v-card class="custom-card ma-3">
             <v-img
@@ -37,13 +37,6 @@
   
   const products = ref([...__ListProducts.filter(product => product.id_produit !== 1)]);
 
-  // watch(() => __ListProducts, (newList) => {
-  //   if (newList.length > 0) {
-  //     products.value = newList.find(product => product.id_produit === 1);
-  //     console.log(bestSeller.value);
-  //     console.log(bestSeller.value.illustration);
-  //   }
-  // }, { immediate: true });
   </script>
   
   
@@ -51,25 +44,20 @@
   .custom-card {
   border: none !important;
   box-shadow: none !important;
-  background-color: #ffdada;
-}
-
-.products{
-  background-color: #ffdada;
 }
 
 .truncate-text {
   display: -webkit-box;
-  -webkit-line-clamp: 5;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
 
    /* Ajout de la propriété standard pour compatibilité future */
-  line-clamp: 5; 
+  line-clamp: 3; 
   box-orient: vertical;
 
-  height: 100px;
+  height: 60px;
 }
   </style>
   

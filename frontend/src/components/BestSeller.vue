@@ -1,5 +1,5 @@
 <template> 
-    <v-card class="product-card">
+    <v-card class="fond-clair elevation-0" color="#FCF9F4">
       <v-row no-gutters class="d-flex justify-center">
         <v-col cols="12" md="4" class="pa-5 w-50">
           <v-img

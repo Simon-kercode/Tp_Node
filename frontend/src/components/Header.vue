@@ -22,7 +22,7 @@
               <v-menu v-if="isAuthenticated" offset-y>
                 <template v-slot:activator="{ props }">
                   <v-btn v-bind="props">
-                    <v-icon size="32">mdi-account</v-icon>
+                    <v-icon size="32">mdi-account-outline</v-icon>
                   </v-btn>
                 </template>
                 <v-list>
@@ -35,10 +35,10 @@
                 </v-list>
               </v-menu>
               <v-btn v-else to="/login">
-                <v-icon size="32" >mdi-account</v-icon>
+                <v-icon size="32" >mdi-account-outline</v-icon>
               </v-btn>
                 <v-btn>
-                    <v-icon size="32">mdi-cart</v-icon>
+                    <v-icon size="32">mdi-cart-outline</v-icon>
                 </v-btn>
                 <v-btn v-if="isAdmin" to="/admin">
                     <v-icon size="32">mdi-police-badge-outline</v-icon>
