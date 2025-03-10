@@ -1,5 +1,6 @@
 import {defineStore} from 'pinia';
 import { useStore } from './store';
+import { useRouter, useRoute } from 'vue-router';
 import axios from 'axios';
 
 export const useAuthStore = defineStore("auth", {
@@ -91,21 +92,24 @@ export const useAuthStore = defineStore("auth", {
                 console.error("Utilisateur non authentifié");
             }
         },
-    async logout() {
+    async logout(router) {
             try {
-                console.log('arrivé ici front');
-                
+                const csrfToken = await this.getCsrfToken();
                 await axios.post("http://localhost:3000/auth/logout", {}, {
                      withCredentials: true, 
                      headers: {'X-CSRF-Token': csrfToken} 
                     });
-                    console.log('arrivé ici front deuxieme fois');
                 this.user = null;
+                
+                // Redirige vers l'accueil si la page actuelle était le back office
+                if (router.currentRoute.value.path === '/admin') router.push('/')
             } catch (error) {
                 console.error("Erreur lors de la déconnexion :", error.response?.data?.message);
             }
         },
-    
+    async initializeAuth() {
+        await this.getUser();
+    },
     // Récupère le token csrf
     async getCsrfToken() {
         const response = await axios.get("http://localhost:3000/csrf-token", 
@@ -116,5 +120,5 @@ export const useAuthStore = defineStore("auth", {
         return response.data.csrfToken;
     }
     
-    }
+    },
 });

@@ -18,7 +18,7 @@ export const useProductStore = defineStore("product", {
                     "http://localhost:3000/produits/categories",
                     { 
                         withCredentials: true,
-                     }
+                    }
                 );
                 this.setListProducts(response.data);
             }

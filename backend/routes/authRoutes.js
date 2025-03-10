@@ -6,9 +6,9 @@ const {authMiddleware} = require("../middlewares/authMiddleware");
 const {csrfMiddleware} = require("../middlewares/csrfMiddleware");
 
 // Route POST pour la connexion de l'utilisateur
-router.post("/login", login);
+router.post("/login", csrfMiddleware, login);
 
-router.post("/logout", logout)
+router.post("/logout", csrfMiddleware, logout)
 // Route GET protégée pour afficher le profil de l'utilisateur
 router.get("/profil", authMiddleware, (req, res) => {
     // Cette route est protégée par le middleware d'authentification, donc l'utilisateur doit être connecté

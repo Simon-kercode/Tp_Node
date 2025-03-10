@@ -29,7 +29,7 @@
                   <v-list-item>
                     <v-list-item-title>Mon Profil</v-list-item-title>
                   </v-list-item>
-                  <v-list-item @click="handleLogout">
+                  <v-list-item @click="handleLogout(router)">
                     <v-list-item-title>Déconnexion</v-list-item-title>
                   </v-list-item>
                 </v-list>
@@ -39,6 +39,9 @@
               </v-btn>
                 <v-btn>
                     <v-icon size="32">mdi-cart</v-icon>
+                </v-btn>
+                <v-btn v-if="isAdmin" to="/admin">
+                    <v-icon size="32">mdi-police-badge-outline</v-icon>
                 </v-btn>
             </div>            
         </v-container>
@@ -59,22 +62,23 @@
   import { useDisplay } from 'vuetify'
   import { useAuthStore } from '../stores/authStore';
   import logo from '../assets/images/logo.png';
+  import {useRouter} from 'vue-router';
   
   const { mobile } = useDisplay() // Détecte si on est sur mobile
   const isMobile = computed(() => mobile.value) // Variable réactive pour mobile
   const drawer = ref(false) // Gère l'ouverture du menu mobile
   const authStore = useAuthStore();
+  const router = useRouter()
 
   const isAuthenticated = computed(() => authStore.user !== null);
+  const isAdmin = computed(() => authStore.user?.role === 1);
 
   function toggleDrawer() {
     drawer.value = !drawer.value
   }
 
-  function handleLogout() {
-    console.log("Tentative de déco");
-    
-    authStore.logout()
+  function handleLogout(router) {
+    authStore.logout(router)
   }
   </script>
 
