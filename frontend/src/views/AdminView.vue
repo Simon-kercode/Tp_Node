@@ -5,7 +5,7 @@
 
 <script setup>
     import Sidebar from '../components/admin/Sidebar.vue';
-    import AdminItemsHandle from '../components/admin/AdminItemsHandle.vue';
+    import AdminItemsHandle from '../components/admin/AdminUsersHandle.vue';
 </script>
 
 <style scoped>
