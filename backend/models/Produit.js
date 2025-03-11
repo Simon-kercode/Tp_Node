@@ -4,6 +4,8 @@ class Produit {
     // Déclaration des propriétés privées
     #nom
     #prix
+    #illustration
+    #description
 
     constructor(nom, prix) {
         this.#nom = nom
@@ -17,6 +19,9 @@ class Produit {
     getPrix() {
         return this.#prix;
     }
+    getIllustration() {
+        return this.#illustration;
+    }
 
     // Méthodes setter pour modifier les valeurs des attributs
     setNom(nom){
@@ -24,6 +29,9 @@ class Produit {
     }
     setPrix(prix){
         this.#prix = prix;
+    }
+    setIllustration(illustration) {
+        this.illustration = illustration;
     }
 
     // Récupérer tous les produits
@@ -51,16 +59,23 @@ class Produit {
                     SELECT 
                         p.id_produit, 
                         p.nom AS produit_nom, 
-                        p.prix, 
-                        c.id_categorie, 
-                        c.nom AS categorie_nom
+                        p.prix,
+                        p.description,
+                        p.illustration, 
+                        GROUP_CONCAT(c.id_categorie) AS id_categories,
+                        GROUP_CONCAT(c.nom) AS categories_noms
                     FROM produit p
                     JOIN appartenir a ON p.id_produit = a.id_produit
                     JOIN categorie c ON a.id_categorie = c.id_categorie
+                    GROUP BY p.id_produit
                 `;
                 const [results] = await db.query(query);
-                console.log("resultats :", results);   
-                return results;         
+                console.log("resultats getAllWithCategories:", results);   
+                return results.map(product => ({
+                    ...product,
+                    id_categories: product.id_categories ? product.id_categories.split(",") : [],
+                    categories_noms: product.categories_noms ? product.categories_noms.split(",") : []
+                }));         
         }
         catch (error) {
             console.error("Erreur lors de la récupération des produits avec catégories :", error)
@@ -84,11 +99,25 @@ class Produit {
     }
 
     // Créer un nouveau produit avec des catégories associées 
-    static async create(nom, prix, categories = []) {
+    static async create(nom, prix, categories = [], illustration = null) {
             const db = getDB();
             try {
-                const queryProduit = `INSERT INTO produit (nom, prix) VALUES (?, ?)`;
-                const valuesProduit = [nom, prix]
+                let queryProduit;
+                let valuesProduit = [nom, prix];
+                
+                if (illustration && description) {
+                    queryProduit = `INSERT INTO produit (nom, prix, image, description) VALUES (?, ?, ?, ?)`;
+                    valuesProduit = [nom, prix, illustration, description];
+                } else if (illustration) {
+                    queryProduit = `INSERT INTO produit (nom, prix, image) VALUES (?, ?, ?)`;
+                    valuesProduit = [nom, prix, illustration];
+                } else if (description) {
+                    queryProduit = `INSERT INTO produit (nom, prix, description) VALUES (?, ?, ?)`;
+                    valuesProduit = [nom, prix, description];
+                } else {
+                    queryProduit = `INSERT INTO produit (nom, prix) VALUES (?, ?)`;
+                    valuesProduit = [nom, prix];
+                }
     
                 const [resultsProduit] = await db.query(queryProduit, valuesProduit);
                 console.log("resultats de l'insertion :", resultsProduit);
@@ -148,6 +177,14 @@ class Produit {
             }
             if (data.categories) {
                 this.updateCategories(id, data.categories);
+            }
+            if (data.illustration) {
+                fields.push("illustration = ?");
+                values.push(data.illustration);
+            }
+            if (data.description) {
+                fields.push("description = ?");
+                values.push(data.description);
             }
             if (fields.length === 0) {
                 throw new Error("Aucune donnée valide à mettre à jour.");

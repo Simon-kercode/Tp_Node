@@ -10,8 +10,7 @@ class CategorieController {
     static async getAll(req, res) {
         try {
             const categoriesData = await Categorie.getAll();
-            const categories = categoriesData.map(categorie => new Categorie(categorie.id_categorie, categorie.nom));
-            res.json(categories);
+            res.json(categoriesData);
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la récupération des catégories.", error});
         }

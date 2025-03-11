@@ -4,9 +4,12 @@
             <!-- Logo et Titre -->
             <div class="d-flex align-center">
                 <v-app-bar-nav-icon v-if="isMobile" @click="toggleDrawer"></v-app-bar-nav-icon>
-                <v-img :src="logo" contain height="50" width="50" class=" me-3"></v-img>
-                <v-spacer></v-spacer>
-                <v-app-bar-title style="min-width: 120px;">PawShop</v-app-bar-title>
+                <router-link to="/" class="d-flex align-center">
+                  <v-img :src="logo" contain height="50" width="50" class="me-3"></v-img>
+                  <v-spacer></v-spacer>
+                  <v-app-bar-title style="min-width: 120px;" class="text-black">PawShop</v-app-bar-title>                  
+              </router-link>
+
             </div>
             <!-- Liens desktop -->
             <div class="d-flex align-center">
@@ -16,11 +19,29 @@
             </div>
             <!-- Icones -->
             <div class="d-flex align-center">
-                <v-btn to="/login">
-                    <v-icon size="32">mdi-account</v-icon>
-                </v-btn>
+              <v-menu v-if="isAuthenticated" offset-y>
+                <template v-slot:activator="{ props }">
+                  <v-btn v-bind="props">
+                    <v-icon size="32">mdi-account-outline</v-icon>
+                  </v-btn>
+                </template>
+                <v-list>
+                  <v-list-item>
+                    <v-list-item-title>Mon Profil</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item @click="handleLogout(router)">
+                    <v-list-item-title>Déconnexion</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+              <v-btn v-else to="/login">
+                <v-icon size="32" >mdi-account-outline</v-icon>
+              </v-btn>
                 <v-btn>
-                    <v-icon size="32">mdi-cart</v-icon>
+                    <v-icon size="32">mdi-cart-outline</v-icon>
+                </v-btn>
+                <v-btn v-if="isAdmin" to="/admin">
+                    <v-icon size="32">mdi-police-badge-outline</v-icon>
                 </v-btn>
             </div>            
         </v-container>
@@ -39,14 +60,25 @@
   <script setup>
   import { ref, computed } from 'vue'
   import { useDisplay } from 'vuetify'
+  import { useAuthStore } from '../stores/authStore';
   import logo from '../assets/images/logo.png';
+  import {useRouter} from 'vue-router';
   
   const { mobile } = useDisplay() // Détecte si on est sur mobile
   const isMobile = computed(() => mobile.value) // Variable réactive pour mobile
   const drawer = ref(false) // Gère l'ouverture du menu mobile
+  const authStore = useAuthStore();
+  const router = useRouter()
+
+  const isAuthenticated = computed(() => authStore.user !== null);
+  const isAdmin = computed(() => authStore.user?.role === 1);
 
   function toggleDrawer() {
     drawer.value = !drawer.value
+  }
+
+  function handleLogout(router) {
+    authStore.logout(router)
   }
   </script>
 

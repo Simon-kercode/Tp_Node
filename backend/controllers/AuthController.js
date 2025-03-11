@@ -16,10 +16,16 @@ exports.login = async (req, res) => {
         // Vérification de l'utilisateur
         const user = await User.getByEmail(mail);
 
+        if (!user) {
+            return res.status(401).json({ message: "Email ou mot de passe incorrect" });
+        }
+
         // Vérification du mot de passe
         const isMatch = await bcrypt.compare(pwd, user.pwd);
         
-        if(!user || !isMatch) return res.status(401).json({message: "Email ou mot de passe incorrect"});
+        if (!isMatch) {
+            return res.status(401).json({ message: "Email ou mot de passe incorrect" });
+        }
         
         // Création du token
         const token = jwt.sign(
@@ -36,18 +42,29 @@ exports.login = async (req, res) => {
             maxAge: 2 * 60 * 60 * 1000, // Expiration du cookie (2h)
         });
         
-        res.json({ message: "Connexion réussie", token });
+        return res.status(200).json({ message: "Connexion réussie", token });
     } catch (error) {
-        res.status(500).json({ message: "Erreur serveur", error: error.message });
+        return res.status(500).json({ message: "Erreur serveur", error: error.message });
     }
 };
 
 exports.logout = async (req, res) => {
-    res.clearCookie("jwt", {
-        httpOnly: true,
-        secure: process.env.NODE_ENV = "production",
-        sameSite: "Strict",
-    });
+    console.log('arrivé ici');
+    
+    try {
+        console.log(req.cookies);
+        
+        res.clearCookie("jwt", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "Strict",
+        });
+        console.log(req.cookies);
+        
+        return res.json({message: "Déconnexion réussie"})        
+    } catch (error) {
+        console.error("Erreur lors de la déconnexion :", error);
+        return res.status(500).json({message : "Erreur de déconnexion : ", error: error?.message})
+    }
 
-    res.json({message: "Déconnexion réussie"})
 }

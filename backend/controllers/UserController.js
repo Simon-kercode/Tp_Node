@@ -48,7 +48,7 @@ class UserController {
 
             const user = await User.create({nom, prenom, mail, pwd});
 
-            res.status(201).json({id: user.id, nom: user.nom, prenom: user.prenom, email: user.mail});
+            res.status(201).json({id: user.id, nom: user.nom, prenom: user.prenom, email: user.mail, message: "Votre compte a bien été créé !"});
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la création de l'utilisateur.", error: error.message });
         }
