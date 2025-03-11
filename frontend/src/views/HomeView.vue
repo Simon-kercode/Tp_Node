@@ -9,9 +9,9 @@
   
 <script setup>
 
-import Categories from '../components/Categories.vue';
-import BestSeller from '../components/BestSeller.vue'
-import OurProducts from '../components/OurProducts.vue';
+import Categories from '../components//home/Categories.vue';
+import BestSeller from '../components/home/BestSeller.vue'
+import OurProducts from '../components/home/OurProducts.vue';
 
 </script>
 

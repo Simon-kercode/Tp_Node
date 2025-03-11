@@ -4,8 +4,8 @@
 </template>
 
 <script setup>
-    import Sidebar from '../components/Sidebar.vue';
-    import AdminItemsHandle from '../components/AdminItemsHandle.vue';
+    import Sidebar from '../components/admin/Sidebar.vue';
+    import AdminItemsHandle from '../components/admin/AdminItemsHandle.vue';
 </script>
 
 <style scoped>
