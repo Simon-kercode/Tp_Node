@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 exports.authMiddleware = (req, res, next) => {
     // Récupération du token
     const token = req.cookies.jwt
-
+    
     // Vérifie si aucun token n'est fourni
     if (!token) {
         return res.status(401).json({ message: "Accès refusé." });
@@ -19,8 +19,7 @@ exports.authMiddleware = (req, res, next) => {
         next();
     } catch (error) {
         res.status(401).json({ message: "Token invalide" });
-    }
-    next();    
+    }    
 }
 
 // Middleware d'autorisation basé sur les rôles
