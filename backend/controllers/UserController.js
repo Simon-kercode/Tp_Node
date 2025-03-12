@@ -62,7 +62,7 @@ class UserController {
 
     // Mettre à jour un utilisateur
     static async update(req, res) {
-        
+        console.log("req dans le controlleur : ", req.body)
         try {
             const user = await User.getById(req.params.id);
             if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
@@ -81,8 +81,8 @@ class UserController {
             const user = await User.getById(req.params.id);
             if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
 
-            await User.delete(req.params.id);
-            res.json({ message: "Utilisateur supprimé avec succès" });
+            const deletedUser = await User.delete(req.params.id);
+            res.json({ message: "Utilisateur supprimé avec succès", success: deletedUser });
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la suppression de l'utilisateur.", error: error.message });
         }

@@ -129,7 +129,14 @@ class User {
              const values = [id];
 
              const [results] = await db.query(query, values);
-             return results
+
+             const queryDeletedUser = `SELECT id_user AS id FROM _user WHERE id_user = ?`;
+             const valuesDeletedUser = [id];
+             const deletedUser = await db.query(queryDeletedUser, valuesDeletedUser);
+             if (!deletedUser) {
+                return true
+             }
+             else return false;
         }
         catch (error) {
             console.error("Erreur lors de la suppression de l'utilisateur :", error)
@@ -141,7 +148,7 @@ class User {
     static async update(id, data) {
 
         const db = getDB();
-
+        console.log("data dans le modele : ", id, data)
         try {
             const fields = [];
             const values = [];
@@ -163,9 +170,9 @@ class User {
                 fields.push("pwd = ?");
                 values.push(hashedPwd);
             }
-            if (data.isAdmin) {
-                fields.push("isAdmin = ?");
-                values.push(data.isAdmin);
+            if (data.isAdmin !== undefined) { 
+                fields.push("isAdmin = ?"); 
+                values.push(data.isAdmin); 
             }
             if (fields.length === 0) {
                 throw new Error("Aucune donnée valide à mettre à jour.");
@@ -175,7 +182,11 @@ class User {
             const query = `UPDATE _user SET ${fields.join(", ")} WHERE id_user = ?`;
             const results = await db.query(query, values);
 
-            return results
+            const queryUpdatedUser = `SELECT id_user AS id, nom AS name, prenom AS firstname, mail AS email, isAdmin FROM _user WHERE id_user = ?`;
+            const idUser = [id]
+            const updatedUser = await db.query(queryUpdatedUser, idUser);
+
+            return updatedUser[0];
         }
         catch (error) {
             console.error("Erreur lors de la mise à jour de l'utilisateur : ", error);
