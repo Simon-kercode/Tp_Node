@@ -1,27 +1,27 @@
 <template>
-    <v-container v-if="adminStore.itemsToDisplay === 'users'">
-        <v-text-field 
-            v-model="searchQuery"
-            label="Rechercher un utilisateur"
-            prepend-inner-icon="mdi-magnify"
-            class="mb-4"
-        ></v-text-field>
+  <v-container v-if="adminStore.itemsToDisplay === 'users'">
+      <v-text-field 
+          v-model="searchQuery"
+          label="Rechercher un utilisateur"
+          prepend-inner-icon="mdi-magnify"
+          class="mb-4"
+      ></v-text-field>
   
-        <v-data-table
-            :items="users"
-            :headers="headers"
-            :search="searchQuery"
-            class="elevation-1"
-            fixed-header
-            :height="isMobile ? '400px' : ''"
-        >
+      <v-data-table
+          :items="users"
+          :headers="headers"
+          :search="searchQuery"
+          class="elevation-1"
+          fixed-header
+          :height="isMobile ? '400px' : ''"
+      >
         <template v-slot:item.actions="{ item }">
-          <v-icon color="blue" @click="editUser(item)">mdi-pencil</v-icon>
+          <v-icon color="blue" @click="editUser(item)" class="me-5">mdi-pencil</v-icon>
           <v-icon color="red" @click="deleteUser(item)">mdi-trash-can-outline</v-icon>
         </template>
       </v-data-table>
-    </v-container>
-  </template>
+  </v-container>
+</template>
 
 <script setup>
 import { ref, computed, watch} from "vue";
