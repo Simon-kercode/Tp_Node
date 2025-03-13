@@ -73,7 +73,7 @@ class Produit {
                 console.log("resultats getAllWithCategories:", results);   
                 return results.map(product => ({
                     ...product,
-                    id_categories: product.id_categories ? product.id_categories.split(",") : [],
+                    id_categories: product.id_categories ? product.id_categories.split(",").map(Number) : [],
                     categories_noms: product.categories_noms ? product.categories_noms.split(",") : []
                 }));         
         }

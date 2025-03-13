@@ -26,7 +26,8 @@
                     ></v-textarea>
                 </v-form>
                 <v-select
-                    v-model="product.categories"
+                    v-model="product.id_categories"
+                    label="Categories"
                     :items="categories"
                     item-title="nom"
                     item-value="id_categorie"
@@ -52,21 +53,12 @@
     const {editProductModaleState} = storeToRefs(productStore);
     const product = ref({
         ...productStore.productToEdit, 
-        prix: parseFloat(productStore.productToEdit.prix),
-        categories: productStore.productToEdit.id_categories.map(id => {
-            const category = productStore.__ListCategories.find(category => category.id_categorie === id);
-            console.log(category);
-            return category ? category.nom : null;
-        })
+        prix: parseFloat(productStore.productToEdit.prix)
     });
+
     const initialProduct = ref({...product});
-    const selectedCategories = ref([...product.value.id_categories]);
 
     const categories = ref(productStore.__ListCategories);
-    
-    watch(selectedCategories, (newSelection) => {
-      product.value.id_categories = newSelection;
-    });
 
     async function updateProduct() {
         const productData = {
