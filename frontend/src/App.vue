@@ -9,6 +9,7 @@
       <Footer v-if="!isAuthPage && !isAdminPage"/>
       <Snackbar v-if="store.snackbarState"/>
       <EditUserModale v-if="userStore.editUserModaleState"/>
+      <EditProductModale v-if="productStore.editProductModaleState"/>
       <ConfirmDialog v-if="store.confirmState"/>
   </v-app>
 
@@ -25,6 +26,7 @@ import Header from './components/Header.vue';
 import Footer from './components/Footer.vue';
 import Snackbar from './components/Snackbar.vue';
 import EditUserModale from './components/admin/EditUserModale.vue';
+import EditProductModale from './components/admin/EditProductModale.vue';
 import ConfirmDialog from './components/ConfirmDialog.vue';
 
 const route = useRoute();

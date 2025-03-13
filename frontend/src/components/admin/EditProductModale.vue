@@ -1,43 +1,79 @@
 <template>
-    <v-dialog v-model="editUserModaleState" max-width="300px">
+    <v-dialog v-model="editProductModaleState" max-width="800px">
         <v-card>
-            <v-card-title>Edition utilisateur</v-card-title>
+            <v-card-title>Edition produit</v-card-title>
             <v-card-text>
-                <div>{{ `${user.name} ${user.firstname}` }}</div>
-                <div class="my-5">{{ user.email }}</div>
-                <v-select   v-model="user.isAdmin"
-                :items="[
-                    { title: 'Administrateur', value: 1 },
-                    { title: 'Utilisateur', value: 0 }
-                ]"
-                item-title="title"
-                item-value="value"
-                label="Rôle"
-                ></v-select>
-                <v-card-actions>
-                    <v-btn @click="updateUser" color="success" variant="flat">Sauvegarder</v-btn>
-                    <v-btn @click="close" color="error" variant="tonal">Annuler</v-btn>                    
-                </v-card-actions>
-
+                <v-form @submit="prevent.updateProduct();">
+                    <v-row>
+                        <v-col cols="12" md="8">
+                            <v-text-field
+                                v-model="product.produit_nom"
+                                label="Nom"
+                            ></v-text-field>                            
+                        </v-col>
+                        <v-col cols="12" md="4">
+                            <v-text-field
+                                type="number"
+                                v-model="product.prix"
+                                label="Prix"
+                                prefix="€"
+                            ></v-text-field>                              
+                        </v-col>
+                    </v-row>
+                    <v-textarea 
+                        v-model="product.description"
+                        label="Description"
+                    ></v-textarea>
+                </v-form>
+                <v-select
+                    v-model="product.categories"
+                    :items="categories"
+                    item-title="nom"
+                    item-value="id_categorie"
+                    multiple
+                    chips
+                >
+                </v-select>
             </v-card-text>
+            <v-card-actions>
+                <v-btn @click="updateProduct" color="success" variant="flat">Sauvegarder</v-btn>
+                <v-btn @click="close" color="error" variant="tonal">Annuler</v-btn>                    
+            </v-card-actions>
         </v-card>
     </v-dialog>
 </template>
 
 <script setup>
-    import {ref, computed} from 'vue';
+    import {ref, computed, watch} from 'vue';
     import { storeToRefs } from 'pinia';
     import { useProductStore } from '../../stores/productStore';
 
     const productStore = useProductStore();
-    const {editUserModaleState} = storeToRefs(userStore);
-    const user = ref(userStore.userToEdit);
-    const initialUser = ref({...user});
+    const {editProductModaleState} = storeToRefs(productStore);
+    const product = ref({
+        ...productStore.productToEdit, 
+        prix: parseFloat(productStore.productToEdit.prix),
+        categories: productStore.productToEdit.id_categories.map(id => {
+            const category = productStore.__ListCategories.find(category => category.id_categorie === id);
+            console.log(category);
+            return category ? category.nom : null;
+        })
+    });
+    const initialProduct = ref({...product});
+    const selectedCategories = ref([...product.value.id_categories]);
 
-    async function updateUser() {
-        const userData = {
-            id: user.value.id,
-            isAdmin: user.value.isAdmin
+    const categories = ref(productStore.__ListCategories);
+    
+    watch(selectedCategories, (newSelection) => {
+      product.value.id_categories = newSelection;
+    });
+
+    async function updateProduct() {
+        const productData = {
+            id: product.value.id_produit,
+            nom: product.value.produit_nom,
+            prix: product.value.prix,
+            description: product.value.description,
         };
 
         if (JSON.stringify(userData) !== JSON.stringify(initialUser.value)) {
@@ -46,8 +82,8 @@
         }
     }
     function close() {
-        userStore.editUserModaleState = false,
-        userStore.userToEdit = null;
+        productStore.editProductModaleState = false,
+        productStore.productToEdit = null;
     }
 </script>
 

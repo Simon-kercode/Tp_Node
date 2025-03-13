@@ -1,6 +1,7 @@
 import {defineStore} from 'pinia';
 import { useStore } from './store';
 import axios from 'axios';
+import EditProductModale from '../components/admin/EditProductModale.vue';
 
 export const useProductStore = defineStore("product", {
     state: () => ({
@@ -9,6 +10,9 @@ export const useProductStore = defineStore("product", {
 
         selectedCategorie: null,
         activFilter: null,
+
+        editProductModaleState: false,
+        productToEdit: null
 
     }),
     actions: {
@@ -28,7 +32,7 @@ export const useProductStore = defineStore("product", {
         },
         setListProducts(products) {
             this.__ListProducts = products;
-            console.log(this.__ListProducts);
+            console.log("Produits : ", this.__ListProducts);
             
         },
         async getListCategories() {
@@ -41,8 +45,6 @@ export const useProductStore = defineStore("product", {
                 );
                 console.log(response);
                 this.setListCategories(response.data);
-                console.log(this.__ListCategories);
-                
             }
             catch(error) {
                 console.error(error)
@@ -53,7 +55,7 @@ export const useProductStore = defineStore("product", {
         setListCategories(categories) {
             const capitalizeCategories = categories.map((category) => {
                 return {
-                    id_categorie: category.id_category,
+                    id_categorie: category.id_categorie,
                     nom: category.nom.charAt(0).toUpperCase() + category.nom.slice(1)
                 }
             });
@@ -69,6 +71,10 @@ export const useProductStore = defineStore("product", {
             this.activFilter = filter;
             console.log(this.activFilter);
             
+        },
+        toggleEditProductModale(product) {
+            this.productToEdit = product;
+            this.editProductModaleState = !this.editProductModaleState;
         }
     },
 });

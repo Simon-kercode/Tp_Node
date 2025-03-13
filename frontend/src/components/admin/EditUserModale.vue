@@ -32,7 +32,8 @@
     const userStore = useUserStore();
     const {editUserModaleState} = storeToRefs(userStore);
     const user = ref(userStore.userToEdit);
-    const initialUser = ref({...user});
+    const initialUser = ref({ id: user.value.id, isAdmin: user.value.isAdmin });
+
 
     async function updateUser() {
         const userData = {
