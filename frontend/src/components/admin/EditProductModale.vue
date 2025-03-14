@@ -3,7 +3,7 @@
         <v-card>
             <v-card-title>Edition produit</v-card-title>
             <v-card-text>
-                <v-form @submit="prevent.updateProduct();">
+                <v-form @submit="prevent.updateProduct();" enctype="multipart/form-data">
                     <v-row>
                         <v-col cols="12" md="8">
                             <v-text-field
@@ -38,10 +38,11 @@
                 </v-select>
                 <div class="d-flex">
                     <v-file-input
+                        v-model="newFile"
                         label="Illustration"
                         clearable
                         @change="handleFileChange"
-                        :model-value="fileName"
+                        @click:clear="clearFile"
                     ></v-file-input>
                     <v-img v-if="previewImage" :src="previewImage" height="100px"></v-img>                    
                 </div>
@@ -66,39 +67,50 @@
         ...productStore.productToEdit, 
         prix: parseFloat(productStore.productToEdit.prix)
     });
-    const initialProduct = ref({...product});
+    const initialProduct = ref({
+        ...productStore.productToEdit, 
+        prix: parseFloat(productStore.productToEdit.prix)
+    });
 
     const categories = ref(productStore.__ListCategories);
 
     const newFile = ref(null);
     const previewImage = ref(`/uploads/productsImages/${product.value.illustration}`);
 
-    const fileName = computed(() => {
-        return newFile.value ? newFile.value.name : product.value.illustration;
-    });
-
     // Gère le changement de fichier dans l'input file d'illustration. Affiche le nom correct et la preview.
     function handleFileChange(event) {
         const file = event.target.files[0]; // Récupére le fichier sélectionné
+        console.log(file)
         if (file) {
             newFile.value = file; // Stocke le fichier pour l'envoi
             previewImage.value = URL.createObjectURL(file); // Génére un aperçu temporaire
-        } else {
-            newFile.value = null;
-            previewImage.value = `/uploads/productsImages/${product.value.illustration}`; // Réaffiche l'image d'origine
+            product.value.illustration = file.name
         }
+        console.log(initialProduct.value)
+    }
+    // Réinitialise l'illustration en cas de clear de l'input file
+    function clearFile() {
+        newFile.value = null,
+        product.value.illustration = initialProduct.value.illustration
+        previewImage.value = `/uploads/productsImages/${product.value.illustration}`
     }
 
     async function updateProduct() {
-        const productData = {
-            id: product.value.id_produit,
-            nom: product.value.produit_nom,
-            prix: product.value.prix,
-            description: product.value.description,
-        };
-
-        if (JSON.stringify(userData) !== JSON.stringify(initialUser.value)) {
-            await userStore.updateUser(userData);
+        const productData = new FormData();
+        productData.append("id", product.value.id_produit);
+        productData.append("nom", product.value.produit_nom);
+        productData.append("prix", product.value.prix);
+        if (product.value.description) {
+            productData.append("description", product.value.description);
+        }
+        if (product.value.illustration) {
+            productData.append("illustration", product.value.illustration)
+        }
+        for (let pair of productData.entries()) {
+            console.log(pair[0] + ": " + pair[1]);
+        }
+        if (JSON.stringify(productData) !== JSON.stringify(initialProduct.value)) {
+            await productStore.updateProduct(productData);
             close();
         }
     }

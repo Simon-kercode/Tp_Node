@@ -35,6 +35,37 @@ export const useProductStore = defineStore("product", {
             console.log("Produits : ", this.__ListProducts);
             
         },
+        async updateProduct(product) {
+            try{
+                const store = useStore();
+                const csrfToken = await store.getCsrfToken();
+                // Récupère l'id par "get" car product est un formData
+                const response = await axios.put(`http://localhost:3000/products/${product.get("id")}`, 
+                    product,
+                {
+                    withCredentials: true,
+                    headers: {
+                        "X-CSRF-Token": csrfToken,
+                        "Content-Type": "multipart/form-data"
+                    }
+                });
+                console.log(response);
+                if (response.data.product) {
+                    this.updateProductInList(response.data.product[0]);
+                }
+            } catch(error) {
+                console.error("Erreur lors de la mise à jour du produit : ", error);
+            }
+        },
+        // Met à jour la liste des utilisateurs dans le store (pour éviter de recharger toute la liste des users)
+        updateProductInList(updatedProduct) {
+            const index = this.__ListProducts.findIndex(product => product.id === updatedProduct.id);
+            
+            // Si l'utilisateur existe, on met à jour la liste
+            if (index !== -1) {
+                this.__ListProducts[index] = updatedProduct;
+            }
+        },
         async getListCategories() {
             try {
                 const response = await axios.get(
