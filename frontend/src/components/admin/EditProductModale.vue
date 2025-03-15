@@ -100,6 +100,7 @@
         productData.append("id", product.value.id_produit);
         productData.append("nom", product.value.produit_nom);
         productData.append("prix", product.value.prix);
+        productData.append("categories", product.value.id_categories);
         if (product.value.description) {
             productData.append("description", product.value.description);
         }

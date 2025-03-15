@@ -180,7 +180,7 @@ class Produit {
                 this.updateCategories(id, data.categories);
             }
             if (file && data.illustration) {
-                let newFileName = data.illustration;
+                let newFileName = file.filename  
                 // Récupère l'ancien produit pour supprimer l'ancienne image
                 const oldProduct = await db.query("SELECT illustration FROM produit WHERE id_produit = ?", [id]);
                 if (oldProduct[0]?.illustration) {
