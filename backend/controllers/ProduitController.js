@@ -1,4 +1,6 @@
 const Produit = require('../models/Produit');
+const multer = require("multer");
+const path = require("path");
 
 class ProduitController {
 
@@ -69,15 +71,18 @@ class ProduitController {
      * Retourne le produit mis à jour ou une erreur 404 si le produit n'existe pas.
      */
     static async update(req, res) {
+        console.log("arrivé ici !")
         try {
+            console.log("req : ", req.body, req.file)
             const produit = await Produit.getById(req.params.id);
             if (!produit) return res.status(404).json({ message: "Produit non trouvé" });
             const data = req.body;
-            const updatedProduit = await Produit.update(req.params.id, data);
+            const file = req.file;
+            const updatedProduit = await Produit.update(req.params.id, data, file);
 
             res.json({ message: "Produit mis à jour", produit: updatedProduit });
         } catch (error) {
-            res.status(500).json({ message: "Erreur lors de la mise à jour du produit.", error });
+            res.status(500).json({ message: "Erreur lors de la mise à jour du produit.", error: error.message});
         }
     }
 

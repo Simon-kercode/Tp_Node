@@ -11,6 +11,8 @@ const app = express();
 const port = process.env.PORT;
 
 app.use(express.json());
+// Permet à express de bien lire les données envoyées en multipart/form-data
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors({
     origin: 'http://localhost:5173', 

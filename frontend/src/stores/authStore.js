@@ -13,7 +13,8 @@ export const useAuthStore = defineStore("auth", {
             console.log("Données envoyées au backend :", { mail: email, pwd: password });
 
             try {
-                const csrfToken = await this.getCsrfToken();
+                const store = useStore();
+                const csrfToken = await store.getCsrfToken();
                 const response = await axios.post(
                     "http://localhost:3000/auth/login",
                     { 
@@ -47,7 +48,8 @@ export const useAuthStore = defineStore("auth", {
         },
         async register(name, firstname, email, password) {
             try {
-                const csrfToken = await this.getCsrfToken();
+                const store = useStore();
+                const csrfToken = await store.getCsrfToken();
                 const response = await axios.post(
                     "http://localhost:3000/users",
                     {
@@ -94,7 +96,8 @@ export const useAuthStore = defineStore("auth", {
         },
     async logout(router) {
             try {
-                const csrfToken = await this.getCsrfToken();
+                const store = useStore();
+                const csrfToken = await store.getCsrfToken();
                 await axios.post("http://localhost:3000/auth/logout", {}, {
                      withCredentials: true, 
                      headers: {'X-CSRF-Token': csrfToken} 
@@ -110,15 +113,6 @@ export const useAuthStore = defineStore("auth", {
     async initializeAuth() {
         await this.getUser();
     },
-    // Récupère le token csrf
-    async getCsrfToken() {
-        const response = await axios.get("http://localhost:3000/csrf-token", 
-        { withCredentials: true }
-        );
-        console.log("Token csrf: ", response.data.csrfToken);
-        
-        return response.data.csrfToken;
-    }
     
     },
 });

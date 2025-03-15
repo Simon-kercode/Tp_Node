@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia';
 import { useStore } from './store';
 import { useProductStore } from './productStore';
-import { useRouter, useRoute } from 'vue-router';
+import { useUserStore } from './userStore';
 import axios from 'axios';
 
 export const useAdminStore = defineStore("admin", {
@@ -9,8 +9,30 @@ export const useAdminStore = defineStore("admin", {
         itemsToDisplay: null,
     }),
     actions: {
-        setItemsToDisplay(items) {
-            this.itemsToDisplay = items
+        async setItemsToDisplay(items) {
+            switch(items) {
+                case 'users':
+                    const userStore = useUserStore();
+                    await userStore.getAllUsers();
+                    this.itemsToDisplay = items
+                    console.log(this.itemsToDisplay);
+                    break;
+                
+                case 'products':
+                case 'categories':
+                    this.itemsToDisplay = items
+                    console.log(this.itemsToDisplay)
+                    break;
+                
+                default:
+                    this.itemsToDisplay = null
+            }
+          
+            // else {
+            //     this.itemsToDisplay = null
+            //     console.log(this.itemsToDisplay);
+                
+            // }
         }
     }
 })

@@ -1,4 +1,5 @@
 const {getDB} = require('../config/db')
+const fs = require ('fs');
 
 class Produit {
     // Déclaration des propriétés privées
@@ -73,7 +74,7 @@ class Produit {
                 console.log("resultats getAllWithCategories:", results);   
                 return results.map(product => ({
                     ...product,
-                    id_categories: product.id_categories ? product.id_categories.split(",") : [],
+                    id_categories: product.id_categories ? product.id_categories.split(",").map(Number) : [],
                     categories_noms: product.categories_noms ? product.categories_noms.split(",") : []
                 }));         
         }
@@ -159,7 +160,7 @@ class Produit {
     }
 
     // Mettre à jour un produit avec de nouvelles informations
-    static async update(id, data) {
+    static async update(id, data, file) {
         const db = getDB();
 
         try {
@@ -178,9 +179,20 @@ class Produit {
             if (data.categories) {
                 this.updateCategories(id, data.categories);
             }
-            if (data.illustration) {
+            if (file && data.illustration) {
+                let newFileName = file.filename  
+                // Récupère l'ancien produit pour supprimer l'ancienne image
+                const oldProduct = await db.query("SELECT illustration FROM produit WHERE id_produit = ?", [id]);
+                if (oldProduct[0]?.illustration) {
+                    const oldImagePath = path.join("frontend/public/uploads/productsImages/", oldProduct[0].illustration);
+                    
+                    // Supprime l'ancienne image si elle existe
+                    if (fs.existsSync(oldImagePath)) {
+                        fs.unlinkSync(oldImagePath);
+                    }
+                }
                 fields.push("illustration = ?");
-                values.push(data.illustration);
+                values.push(newFileName);
             }
             if (data.description) {
                 fields.push("description = ?");
@@ -198,7 +210,7 @@ class Produit {
         }
         catch (error) {
             console.error("Erreur lors de la mise à jour du produit : ", error);
-            throw error;
+            throw new Error(error);
         }
     }
 
