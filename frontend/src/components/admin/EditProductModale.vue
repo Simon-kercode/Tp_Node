@@ -103,8 +103,9 @@
         if (product.value.description) {
             productData.append("description", product.value.description);
         }
-        if (product.value.illustration) {
+        if (product.value.illustration && newFile.value !== null) {
             productData.append("illustration", product.value.illustration)
+            productData.append("file", newFile.value)
         }
         for (let pair of productData.entries()) {
             console.log(pair[0] + ": " + pair[1]);

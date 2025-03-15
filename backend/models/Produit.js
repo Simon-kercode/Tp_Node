@@ -179,12 +179,12 @@ class Produit {
             if (data.categories) {
                 this.updateCategories(id, data.categories);
             }
-            if (file) {
-                let newFileName = file.fileName;
+            if (file && data.illustration) {
+                let newFileName = data.illustration;
                 // Récupère l'ancien produit pour supprimer l'ancienne image
                 const oldProduct = await db.query("SELECT illustration FROM produit WHERE id_produit = ?", [id]);
                 if (oldProduct[0]?.illustration) {
-                    const oldImagePath = path.join(__dirname, "../public/uploads/productsImages/", oldProduct[0].illustration);
+                    const oldImagePath = path.join("frontend/public/uploads/productsImages/", oldProduct[0].illustration);
                     
                     // Supprime l'ancienne image si elle existe
                     if (fs.existsSync(oldImagePath)) {

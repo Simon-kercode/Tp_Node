@@ -37,10 +37,11 @@ export const useProductStore = defineStore("product", {
         },
         async updateProduct(product) {
             try{
+                console.log("product envoyé au controlleur : ", product)
                 const store = useStore();
                 const csrfToken = await store.getCsrfToken();
                 // Récupère l'id par "get" car product est un formData
-                const response = await axios.put(`http://localhost:3000/products/${product.get("id")}`, 
+                const response = await axios.put(`http://localhost:3000/produits/${product.get("id")}`, 
                     product,
                 {
                     withCredentials: true,
@@ -54,7 +55,7 @@ export const useProductStore = defineStore("product", {
                     this.updateProductInList(response.data.product[0]);
                 }
             } catch(error) {
-                console.error("Erreur lors de la mise à jour du produit : ", error);
+                console.error("Erreur lors de la mise à jour du produit : ", error.message);
             }
         },
         // Met à jour la liste des utilisateurs dans le store (pour éviter de recharger toute la liste des users)

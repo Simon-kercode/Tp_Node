@@ -71,7 +71,9 @@ class ProduitController {
      * Retourne le produit mis à jour ou une erreur 404 si le produit n'existe pas.
      */
     static async update(req, res) {
+        console.log("arrivé ici !")
         try {
+            console.log("req : ", req.body, req.file)
             const produit = await Produit.getById(req.params.id);
             if (!produit) return res.status(404).json({ message: "Produit non trouvé" });
             const data = req.body;
