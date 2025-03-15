@@ -1,8 +1,12 @@
 <template>
-  <v-container class="mb-5">
-      <h2 class="text-center mb-5">AUTRES PRODUITS LES PLUS VENDUS</h2>
-      <v-row justify="center">
-        <v-col cols="12" md="3" v-for="product in products" :key="product.id_produit">
+  <v-container class="mb-5" v-if="products.length">
+    <h2 class="text-center mb-5">AUTRES PRODUITS LES PLUS VENDUS</h2>
+    <v-row justify="center">
+      <v-col cols="12" md="3" v-for="product in products" :key="product.id_produit">
+        <router-link 
+          :to="{ name: 'ProductDetail', params: { id: product.id_produit } }"
+          class="text-decoration-none"
+        >
           <v-card class="custom-card ma-3">
             <v-img
               v-if="product.illustration"
@@ -17,8 +21,9 @@
               {{product.description}}
             </v-card-text>
           </v-card>
-        </v-col>
-      </v-row>    
+        </router-link>
+      </v-col>
+    </v-row>    
   </v-container>
 
   </template>
@@ -29,15 +34,17 @@
   import { useDisplay } from 'vuetify'
   import { useProductStore } from '../../stores/productStore'
 
-  const { mobile } = useDisplay() // Détecte si on est sur mobile
-  const isMobile = computed(() => mobile.value) // Variable réactive pour mobile
-  const productStore = useProductStore();
-  const {__ListProducts} = productStore;
-  
-  const products = ref([...__ListProducts.filter(product => product.id_produit !== 1)]);
+const { mobile } = useDisplay() // Détecte si on est sur mobile
+const isMobile = computed(() => mobile.value) // Variable réactive pour mobile
+const productStore = useProductStore();
 
-  </script>
-  
+const products = ref([]);
+
+onMounted(async () => {
+  await productStore.getListProducts(); // Assurez-vous que cette méthode existe et fonctionne correctement
+  products.value = productStore.__ListProducts.filter(product => product.id_produit !== 1);
+});
+</script>
   
   <style scoped>
   .custom-card {

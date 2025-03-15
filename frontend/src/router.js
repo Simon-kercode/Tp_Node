@@ -5,12 +5,15 @@ import HomeView from './views/HomeView.vue';
 import ShopView from './views/ShopView.vue';
 import ContactView from './views/ContactView.vue';
 import AdminView from './views/AdminView.vue';
+import ProductDetailView from './views/ProductView.vue';
+
 
 const routes = [
     { path: '/login', component: LoginView, name: 'Login' },
     { path: '/boutique', component: ShopView, name: 'Boutique' },
     { path: '/contact', component: ContactView, name: 'Contact' },
     { path: '/admin', component: AdminView, name: 'Admin', meta: {requiresAdmin: true} },
+    { path: '/produit/:id', component: ProductDetailView, name: 'ProductDetail' },
     { path: '/', component: HomeView, name: 'Home'},
 ];
 
