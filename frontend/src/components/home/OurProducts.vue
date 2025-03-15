@@ -38,12 +38,8 @@ const { mobile } = useDisplay() // Détecte si on est sur mobile
 const isMobile = computed(() => mobile.value) // Variable réactive pour mobile
 const productStore = useProductStore();
 
-const products = ref([]);
+const products = ref([...productStore.__ListProducts.filter(product => product.id_produit !== 1)]);
 
-onMounted(async () => {
-  await productStore.getListProducts(); // Assurez-vous que cette méthode existe et fonctionne correctement
-  products.value = productStore.__ListProducts.filter(product => product.id_produit !== 1);
-});
 </script>
   
   <style scoped>
