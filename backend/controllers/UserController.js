@@ -7,12 +7,18 @@ class UserController {
     static async getAll(req, res) {
         try {
             const usersData = await User.getAll();
-            console.log(usersData);
-            
-            const users = usersData.map(user =>new User(user.nom, user.prenom, user.mail));
-            console.log(users);
-            
-            res.json(users);
+            console.log("Resultats : ", usersData);
+            if (usersData) {
+                const users = usersData.map(user => ({
+                    id: user.id_user,
+                    isAdmin: user.isAdmin,
+                    name: user.nom,
+                    firstname: user.prenom,
+                    email: user.mail,
+                }));
+                console.log("users formattés : ", users);
+                res.json(users);              
+            }
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la récupération des utilisateurs.", error: error.message });
         }
