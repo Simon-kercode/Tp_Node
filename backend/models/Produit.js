@@ -88,10 +88,28 @@ class Produit {
     static async getById(id) {
         const db = getDB();
         try {
-            const query = `SELECT * FROM produit WHERE id_produit = ?`;
+            const query = `
+                    SELECT 
+                        p.id_produit, 
+                        p.nom AS produit_nom, 
+                        p.prix,
+                        p.description,
+                        p.illustration, 
+                        GROUP_CONCAT(c.id_categorie) AS id_categories,
+                        GROUP_CONCAT(c.nom) AS categories_noms
+                    FROM produit p
+                    JOIN appartenir a ON p.id_produit = a.id_produit
+                    JOIN categorie c ON a.id_categorie = c.id_categorie
+                    WHERE p.id_produit = ?
+                    GROUP BY p.id_produit
+                `;
             const values = [id];
             const [results] = await db.query(query, values);
-            return results;
+            return results.map(product => ({
+                ...product,
+                id_categories: product.id_categories ? product.id_categories.split(",").map(Number) : [],
+                categories_noms: product.categories_noms ? product.categories_noms.split(",") : []
+            })); 
         }
         catch (error) {
             console.error(`Erreur lors de la récupération du produit n°${id} :`, error);
@@ -177,7 +195,7 @@ class Produit {
                 values.push(data.prix);
             }
             if (data.categories) {
-                this.updateCategories(id, data.categories);
+                this.updateCategories(id, JSON.parse(data.categories));
             }
             if (file && data.illustration) {
                 let newFileName = file.filename  
@@ -204,9 +222,15 @@ class Produit {
 
             values.push(id);
             const query = `UPDATE produit SET ${fields.join(", ")} WHERE id_produit = ?`;
-            const results = await db.query(query, values);
+            await db.query(query, values);
 
-            return results
+            // const queryUpdatedProduit = `SELECT * FROM produit WHERE id_produit = ?`;
+            // const idProduit = [id]
+            // const updatedProduit = await db.query(queryUpdatedProduit, idProduit);
+            const updatedProduit = await this.getById(id);
+
+            return updatedProduit[0];
+
         }
         catch (error) {
             console.error("Erreur lors de la mise à jour du produit : ", error);

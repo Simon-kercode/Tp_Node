@@ -1,12 +1,13 @@
 <template>
     <v-container v-if="adminStore.itemsToDisplay === 'products'">
+        <h1>Gestion des produits</h1>
         <v-text-field 
             v-model="searchQuery"
             label="Rechercher un produit"
             prepend-inner-icon="mdi-magnify"
             class="mb-4"
         ></v-text-field>
-    
+        <v-btn prepend-icon="mdi-plus" class="mb-5 custom-btn" color="#3A3330" variant="flat" density="comfortable" @click=addProduct>Ajouter un Produit</v-btn>
         <v-data-table
             :items="products"
             :headers="headers"
@@ -32,6 +33,7 @@
 
     const adminStore = useAdminStore();
     const productStore = useProductStore();
+    const store = useStore();
 
     const { mobile } = useDisplay();
     const isMobile = computed(() => mobile.value);

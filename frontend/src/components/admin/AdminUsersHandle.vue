@@ -1,5 +1,6 @@
 <template>
   <v-container v-if="adminStore.itemsToDisplay === 'users'">
+      <h1>Gestion des utilisateurs</h1>
       <v-text-field 
           v-model="searchQuery"
           label="Rechercher un utilisateur"

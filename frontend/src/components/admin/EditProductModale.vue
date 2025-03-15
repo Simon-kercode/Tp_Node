@@ -100,7 +100,7 @@
         productData.append("id", product.value.id_produit);
         productData.append("nom", product.value.produit_nom);
         productData.append("prix", product.value.prix);
-        productData.append("categories", product.value.id_categories);
+        productData.append("categories", JSON.stringify(product.value.id_categories));
         if (product.value.description) {
             productData.append("description", product.value.description);
         }
@@ -111,7 +111,7 @@
         for (let pair of productData.entries()) {
             console.log(pair[0] + ": " + pair[1]);
         }
-        if (JSON.stringify(productData) !== JSON.stringify(initialProduct.value)) {
+        if (JSON.stringify(product.value) !== JSON.stringify(initialProduct.value)) {
             await productStore.updateProduct(productData);
             close();
         }

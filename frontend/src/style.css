@@ -24,3 +24,6 @@ a {
   color: var(--bg-orange);
   text-decoration: none;
 }
+.custom-btn:hover {
+  background-color: var(--bg-orange) !important;
+}

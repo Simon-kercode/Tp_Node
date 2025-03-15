@@ -50,9 +50,9 @@ export const useProductStore = defineStore("product", {
                         "Content-Type": "multipart/form-data"
                     }
                 });
-                console.log(response);
-                if (response.data.product) {
-                    this.updateProductInList(response.data.product[0]);
+                console.log(response.data.produit);
+                if (response.data.produit) {
+                    this.updateProductInList(response.data.produit);
                 }
             } catch(error) {
                 console.error("Erreur lors de la mise à jour du produit : ", error.message);
@@ -60,11 +60,12 @@ export const useProductStore = defineStore("product", {
         },
         // Met à jour la liste des utilisateurs dans le store (pour éviter de recharger toute la liste des users)
         updateProductInList(updatedProduct) {
-            const index = this.__ListProducts.findIndex(product => product.id === updatedProduct.id);
-            
-            // Si l'utilisateur existe, on met à jour la liste
+            const index = this.__ListProducts.findIndex(product => product.id_produit === updatedProduct.id_produit);
+            console.log(index);
+            // Si le produit existe, on met à jour la liste
             if (index !== -1) {
                 this.__ListProducts[index] = updatedProduct;
+                console.log(this.__ListProducts)
             }
         },
         async getListCategories() {
