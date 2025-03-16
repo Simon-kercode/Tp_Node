@@ -80,7 +80,37 @@ export const useProductStore = defineStore("product", {
                 console.error("Erreur lors de la création du produit : ", error)
             }
         },
-
+        async deleteProduct(product) {
+            try {
+                console.log(product)
+                const store = useStore();
+                const csrfToken = await store.getCsrfToken();
+                const response = await axios.delete(`http://localhost:3000/produits/${product.id_produit}`,
+                    {
+                        withCredentials: true,
+                        headers: {
+                            "X-CSRF-Token": csrfToken
+                        }
+                    });
+                    console.log(response);
+                    if (response.status === 200) {
+                        store.sendSnackBar({
+                            color: "success",
+                            text: "Produit supprimé avec succès !"
+                        });
+                        this.deleteProductInList(product)
+                    }
+                    else {
+                        store.sendSnackBar({
+                            color: "error",
+                            text: "Erreur lors de la suppression."
+                        })
+                    }
+                    
+            } catch (error) {
+                console.error("Erreur lors de la suppression du produit : ", error)
+            }
+        },
         // Met à jour la liste des utilisateurs dans le store (pour éviter de recharger toute la liste des users)
         updateProductInList(updatedProduct) {
             const index = this.__ListProducts.findIndex(product => product.id_produit === updatedProduct.id_produit);
@@ -93,6 +123,13 @@ export const useProductStore = defineStore("product", {
         },
         addProductInList(newProduct) {
             this.__ListProducts.push(newProduct);
+        },
+        deleteProductInList(deletedProduct) {
+            const index = this.__ListProducts.findIndex(product => product.id_produit === deletedProduct.id_produit);
+            
+            if (index !== -1) {
+                this.__ListProducts.splice(index, 1);
+            }
         },
 
         async getListCategories() {
