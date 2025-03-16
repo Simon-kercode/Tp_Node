@@ -52,11 +52,19 @@ export const useProductStore = defineStore("product", {
                     }
                 });
                 console.log(response.data.produit);
-                if (response.data.produit) {
+                if (response.status === 200 && response.data.produit) {
                     this.updateProductInList(response.data.produit);
+                    store.sendSnackBar({
+                        color: "success",
+                        text: "Produit mis à jour avec succès !"
+                    })
                 }
             } catch(error) {
                 console.error("Erreur lors de la mise à jour du produit : ", error.message);
+                store.sendSnackBar({
+                    color: "error",
+                    text: "Erreur lors de la mise à jour du produit !"
+                })
             }
         },
 
@@ -73,11 +81,19 @@ export const useProductStore = defineStore("product", {
                         }
                     });
                 console.log(response.data.produit);
-                if (response.data.produit) {
+                if (response.status === 200 && response.data.produit) {
                     this.addProductInList(response.data.produit)
+                    store.sendSnackBar({
+                        color: "success",
+                        text: "Produit créé avec succès !"
+                    });
                 }
             } catch (error) {
                 console.error("Erreur lors de la création du produit : ", error)
+                store.sendSnackBar({
+                    color: "error",
+                    text: "Erreur lors de la création du produit !"
+                });
             }
         },
         async deleteProduct(product) {
@@ -100,15 +116,13 @@ export const useProductStore = defineStore("product", {
                         });
                         this.deleteProductInList(product)
                     }
-                    else {
-                        store.sendSnackBar({
-                            color: "error",
-                            text: "Erreur lors de la suppression."
-                        })
-                    }
                     
             } catch (error) {
                 console.error("Erreur lors de la suppression du produit : ", error)
+                store.sendSnackBar({
+                    color: "error",
+                    text: "Erreur lors de la suppression du produit !"
+                });
             }
         },
         // Met à jour la liste des utilisateurs dans le store (pour éviter de recharger toute la liste des users)
