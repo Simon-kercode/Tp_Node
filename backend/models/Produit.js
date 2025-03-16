@@ -117,7 +117,7 @@ class Produit {
         }
     }
 
-    // Créer un nouveau produit avec des catégories associées 
+    // Crée un nouveau produit avec des catégories associées 
     static async create(nom, prix, categories, description = null, illustration = null, file = null) {
             const db = getDB();
             try {
@@ -149,10 +149,9 @@ class Produit {
                     const [resultsCategorie] = await db.query(queryCategorie, valuesCategorie);
                     console.log({produit: resultsProduit, categorie: resultsCategorie});
                     
-                    return {produit: resultsProduit, categorie: resultsCategorie};
-                }
-                else {
-                    return {produit: resultsProduit};
+                    // récupère le produit créé et le renvoi
+                    const newProduit = await this.getById(produitId);
+                    return newProduit[0];
                 }
             } catch (error) {
                 console.error("Erreur lors de la création du produit :", error);
@@ -160,7 +159,7 @@ class Produit {
             }
     }
 
-    // Supprimer un produit ainsi que ses liens dans la table "appartenir"
+    // Supprime un produit ainsi que ses liens dans la table "appartenir"
     static async delete(id) {
         const db = getDB();
 

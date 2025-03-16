@@ -73,6 +73,9 @@ export const useProductStore = defineStore("product", {
                         }
                     });
                 console.log(response.data.produit);
+                if (response.data.produit) {
+                    this.addProductInList(response.data.produit)
+                }
             } catch (error) {
                 console.error("Erreur lors de la création du produit : ", error)
             }
@@ -88,6 +91,10 @@ export const useProductStore = defineStore("product", {
                 console.log(this.__ListProducts)
             }
         },
+        addProductInList(newProduct) {
+            this.__ListProducts.push(newProduct);
+        },
+
         async getListCategories() {
             try {
                 const response = await axios.get(
