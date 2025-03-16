@@ -11,7 +11,7 @@ const {csrfMiddleware} = require("../middlewares/csrfMiddleware");
 router.get('/', ProduitController.getAll);
 router.get('/categories', ProduitController.getAllWithCategories);
 router.get('/:id', ProduitController.getById);
-router.post('/', authMiddleware, csrfMiddleware, ProduitController.create);
+router.post('/', authMiddleware, csrfMiddleware, upload.single('file'), ProduitController.create);
 router.put('/:id', authMiddleware, csrfMiddleware, upload.single('file'), ProduitController.update);
 router.delete('/:id', authMiddleware, csrfMiddleware, ProduitController.delete);
 

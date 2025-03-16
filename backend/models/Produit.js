@@ -118,18 +118,18 @@ class Produit {
     }
 
     // Créer un nouveau produit avec des catégories associées 
-    static async create(nom, prix, categories = [], illustration = null) {
+    static async create(nom, prix, categories, description = null, illustration = null, file = null) {
             const db = getDB();
             try {
                 let queryProduit;
                 let valuesProduit = [nom, prix];
-                
+                let fileName = file !== null? file.filename : null;
                 if (illustration && description) {
-                    queryProduit = `INSERT INTO produit (nom, prix, image, description) VALUES (?, ?, ?, ?)`;
-                    valuesProduit = [nom, prix, illustration, description];
+                    queryProduit = `INSERT INTO produit (nom, prix, illustration, description) VALUES (?, ?, ?, ?)`;
+                    valuesProduit = [nom, prix, fileName, description];
                 } else if (illustration) {
-                    queryProduit = `INSERT INTO produit (nom, prix, image) VALUES (?, ?, ?)`;
-                    valuesProduit = [nom, prix, illustration];
+                    queryProduit = `INSERT INTO produit (nom, prix, illustration) VALUES (?, ?, ?)`;
+                    valuesProduit = [nom, prix, fileName];
                 } else if (description) {
                     queryProduit = `INSERT INTO produit (nom, prix, description) VALUES (?, ?, ?)`;
                     valuesProduit = [nom, prix, description];
@@ -141,8 +141,9 @@ class Produit {
                 const [resultsProduit] = await db.query(queryProduit, valuesProduit);
                 console.log("resultats de l'insertion :", resultsProduit);
                 const produitId = resultsProduit.insertId;
-
+                console.log(produitId)
                 if (categories.length) {
+                    categories = JSON.parse(categories)
                     const queryCategorie = `INSERT INTO appartenir (id_produit, id_categorie) VALUES ${categories.map(() => "(?, ?)").join(", ")}`;
                     const valuesCategorie = categories.flatMap(categorieId => [produitId, categorieId]);  
                     const [resultsCategorie] = await db.query(queryCategorie, valuesCategorie);

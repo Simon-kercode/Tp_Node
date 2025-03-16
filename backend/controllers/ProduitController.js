@@ -57,9 +57,10 @@ class ProduitController {
      */
     static async create(req, res) {
         try {
-            const { nom, prix, categories } = req.body;
+            const { nom, prix, description, illustration, categories } = req.body;
+            const file = req.file;
             const produit = new Produit(nom, prix);
-            await Produit.create(nom, prix, categories);
+            await Produit.create(nom, prix, categories, description, illustration, file);
             res.status(201).json(produit);
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la création du produit.", error });

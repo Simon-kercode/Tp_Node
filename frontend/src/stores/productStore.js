@@ -12,6 +12,7 @@ export const useProductStore = defineStore("product", {
         activFilter: null,
 
         editProductModaleState: false,
+        isEditingProduct: false,
         productToEdit: null
 
     }),
@@ -58,6 +59,25 @@ export const useProductStore = defineStore("product", {
                 console.error("Erreur lors de la mise à jour du produit : ", error.message);
             }
         },
+
+        async addProduct(product) {
+            try {
+                const store = useStore();
+                const csrfToken = await store.getCsrfToken();
+                const response = await axios.post("http://localhost:3000/produits",
+                    product,
+                    {
+                        withCredentials: true,
+                        headers: {
+                            "X-CSRF-Token": csrfToken
+                        }
+                    });
+                console.log(response.data.produit);
+            } catch (error) {
+                console.error("Erreur lors de la création du produit : ", error)
+            }
+        },
+
         // Met à jour la liste des utilisateurs dans le store (pour éviter de recharger toute la liste des users)
         updateProductInList(updatedProduct) {
             const index = this.__ListProducts.findIndex(product => product.id_produit === updatedProduct.id_produit);

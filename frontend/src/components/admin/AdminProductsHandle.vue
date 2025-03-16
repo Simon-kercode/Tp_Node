@@ -63,7 +63,12 @@
 );
 
 function editProduct(product) {
+    productStore.isEditingProduct = true;
     productStore.toggleEditProductModale(product);
+}
+function addProduct() {
+  productStore.isEditingProduct = false;
+  productStore.toggleEditProductModale(null);
 }
 async function deleteProduct(product) {
     store.setConfirmMsg({
