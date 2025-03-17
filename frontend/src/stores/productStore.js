@@ -37,9 +37,9 @@ export const useProductStore = defineStore("product", {
             
         },
         async updateProduct(product) {
+            const store = useStore();
             try{
                 console.log("product envoyé au controlleur : ", product)
-                const store = useStore();
                 const csrfToken = await store.getCsrfToken();
                 // Récupère l'id par "get" car product est un formData
                 const response = await axios.put(`http://localhost:3000/produits/${product.get("id")}`, 
@@ -69,8 +69,8 @@ export const useProductStore = defineStore("product", {
         },
 
         async addProduct(product) {
+            const store = useStore();
             try {
-                const store = useStore();
                 const csrfToken = await store.getCsrfToken();
                 const response = await axios.post("http://localhost:3000/produits",
                     product,
@@ -81,7 +81,7 @@ export const useProductStore = defineStore("product", {
                         }
                     });
                 console.log(response.data.produit);
-                if (response.status === 200 && response.data.produit) {
+                if (response.status === 201 && response.data.produit) {
                     this.addProductInList(response.data.produit)
                     store.sendSnackBar({
                         color: "success",
@@ -97,9 +97,9 @@ export const useProductStore = defineStore("product", {
             }
         },
         async deleteProduct(product) {
+            const store = useStore();
             try {
                 console.log(product)
-                const store = useStore();
                 const csrfToken = await store.getCsrfToken();
                 const response = await axios.delete(`http://localhost:3000/produits/${product.id_produit}`,
                     {
