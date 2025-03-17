@@ -81,21 +81,21 @@
     });
 
     watch(
-    () => productStore.productToEdit,
-    (newVal) => {
-        if (productStore.isEditingProduct && newVal) {
-            Object.assign(productModel, {
-                id_produit: newVal.id_produit,
-                produit_nom: newVal.produit_nom || "",
-                prix: parseFloat(newVal.prix) || "",
-                description: newVal.description || "",
-                id_categories: newVal.id_categories || [],
-                illustration: newVal.illustration || "",
-            });
-        }
-    },
-    { deep: true, immediate: true }
-);   
+        () => productStore.productToEdit,
+        (newVal) => {
+            if (productStore.isEditingProduct && newVal) {
+                Object.assign(productModel, {
+                    id_produit: newVal.id_produit,
+                    produit_nom: newVal.produit_nom || "",
+                    prix: parseFloat(newVal.prix) || "",
+                    description: newVal.description || "",
+                    id_categories: newVal.id_categories || [],
+                    illustration: newVal.illustration || "",
+                });
+            }
+        },
+        { deep: true, immediate: true }
+    );   
 
     const initialProduct = ref({
         ...productModel

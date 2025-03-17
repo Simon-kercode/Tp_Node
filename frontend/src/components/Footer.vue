@@ -64,7 +64,7 @@
 <style scoped>
     .bg-footer{
         background-color: #3A3330;
-        max-height: 310px;
+        max-height: 450px;
         height: auto;
     }
     .card-footer {
