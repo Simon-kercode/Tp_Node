@@ -2,6 +2,7 @@ import {defineStore} from 'pinia';
 import { useStore } from './store';
 import { useProductStore } from './productStore';
 import { useUserStore } from './userStore';
+import { useOrderStore } from './orderStore';
 import axios from 'axios';
 
 export const useAdminStore = defineStore("admin", {
@@ -17,7 +18,9 @@ export const useAdminStore = defineStore("admin", {
                     this.itemsToDisplay = items
                     console.log(this.itemsToDisplay);
                     break;
-                
+                case 'orders':
+                    const orderStore = useOrderStore();
+                    await orderStore.getAllOrdersWithProducts();
                 case 'products':
                 case 'categories':
                     this.itemsToDisplay = items

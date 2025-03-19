@@ -1,6 +1,4 @@
 const Produit = require('../models/Produit');
-const multer = require("multer");
-const path = require("path");
 
 class ProduitController {
 

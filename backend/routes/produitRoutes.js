@@ -5,15 +5,15 @@ const upload = multer({ storage: multerMiddleware })
 const router = express.Router();
 
 const ProduitController = require('../controllers/ProduitController');
-const {authMiddleware} = require("../middlewares/authMiddleware");
+const {authMiddleware, roleMiddleware} = require("../middlewares/authMiddleware");
 const {csrfMiddleware} = require("../middlewares/csrfMiddleware");
 
 router.get('/', ProduitController.getAll);
 router.get('/categories', ProduitController.getAllWithCategories);
 router.get('/:id', ProduitController.getById);
-router.post('/', authMiddleware, csrfMiddleware, upload.single('file'), ProduitController.create);
-router.put('/:id', authMiddleware, csrfMiddleware, upload.single('file'), ProduitController.update);
-router.delete('/:id', authMiddleware, csrfMiddleware, ProduitController.delete);
+router.post('/', authMiddleware, csrfMiddleware, roleMiddleware(1), upload.single('file'), ProduitController.create);
+router.put('/:id', authMiddleware, csrfMiddleware, roleMiddleware(1), upload.single('file'), ProduitController.update);
+router.delete('/:id', authMiddleware, csrfMiddleware, roleMiddleware(1), ProduitController.delete);
 
 
 module.exports = router;

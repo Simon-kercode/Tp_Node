@@ -23,6 +23,9 @@ class Produit {
     getIllustration() {
         return this.#illustration;
     }
+    getDescription() {
+        return this.#description
+    }
 
     // Méthodes setter pour modifier les valeurs des attributs
     setNom(nom){
@@ -32,7 +35,10 @@ class Produit {
         this.#prix = prix;
     }
     setIllustration(illustration) {
-        this.illustration = illustration;
+        this.#illustration = illustration;
+    }
+    setDescription(description) {
+        this.#description = description
     }
 
     // Récupérer tous les produits
@@ -71,7 +77,8 @@ class Produit {
                     GROUP BY p.id_produit
                 `;
                 const [results] = await db.query(query);
-                console.log("resultats getAllWithCategories:", results);   
+                console.log("resultats getAllWithCategories:", results);  
+                // On renvoit les données formatées 
                 return results.map(product => ({
                     ...product,
                     id_categories: product.id_categories ? product.id_categories.split(",").map(Number) : [],

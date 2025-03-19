@@ -49,18 +49,18 @@
     );
     
     const headers = computed(() => mobile.value ? 
-  [
-    { key: 'produit_nom', title: 'Nom' },
-    { key: 'prix', title: 'Prix' },
-    { key: "actions", title: "", sortable: false }
-  ] : 
-  [
-    { key: 'produit_nom', title: 'Nom' },
-    { key: 'prix', title: 'Prix' },
-    { key: 'categories_noms', title: 'Catégories' },
-    { key: "actions", title: "", sortable: false }
-  ]
-);
+      [
+        { key: 'produit_nom', title: 'Nom' },
+        { key: 'prix', title: 'Prix' },
+        { key: "actions", title: "", sortable: false }
+      ] : 
+      [
+        { key: 'produit_nom', title: 'Nom' },
+        { key: 'prix', title: 'Prix' },
+        { key: 'categories_noms', title: 'Catégories' },
+        { key: "actions", title: "", sortable: false }
+      ]
+    );
 
 function editProduct(product) {
     productStore.isEditingProduct = true;

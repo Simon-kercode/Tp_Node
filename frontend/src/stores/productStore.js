@@ -1,7 +1,6 @@
 import {defineStore} from 'pinia';
 import { useStore } from './store';
 import axios from 'axios';
-import EditProductModale from '../components/admin/EditProductModale.vue';
 
 export const useProductStore = defineStore("product", {
     state: () => ({

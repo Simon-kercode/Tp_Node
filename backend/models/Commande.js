@@ -64,6 +64,36 @@ class Commande {
         }
     }
 
+    // Méthode pour récupérer toutes les commandes, ainsi que ses produits et l'email de l'utilisateur qui a passé la commande
+    static async getAllWithProducts() {
+        const db = getDB();
+        try {
+            const query = `
+                SELECT
+                    commande.*,
+                    u.mail AS user_email,
+                    GROUP_CONCAT(p.id_produit) AS id_produits,
+                    GROUP_CONCAT(p.nom) AS nom_produits
+                FROM commande
+                JOIN _user u ON u.id_user = commande.id_user
+                JOIN contenir c ON c.id_commande = commande.id_commande
+                JOIN produit p ON p.id_produit = c.id_produit
+                GROUP BY commande.id_commande, u.mail;
+            `;
+
+            const [results] = await db.query(query);
+            console.log("Récupération commandes et produits : ", results);
+            // On renvoit les données formatées
+            return results.map(commande => ({
+                ...commande,
+                id_produits: commande.id_produits ? commande.id_produits.split(",").map(Number) : [],
+                nom_produits: commande.nom_produits ? commande.nom_produits.split(",") : []
+            }));
+        } catch (error) {
+            console.error("Erreur lors de la récupération des commandes avec produits : ", error);
+            throw error;
+        }
+    }
     // Méthode pour récupérer une commande par son ID
     static async getById(id) {
         const db = getDB();
