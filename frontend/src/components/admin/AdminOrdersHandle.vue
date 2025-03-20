@@ -16,7 +16,7 @@
             :height="isMobile ? '400px' : ''"
         >
             <template v-slot:item.statut="{ item }">
-                <v-chip>
+                <v-chip :color="orderStore.getStatutColor(item.statut)" dark>
                 {{ item.statut }}
                 </v-chip>
             </template>
@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-    import { ref, computed, watch} from "vue";
+    import { ref, computed, watchEffect} from "vue";
     import { useAdminStore } from '../../stores/adminStore';
     import { useOrderStore } from "../../stores/orderStore";
     import { useStore } from "../../stores/store";
@@ -44,15 +44,16 @@
 
     const searchQuery = ref("");
 
-    const orders = ref(
-        orderStore.__ListOrders.map(commande => ({
+    // On utilise watchEffect pour récupérer les données du store dès qu'elles sont disponibles
+    const orders = ref([]);
+    watchEffect(() => {
+        orders.value = orderStore.__ListOrders.map(commande => ({
             ...commande,
             date_commande: new Date(commande.date_commande).toLocaleDateString("fr-FR"),
             total: commande.total + ' €',
             nom_produits: commande.nom_produits.join(', ')            
-        })),
-
-    );
+        }));
+    })
 
     const headers = computed(() => mobile.value ? 
         [

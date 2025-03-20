@@ -32,7 +32,7 @@ export const useOrderStore = defineStore("orders", {
 
         selectedOrder: null,
 
-        editOrdertModaleState: false,
+        editOrderModaleState: false,
         isEditingOrder: false,
         orderToEdit: null
 
@@ -141,14 +141,14 @@ export const useOrderStore = defineStore("orders", {
         },
         toggleEditOrderModale(order) {
             this.orderToEdit = order;
-            this.editOrdertModaleState = !this.editOrdertModaleState;
+            this.editOrderModaleState = !this.editOrderModaleState;
         },
 
-        // getStatutColor(status) {
-        //     const foundStatus = this.__ListStatus.find(item => item.status === status);
+        getStatutColor(status) {
+            const foundStatus = this.__ListStatus.find(item => item.status === status);
 
-        //     return foundStatus ? foundStatus.color : 'gray';
-        // }
+            return foundStatus ? foundStatus.color : 'gray';
+        }
 
     }
 });
