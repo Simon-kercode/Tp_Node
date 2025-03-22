@@ -1,13 +1,40 @@
 <template>
     <v-dialog v-model="editOrderModaleState" max-width="800px">
         <v-card>
-            <v-card-title>Edition produit</v-card-title>
+            <v-card-title>Edition commande</v-card-title>
             <v-form ref="orderForm" @submit.prevent="updateOrder();">
             <v-card-text>
                 <v-row>
-                    <v-col cols="12" md="8">                        
+                    <v-col cols="12" md="4">
+                        <v-text-field
+                            v-model="orderModel.date_commande"
+                            label="Date de la commande"
+                            readonly
+                        ></v-text-field>
                     </v-col>
-                    <v-col cols="12" md="4">                             
+                    <v-col cols="12" md="4">  
+                        <v-text-field
+                            v-model="orderModel.total"
+                            label="Total"
+                            readonly
+                        ></v-text-field>                           
+                    </v-col>
+                    <v-col cols="12" md="4">  
+                        <v-text-field
+                            v-model="orderModel.user_email"
+                            label="Destinataire"
+                            readonly
+                        ></v-text-field>
+                    </v-col>
+                </v-row>
+                <v-row class="mb-3">
+                    <v-col cols="12">
+                        <h4 class="text-h6 mb-2">Produits de la commande</h4>
+                        <v-chip-group column>
+                            <v-chip v-for="product in orderProducts" :key="product" color="primary">
+                                {{ product }}
+                            </v-chip>
+                        </v-chip-group>
                     </v-col>
                 </v-row>
                 <v-select
@@ -31,7 +58,7 @@
 </template>
 
 <script setup>
-    import {ref, reactive, watch} from 'vue';
+    import {ref, computed} from 'vue';
     import { storeToRefs } from 'pinia';
     import { useOrderStore } from '../../stores/orderStore';
     import { requiredRule } from '../../utils/formRules';
@@ -41,7 +68,9 @@
 
     const orderModel = ref(orderStore.orderToEdit);
     const initialOrder = ref({id: orderModel.value.id_commande, statut: orderModel.value.statut});
-
+    const orderProducts = computed(() => 
+        orderModel.value.nom_produits ? orderModel.value.nom_produits.split(', ') : []
+    );
     async function updateOrder() {
         const orderData = {
             id: orderModel.value.id_commande,

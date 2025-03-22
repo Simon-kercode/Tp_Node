@@ -185,9 +185,13 @@ class Commande {
 
             values.push(id);
             const query = `UPDATE commande SET ${fields.join(", ")} WHERE id_commande = ?`;
-            const results = await db.query(query, values);
+            await db.query(query, values);
 
-            return results
+            const queryUpdatedOrder = `SELECT * FROM commande WHERE id_commande = ?`;
+            const idCommande = [id]
+            const updatedOrder = await db.query(queryUpdatedOrder, idCommande);
+
+            return updatedOrder[0];
         }
         catch (error) {
             console.error("Erreur lors de la mise à jour de la commande : ", error);

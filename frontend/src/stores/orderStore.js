@@ -13,6 +13,10 @@ export const useOrderStore = defineStore("orders", {
                 color: "yellow",
             },
             {
+                status: "Payé",
+                color: "#2ecc71",
+            },
+            {
                 status: "En cours de traitement",
                 color: "blue"
             },
@@ -72,12 +76,11 @@ export const useOrderStore = defineStore("orders", {
                     withCredentials: true,
                     headers: {
                         "X-CSRF-Token": csrfToken,
-                        "Content-Type": "multipart/form-data"
                     }
                 });
                 console.log(response.data.order);
                 if (response.status === 200 && response.data.order) {
-                    this.updateProductInList(response.data.order);
+                    this.updateOrderInList(response.data.order);
                     store.sendSnackBar({
                         color: "success",
                         text: "Commande mise à jour avec succès !"
@@ -121,7 +124,7 @@ export const useOrderStore = defineStore("orders", {
             }
         },
 
-        udpateOrderInList(updatedOrder) {
+        updateOrderInList(updatedOrder) {
             const index = this.__ListOrders.findIndex(order => order.id_commande === updatedOrder.id_commande);
 
             if (index !== -1) {
@@ -141,6 +144,7 @@ export const useOrderStore = defineStore("orders", {
         },
         toggleEditOrderModale(order) {
             this.orderToEdit = order;
+            console.log("orderToEdit : ", this.orderToEdit)
             this.editOrderModaleState = !this.editOrderModaleState;
         },
 

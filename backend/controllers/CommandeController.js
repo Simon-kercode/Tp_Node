@@ -69,11 +69,12 @@ class CommandeController {
     static async update(req, res) {
         try {
             const commande = await Commande.getById(req.params.id);
-            if (!commande) return res.status(404).json({ message: "Catégorie non trouvée" });
+            if (!commande) return res.status(404).json({ message: "Commande non trouvée" });
+            console.log("body : ", req.body)
             const data = req.body;
             const updatedCommande = await Commande.update(req.params.id, data);
 
-            res.json({ message: "Commande mise à jour", commande: updatedCommande });
+            res.json({ message: "Commande mise à jour", order: updatedCommande });
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la mise à jour de la commande.", error });
         }
