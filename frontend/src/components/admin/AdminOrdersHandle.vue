@@ -20,6 +20,9 @@
                 {{ item.statut }}
                 </v-chip>
             </template>
+            <template v-slot:item.id_produits="{ item }">
+                {{ item.nom_produits ? item.id_produits.length : 0 }}
+            </template>
             <template v-slot:item.actions="{ item }">
                 <v-icon color="blue" @click="editOrder(item)" class="me-5">mdi-pencil</v-icon>
                 <v-icon color="red" @click="deleteOrder(item)">mdi-trash-can-outline</v-icon>
@@ -65,6 +68,7 @@
             { key: 'date_commande', title: 'Date' },
             { key: 'total', title: 'Total' },
             { key: 'statut', title: 'Statut'},
+            { key: 'id_produits', title: 'Nombre de produits'},
             { key: 'user_email', title: 'Destinataire' },
             { key: "actions", title: "", sortable: false }
         ]

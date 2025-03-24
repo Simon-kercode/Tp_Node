@@ -21,6 +21,8 @@ export const useAdminStore = defineStore("admin", {
                 case 'orders':
                     const orderStore = useOrderStore();
                     await orderStore.getAllOrdersWithProducts();
+                    this.itemsToDisplay = items;
+                    break;
                 case 'products':
                 case 'categories':
                     this.itemsToDisplay = items
@@ -28,14 +30,10 @@ export const useAdminStore = defineStore("admin", {
                     break;
                 
                 default:
-                    this.itemsToDisplay = null
+                    const defaultOrderStore = useOrderStore();
+                    await defaultOrderStore.getAllOrdersWithProducts();
+                    this.itemsToDisplay = 'orders'
             }
-          
-            // else {
-            //     this.itemsToDisplay = null
-            //     console.log(this.itemsToDisplay);
-                
-            // }
         }
     }
 })
