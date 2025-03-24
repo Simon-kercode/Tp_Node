@@ -77,7 +77,7 @@
     const orderStore = useOrderStore();
     const {editOrderModaleState} = storeToRefs(orderStore);
 
-    const orderModel = ref(orderStore.orderToEdit);
+    const orderModel = ref({...orderStore.orderToEdit});
     const initialOrder = ref({id: orderModel.value.id_commande, statut: orderModel.value.statut});
     const orderProducts = computed(() => 
         orderModel.value.nom_produits ? orderModel.value.nom_produits.split(', ') : []

@@ -67,7 +67,6 @@ export const useOrderStore = defineStore("orders", {
         async updateOrder(order) {
             const store = useStore();
             try{
-                console.log("order envoyé au controlleur : ", order)
                 const csrfToken = await store.getCsrfToken();
                 // Récupère l'id par "get" car product est un formData
                 const response = await axios.put(`http://localhost:3000/commandes/${order.id}`, 
@@ -80,7 +79,7 @@ export const useOrderStore = defineStore("orders", {
                 });
                 console.log(response.data.order);
                 if (response.status === 200 && response.data.order) {
-                    this.updateOrderInList(response.data.order);
+                    this.updateOrderInList(response.data.order[0]);
                     store.sendSnackBar({
                         color: "success",
                         text: "Commande mise à jour avec succès !"
@@ -128,7 +127,7 @@ export const useOrderStore = defineStore("orders", {
             const index = this.__ListOrders.findIndex(order => order.id_commande === updatedOrder.id_commande);
 
             if (index !== -1) {
-                this.__ListOrders[index] = updatedOrder
+                this.__ListOrders[index].statut = updatedOrder.statut
             }
         },
         addOrderInList(newOrder) {
@@ -144,7 +143,6 @@ export const useOrderStore = defineStore("orders", {
         },
         toggleEditOrderModale(order) {
             this.orderToEdit = order;
-            console.log("orderToEdit : ", this.orderToEdit)
             this.editOrderModaleState = !this.editOrderModaleState;
         },
 
