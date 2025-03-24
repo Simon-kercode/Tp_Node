@@ -1,7 +1,7 @@
 <template>
   <v-container v-if="product">
-    <v-row>
-      <v-col cols="12" md="6">
+    <v-row class="d-flex justify-center">
+      <v-col cols="12" md="4">
         <v-img 
           :src="`/uploads/productsImages/${product.illustration}`" 
           height="400" 
@@ -10,14 +10,39 @@
         ></v-img>
       </v-col>
       
-      <v-col cols="12" md="6">
+      <v-col cols="12" md="5">
         <h1 class="text-h4 mb-4">{{ product.produit_nom }}</h1>
         <p class="text-body-1 mb-4">{{ product.description }}</p>
         <v-divider class="mb-4"></v-divider>
         <p class="text-h5 mb-4">Prix : {{ product.prix }} €</p>
-        <v-btn color="primary" x-large block @click="addToCart">
-          Ajouter au panier
-        </v-btn>
+        <v-row>
+          <v-col cols="12" sm="4" class="d-flex">
+            <v-btn 
+              icon="mdi-minus"
+              @click="decrement"
+              class="square-btn"
+            ></v-btn>
+
+            <v-text-field
+              class="mx-1 text-center"
+              type="number"
+              v-model="quantity"
+              density="compact"
+              min="1"
+            ></v-text-field>
+
+            <v-btn 
+              icon="mdi-plus"
+              @click="increment"
+              class="square-btn"
+            ></v-btn>
+          </v-col>
+          <v-col cols="12" sm="8">
+            <v-btn class="custom-btn" x-large block @click="addToCart">
+              Ajouter au panier
+            </v-btn>          
+          </v-col>          
+        </v-row>
       </v-col>
     </v-row>
   </v-container>
@@ -31,7 +56,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useProductStore } from '../stores/productStore';
 
@@ -39,6 +64,12 @@ const route = useRoute();
 const productStore = useProductStore();
 const product = ref(null);
 const error = ref(false);
+const quantity = ref(1);
+
+// Empêche les valeurs négatives ou nulles entrées à la main
+watch(quantity, (val) => {
+  if (val < 1) quantity.value = 1; 
+});
 
 onMounted(() => {
   // Convertir l'ID en nombre
@@ -54,22 +85,29 @@ onMounted(() => {
   } else {
     error.value = true;
     console.error(`Produit avec l'ID ${productId} non trouvé dans le store`);
-    
-    // Optionnel : Charger les produits si jamais ils n'étaient pas chargés
-    productStore.getListProducts().then(() => {
-      const retryProduct = productStore.__ListProducts.find(
-        p => p.id_produit === productId
-      );
-      if (retryProduct) {
-        product.value = retryProduct;
-        error.value = false;
-      }
-    });
   }
 });
+
+function increment() {
+  quantity.value++;
+}
+function decrement() {
+  if (quantity.value <= 1 ) return;
+  quantity.value--
+}
 
 function addToCart() {
   console.log('Ajout au panier:', product.value);
   // Implémentez la logique réelle ici
 }
 </script>
+
+<style scoped>
+
+.square-btn {
+  width: 35px;
+  height: 35px;
+  min-width: 35px;
+  border-radius: 8px;
+}
+</style>

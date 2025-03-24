@@ -182,6 +182,7 @@ export const useProductStore = defineStore("product", {
             console.log(this.activFilter);
             
         },
+
         toggleEditProductModale(product) {
             this.productToEdit = product;
             this.editProductModaleState = !this.editProductModaleState;

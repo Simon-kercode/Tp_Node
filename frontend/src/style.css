@@ -24,6 +24,10 @@ a {
   color: var(--bg-orange);
   text-decoration: none;
 }
-.custom-btn:hover {
+.custom-btn {
   background-color: var(--bg-orange) !important;
+  color: white !important;
+}
+.custom-btn:hover {
+  background-color: #3A3330 !important;
 }
