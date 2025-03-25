@@ -23,6 +23,9 @@ class Produit {
     getIllustration() {
         return this.#illustration;
     }
+    getDescription() {
+        return this.#description
+    }
 
     // Méthodes setter pour modifier les valeurs des attributs
     setNom(nom){
@@ -32,7 +35,10 @@ class Produit {
         this.#prix = prix;
     }
     setIllustration(illustration) {
-        this.illustration = illustration;
+        this.#illustration = illustration;
+    }
+    setDescription(description) {
+        this.#description = description
     }
 
     // Récupérer tous les produits
@@ -71,7 +77,8 @@ class Produit {
                     GROUP BY p.id_produit
                 `;
                 const [results] = await db.query(query);
-                console.log("resultats getAllWithCategories:", results);   
+                console.log("resultats getAllWithCategories:", results);  
+                // On renvoit les données formatées 
                 return results.map(product => ({
                     ...product,
                     id_categories: product.id_categories ? product.id_categories.split(",").map(Number) : [],
@@ -88,10 +95,28 @@ class Produit {
     static async getById(id) {
         const db = getDB();
         try {
-            const query = `SELECT * FROM produit WHERE id_produit = ?`;
+            const query = `
+                    SELECT 
+                        p.id_produit, 
+                        p.nom AS produit_nom, 
+                        p.prix,
+                        p.description,
+                        p.illustration, 
+                        GROUP_CONCAT(c.id_categorie) AS id_categories,
+                        GROUP_CONCAT(c.nom) AS categories_noms
+                    FROM produit p
+                    JOIN appartenir a ON p.id_produit = a.id_produit
+                    JOIN categorie c ON a.id_categorie = c.id_categorie
+                    WHERE p.id_produit = ?
+                    GROUP BY p.id_produit
+                `;
             const values = [id];
             const [results] = await db.query(query, values);
-            return results;
+            return results.map(product => ({
+                ...product,
+                id_categories: product.id_categories ? product.id_categories.split(",").map(Number) : [],
+                categories_noms: product.categories_noms ? product.categories_noms.split(",") : []
+            })); 
         }
         catch (error) {
             console.error(`Erreur lors de la récupération du produit n°${id} :`, error);
@@ -99,19 +124,19 @@ class Produit {
         }
     }
 
-    // Créer un nouveau produit avec des catégories associées 
-    static async create(nom, prix, categories = [], illustration = null) {
+    // Crée un nouveau produit avec des catégories associées 
+    static async create(nom, prix, categories, description = null, illustration = null, file = null) {
             const db = getDB();
             try {
                 let queryProduit;
                 let valuesProduit = [nom, prix];
-                
+                let fileName = file !== null? file.filename : null;
                 if (illustration && description) {
-                    queryProduit = `INSERT INTO produit (nom, prix, image, description) VALUES (?, ?, ?, ?)`;
-                    valuesProduit = [nom, prix, illustration, description];
+                    queryProduit = `INSERT INTO produit (nom, prix, illustration, description) VALUES (?, ?, ?, ?)`;
+                    valuesProduit = [nom, prix, fileName, description];
                 } else if (illustration) {
-                    queryProduit = `INSERT INTO produit (nom, prix, image) VALUES (?, ?, ?)`;
-                    valuesProduit = [nom, prix, illustration];
+                    queryProduit = `INSERT INTO produit (nom, prix, illustration) VALUES (?, ?, ?)`;
+                    valuesProduit = [nom, prix, fileName];
                 } else if (description) {
                     queryProduit = `INSERT INTO produit (nom, prix, description) VALUES (?, ?, ?)`;
                     valuesProduit = [nom, prix, description];
@@ -123,17 +148,17 @@ class Produit {
                 const [resultsProduit] = await db.query(queryProduit, valuesProduit);
                 console.log("resultats de l'insertion :", resultsProduit);
                 const produitId = resultsProduit.insertId;
-
+                console.log(produitId)
                 if (categories.length) {
+                    categories = JSON.parse(categories)
                     const queryCategorie = `INSERT INTO appartenir (id_produit, id_categorie) VALUES ${categories.map(() => "(?, ?)").join(", ")}`;
                     const valuesCategorie = categories.flatMap(categorieId => [produitId, categorieId]);  
                     const [resultsCategorie] = await db.query(queryCategorie, valuesCategorie);
                     console.log({produit: resultsProduit, categorie: resultsCategorie});
                     
-                    return {produit: resultsProduit, categorie: resultsCategorie};
-                }
-                else {
-                    return {produit: resultsProduit};
+                    // récupère le produit créé et le renvoi
+                    const newProduit = await this.getById(produitId);
+                    return newProduit[0];
                 }
             } catch (error) {
                 console.error("Erreur lors de la création du produit :", error);
@@ -141,7 +166,7 @@ class Produit {
             }
     }
 
-    // Supprimer un produit ainsi que ses liens dans la table "appartenir"
+    // Supprime un produit ainsi que ses liens dans la table "appartenir"
     static async delete(id) {
         const db = getDB();
 
@@ -177,7 +202,7 @@ class Produit {
                 values.push(data.prix);
             }
             if (data.categories) {
-                this.updateCategories(id, data.categories);
+                this.updateCategories(id, JSON.parse(data.categories));
             }
             if (file && data.illustration) {
                 let newFileName = file.filename  
@@ -204,9 +229,15 @@ class Produit {
 
             values.push(id);
             const query = `UPDATE produit SET ${fields.join(", ")} WHERE id_produit = ?`;
-            const results = await db.query(query, values);
+            await db.query(query, values);
 
-            return results
+            // const queryUpdatedProduit = `SELECT * FROM produit WHERE id_produit = ?`;
+            // const idProduit = [id]
+            // const updatedProduit = await db.query(queryUpdatedProduit, idProduit);
+            const updatedProduit = await this.getById(id);
+
+            return updatedProduit[0];
+
         }
         catch (error) {
             console.error("Erreur lors de la mise à jour du produit : ", error);

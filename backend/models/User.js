@@ -180,7 +180,7 @@ class User {
 
             values.push(id);
             const query = `UPDATE _user SET ${fields.join(", ")} WHERE id_user = ?`;
-            const results = await db.query(query, values);
+            await db.query(query, values);
 
             const queryUpdatedUser = `SELECT id_user AS id, nom AS name, prenom AS firstname, mail AS email, isAdmin FROM _user WHERE id_user = ?`;
             const idUser = [id]

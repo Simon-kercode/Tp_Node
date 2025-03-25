@@ -1,7 +1,6 @@
 import {defineStore} from 'pinia';
 import { useStore } from './store';
 import axios from 'axios';
-import EditProductModale from '../components/admin/EditProductModale.vue';
 
 export const useProductStore = defineStore("product", {
     state: () => ({
@@ -12,6 +11,7 @@ export const useProductStore = defineStore("product", {
         activFilter: null,
 
         editProductModaleState: false,
+        isEditingProduct: false,
         productToEdit: null
 
     }),
@@ -36,9 +36,9 @@ export const useProductStore = defineStore("product", {
             
         },
         async updateProduct(product) {
+            const store = useStore();
             try{
                 console.log("product envoyé au controlleur : ", product)
-                const store = useStore();
                 const csrfToken = await store.getCsrfToken();
                 // Récupère l'id par "get" car product est un formData
                 const response = await axios.put(`http://localhost:3000/produits/${product.get("id")}`, 
@@ -50,23 +50,101 @@ export const useProductStore = defineStore("product", {
                         "Content-Type": "multipart/form-data"
                     }
                 });
-                console.log(response);
-                if (response.data.product) {
-                    this.updateProductInList(response.data.product[0]);
+                console.log(response.data.produit);
+                if (response.status === 200 && response.data.produit) {
+                    this.updateProductInList(response.data.produit);
+                    store.sendSnackBar({
+                        color: "success",
+                        text: "Produit mis à jour avec succès !"
+                    })
                 }
             } catch(error) {
                 console.error("Erreur lors de la mise à jour du produit : ", error.message);
+                store.sendSnackBar({
+                    color: "error",
+                    text: "Erreur lors de la mise à jour du produit !"
+                })
+            }
+        },
+
+        async addProduct(product) {
+            const store = useStore();
+            try {
+                const csrfToken = await store.getCsrfToken();
+                const response = await axios.post("http://localhost:3000/produits",
+                    product,
+                    {
+                        withCredentials: true,
+                        headers: {
+                            "X-CSRF-Token": csrfToken
+                        }
+                    });
+                console.log(response.data.produit);
+                if (response.status === 201 && response.data.produit) {
+                    this.addProductInList(response.data.produit)
+                    store.sendSnackBar({
+                        color: "success",
+                        text: "Produit créé avec succès !"
+                    });
+                }
+            } catch (error) {
+                console.error("Erreur lors de la création du produit : ", error)
+                store.sendSnackBar({
+                    color: "error",
+                    text: "Erreur lors de la création du produit !"
+                });
+            }
+        },
+        async deleteProduct(product) {
+            const store = useStore();
+            try {
+                console.log(product)
+                const csrfToken = await store.getCsrfToken();
+                const response = await axios.delete(`http://localhost:3000/produits/${product.id_produit}`,
+                    {
+                        withCredentials: true,
+                        headers: {
+                            "X-CSRF-Token": csrfToken
+                        }
+                    });
+                    console.log(response);
+                    if (response.status === 200) {
+                        store.sendSnackBar({
+                            color: "success",
+                            text: "Produit supprimé avec succès !"
+                        });
+                        this.deleteProductInList(product)
+                    }
+                    
+            } catch (error) {
+                console.error("Erreur lors de la suppression du produit : ", error)
+                store.sendSnackBar({
+                    color: "error",
+                    text: "Erreur lors de la suppression du produit !"
+                });
             }
         },
         // Met à jour la liste des utilisateurs dans le store (pour éviter de recharger toute la liste des users)
         updateProductInList(updatedProduct) {
-            const index = this.__ListProducts.findIndex(product => product.id === updatedProduct.id);
-            
-            // Si l'utilisateur existe, on met à jour la liste
+            const index = this.__ListProducts.findIndex(product => product.id_produit === updatedProduct.id_produit);
+            console.log(index);
+            // Si le produit existe, on met à jour la liste
             if (index !== -1) {
                 this.__ListProducts[index] = updatedProduct;
+                console.log(this.__ListProducts)
             }
         },
+        addProductInList(newProduct) {
+            this.__ListProducts.push(newProduct);
+        },
+        deleteProductInList(deletedProduct) {
+            const index = this.__ListProducts.findIndex(product => product.id_produit === deletedProduct.id_produit);
+            
+            if (index !== -1) {
+                this.__ListProducts.splice(index, 1);
+            }
+        },
+
         async getListCategories() {
             try {
                 const response = await axios.get(
@@ -104,6 +182,7 @@ export const useProductStore = defineStore("product", {
             console.log(this.activFilter);
             
         },
+
         toggleEditProductModale(product) {
             this.productToEdit = product;
             this.editProductModaleState = !this.editProductModaleState;

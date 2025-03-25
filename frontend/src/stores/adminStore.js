@@ -2,6 +2,7 @@ import {defineStore} from 'pinia';
 import { useStore } from './store';
 import { useProductStore } from './productStore';
 import { useUserStore } from './userStore';
+import { useOrderStore } from './orderStore';
 import axios from 'axios';
 
 export const useAdminStore = defineStore("admin", {
@@ -17,7 +18,11 @@ export const useAdminStore = defineStore("admin", {
                     this.itemsToDisplay = items
                     console.log(this.itemsToDisplay);
                     break;
-                
+                case 'orders':
+                    const orderStore = useOrderStore();
+                    await orderStore.getAllOrdersWithProducts();
+                    this.itemsToDisplay = items;
+                    break;
                 case 'products':
                 case 'categories':
                     this.itemsToDisplay = items
@@ -25,14 +30,10 @@ export const useAdminStore = defineStore("admin", {
                     break;
                 
                 default:
-                    this.itemsToDisplay = null
+                    const defaultOrderStore = useOrderStore();
+                    await defaultOrderStore.getAllOrdersWithProducts();
+                    this.itemsToDisplay = 'orders'
             }
-          
-            // else {
-            //     this.itemsToDisplay = null
-            //     console.log(this.itemsToDisplay);
-                
-            // }
         }
     }
 })

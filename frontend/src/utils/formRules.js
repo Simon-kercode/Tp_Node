@@ -2,7 +2,7 @@
 export const requiredRule = (fieldName = "Ce champ") => {
     return (value) => {
         // Retourne une fonction de validation qui vérifie si la valeur est null, undefined ou vide
-        if (value === null || value === undefined || value === "") {
+        if (value === null || value === undefined || value === "" || (Array.isArray(value) && value.length === 0)) {
         return `${fieldName} est requis`;
         }
         return true;

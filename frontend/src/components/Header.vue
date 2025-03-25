@@ -37,8 +37,11 @@
               <v-btn v-else to="/login">
                 <v-icon size="32" >mdi-account-outline</v-icon>
               </v-btn>
-                <v-btn>
-                    <v-icon size="32">mdi-cart-outline</v-icon>
+                <v-btn stacked to="/panier">
+                  <v-badge v-if="quantityInCart > 0" color="success" :content="quantityInCart">
+                    <v-icon size="32">mdi-cart-outline</v-icon>                    
+                  </v-badge>
+                  <v-icon v-else size="32">mdi-cart-outline</v-icon>                    
                 </v-btn>
                 <v-btn v-if="isAdmin" to="/admin">
                     <v-icon size="32">mdi-police-badge-outline</v-icon>
@@ -59,15 +62,19 @@
   
   <script setup>
   import { ref, computed } from 'vue'
+  import { storeToRefs } from 'pinia';
   import { useDisplay } from 'vuetify'
   import { useAuthStore } from '../stores/authStore';
   import logo from '../assets/images/logo.png';
   import {useRouter} from 'vue-router';
+  import { useOrderStore } from '../stores/orderStore';
   
   const { mobile } = useDisplay() // Détecte si on est sur mobile
   const isMobile = computed(() => mobile.value) // Variable réactive pour mobile
   const drawer = ref(false) // Gère l'ouverture du menu mobile
   const authStore = useAuthStore();
+  const orderStore = useOrderStore();
+  const {quantityInCart} = storeToRefs(orderStore);
   const router = useRouter()
 
   const isAuthenticated = computed(() => authStore.user !== null);

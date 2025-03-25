@@ -24,11 +24,19 @@ class UserController {
         }
     }
 
-    // Récupérer tous l'utilisateur via son id 
+    /* Récupérer un utilisateur via son id.
+     * Vérifie que l'utilisateur qui envoie la requete est bien l'utilisateur demandé.
+    */
     static async getById(req, res) {
         try {
+            const userId = req.user.id
             const user = await User.getById(req.params.id);
             if (!user)  return res.status(404).json({ message: "Utilisateur non trouvé" });
+
+            if(user.id_user !== userId) {
+                return res.status(403).json({ message: "Accès interdit" });
+            }
+
             res.json(user);
         } catch (error) {
             res.status(500).json({ message: `Erreur lors de la récupération de l'utilisateur`, error: error.message });

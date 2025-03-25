@@ -9,21 +9,37 @@ class CommandeController {
     static async getAll(req, res) {
         try {
             const commandesData = await Commande.getAll();
-            const commandes = commandesData.map(commande => new Commande(commande.statut, commande.total, commande.date_commande));
-            res.json(commandes);
+            res.json(commandesData);
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la récupération des commandes.", error });
         }
     }
 
+    static async getAllWithProducts(req, res) {
+        try {
+            const commandesData = await Commande.getAllWithProducts();
+            console.log("commandes récupérées : ", commandesData);
+            
+            res.json(commandesData);
+        } catch (error) {
+            res.status(500).json({message: "Errur lors de la récupération des commandes avec produits.", error});
+        }
+    }
     /**
      * Récupère une commande spécifique par son ID.
+     * Vérifie que l'utilisateur est bien celui qui a passé la commande, sinon envoie une erreur 403.
      * Retourne la commande si elle est trouvée, sinon une erreur 404.
      */
     static async getById(req, res) {
         try {
+            const userId = req.user.id;
             const commande = await Commande.getById(req.params.id);
             if (!commande) return res.status(404).json({ message: "Commande non trouvée" });
+
+            if (commande.id_user !== userId && req.user.role !== 1) {
+                return res.status(403).json({ message: "Accès interdit" });
+            }
+
             res.json(commande);
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la récupération de la commande", error });
@@ -53,11 +69,12 @@ class CommandeController {
     static async update(req, res) {
         try {
             const commande = await Commande.getById(req.params.id);
-            if (!commande) return res.status(404).json({ message: "Catégorie non trouvée" });
+            if (!commande) return res.status(404).json({ message: "Commande non trouvée" });
+            console.log("body : ", req.body)
             const data = req.body;
             const updatedCommande = await Commande.update(req.params.id, data);
 
-            res.json({ message: "Commande mise à jour", commande: updatedCommande });
+            res.json({ message: "Commande mise à jour", order: updatedCommande });
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la mise à jour de la commande.", error });
         }

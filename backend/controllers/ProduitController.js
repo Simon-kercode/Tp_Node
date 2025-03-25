@@ -1,6 +1,4 @@
 const Produit = require('../models/Produit');
-const multer = require("multer");
-const path = require("path");
 
 class ProduitController {
 
@@ -57,10 +55,10 @@ class ProduitController {
      */
     static async create(req, res) {
         try {
-            const { nom, prix, categories } = req.body;
-            const produit = new Produit(nom, prix);
-            await Produit.create(nom, prix, categories);
-            res.status(201).json(produit);
+            const { nom, prix, description, illustration, categories } = req.body;
+            const file = req.file;
+            const produit = await Produit.create(nom, prix, categories, description, illustration, file);
+            res.status(201).json({message : "Produit créé", produit: produit});
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la création du produit.", error });
         }

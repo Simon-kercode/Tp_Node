@@ -10,6 +10,7 @@
       <Snackbar v-if="store.snackbarState"/>
       <EditUserModale v-if="userStore.editUserModaleState"/>
       <EditProductModale v-if="productStore.editProductModaleState"/>
+      <EditOrderModale v-if="orderStore.editOrderModaleState" />
       <ConfirmDialog v-if="store.confirmState"/>
   </v-app>
 
@@ -22,11 +23,13 @@ import { useStore } from './stores/store';
 import { useProductStore } from './stores/productStore';
 import {useAuthStore} from './stores/authStore';
 import { useUserStore } from './stores/userStore';
+import { useOrderStore } from './stores/orderStore';
 import Header from './components/Header.vue';
 import Footer from './components/Footer.vue';
 import Snackbar from './components/Snackbar.vue';
 import EditUserModale from './components/admin/EditUserModale.vue';
 import EditProductModale from './components/admin/EditProductModale.vue';
+import EditOrderModale from './components/admin/EditOrderModale.vue';
 import ConfirmDialog from './components/ConfirmDialog.vue';
 
 const route = useRoute();
@@ -36,6 +39,7 @@ const store = useStore();
 const productStore = useProductStore();
 const authStore = useAuthStore();
 const userStore = useUserStore();
+const orderStore = useOrderStore();
 
 // Quand le composant est monté, on charge tous les produits, les catégories et l'utilisateur connecté (si son token est toujours valide)
 onMounted(async () => {

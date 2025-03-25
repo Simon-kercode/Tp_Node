@@ -6,6 +6,7 @@ import ShopView from './views/ShopView.vue';
 import ContactView from './views/ContactView.vue';
 import AdminView from './views/AdminView.vue';
 import ProductDetailView from './views/ProductView.vue';
+import CartView from './views/CartView.vue';
 
 
 const routes = [
@@ -14,6 +15,7 @@ const routes = [
     { path: '/contact', component: ContactView, name: 'Contact' },
     { path: '/admin', component: AdminView, name: 'Admin', meta: {requiresAdmin: true} },
     { path: '/produit/:id', component: ProductDetailView, name: 'ProductDetail' },
+    { path: '/panier', component: CartView, name: 'Cart' },
     { path: '/', component: HomeView, name: 'Home'},
 ];
 

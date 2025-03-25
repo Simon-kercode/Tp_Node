@@ -2,14 +2,22 @@
     <Sidebar />
     <AdminUsersHandle />
     <AdminProductsHandle />
-    <AdminCategoriesHandle />
+    <AdminOrdersHandle />
 </template>
 
 <script setup>
     import Sidebar from '../components/admin/Sidebar.vue';
     import AdminUsersHandle from '../components/admin/AdminUsersHandle.vue';
     import AdminProductsHandle from '../components/admin/AdminProductsHandle.vue';
-    import AdminCategoriesHandle from '../components/admin/AdminCategoriesHandle.vue';
+    import AdminOrdersHandle from '../components/admin/AdminOrdersHandle.vue';
+    import { onMounted } from 'vue';
+    import { useAdminStore } from '../stores/adminStore';
+
+    const adminStore = useAdminStore();
+
+    onMounted(() => {
+        adminStore.setItemsToDisplay('orders');
+    })
 </script>
 
 <style scoped>
