@@ -38,7 +38,7 @@
             ></v-btn>
           </v-col>
           <v-col cols="12" sm="8">
-            <v-btn class="custom-btn" x-large block @click="addToCart">
+            <v-btn class="custom-btn" x-large block @click="addToCart(product, quantity)">
               Ajouter au panier
             </v-btn>          
           </v-col>          
@@ -59,9 +59,11 @@
 import { ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useProductStore } from '../stores/productStore';
+import { useOrderStore } from '../stores/orderStore';
 
 const route = useRoute();
 const productStore = useProductStore();
+const orderStore = useOrderStore();
 const product = ref(null);
 const error = ref(false);
 const quantity = ref(1);
@@ -96,18 +98,11 @@ function decrement() {
   quantity.value--
 }
 
-function addToCart() {
-  console.log('Ajout au panier:', product.value);
-  // Implémentez la logique réelle ici
+function addToCart(product, number) {
+  orderStore.addProductToCart(product, number);
 }
 </script>
 
 <style scoped>
 
-.square-btn {
-  width: 35px;
-  height: 35px;
-  min-width: 35px;
-  border-radius: 8px;
-}
 </style>

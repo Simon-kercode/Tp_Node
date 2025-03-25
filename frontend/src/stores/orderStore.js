@@ -38,8 +38,10 @@ export const useOrderStore = defineStore("orders", {
 
         editOrderModaleState: false,
         isEditingOrder: false,
-        orderToEdit: null
+        orderToEdit: null,
 
+        cartContent: [],
+        quantityInCart: 0,
     }),
 
     actions : {
@@ -150,7 +152,63 @@ export const useOrderStore = defineStore("orders", {
             const foundStatus = this.__ListStatus.find(item => item.status === status);
 
             return foundStatus ? foundStatus.color : 'gray';
-        }
+        },
 
+        /* Méthode d'ajout au panier.
+         * Vérifie si le produit existe déjà dans le panier. Si oui, incrémente la quantité
+         * Si non, l'ajoute avec la quantité donnée.
+         */
+        addProductToCart(product,quantity) {
+            const existingProduct = this.cartContent.find(item => item.id_produit === product.id_produit);
+            if (existingProduct) {
+                const initialQuantity = existingProduct.quantity;
+                existingProduct.quantity += quantity;
+                this.verifyProductInCart(product, initialQuantity, quantity);
+            }
+            else {
+                this.cartContent.push({...product, quantity});
+                this.verifyProductInCart(product, 0, quantity);
+            }
+            this.quantityInCart += quantity
+            console.log(this.cartContent)
+        },
+
+        /* Méthode de déletion de produit du panier.
+         * Décrémente de la quantité donnée
+         * Supprime le produit si la quantité atteint 0
+         */
+        deleteProductToCart(product, quantity) {
+            const index = this.cartContent.findIndex(item => item.id_produit === product.id_produit);
+        
+            if (index !== -1) {
+                this.cartContent[index].quantity -= quantity;
+                this.quantityInCart -= quantity;
+
+                if (this.cartContent[index].quantity <= 0) {
+                    this.cartContent.splice(index, 1);
+                }
+            }
+        },
+        
+        // Méthode de vérification de l'ajout du produit au panier
+        verifyProductInCart(product, initialQuantity, quantity) {
+            const store = useStore();
+            const verifiedProduct = this.cartContent.find(
+                item => item.id_produit === product.id_produit && 
+                item.quantity === (initialQuantity + quantity)
+            );
+
+            if (verifiedProduct) {
+                store.sendSnackBar({
+                    color: "success",
+                    text: "Produit ajouté au panier."
+                })
+            } else {
+                store.sendSnackBar({
+                    color: "error",
+                    text: "Echec de l'ajout au panier."
+                })
+            }
+        }
     }
 });

@@ -31,3 +31,9 @@ a {
 .custom-btn:hover {
   background-color: #3A3330 !important;
 }
+.square-btn {
+  width: 35px !important;
+  height: 35px !important;
+  min-width: 35px !important;
+  border-radius: 8px !important;
+}
