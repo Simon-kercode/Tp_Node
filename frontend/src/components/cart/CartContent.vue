@@ -1,8 +1,4 @@
 <template>
-    <v-container class="my-5">
-        <v-card>
-            <v-card-title class="text-center">Votre panier</v-card-title>
-            <v-row>
                 <v-col cols="12" md="8">
                     <v-data-table
                         :items="cartContent"
@@ -27,18 +23,10 @@
                         <v-icon color="red" @click="orderStore.deleteProductToCart(item, item.quantity)">mdi-trash-can-outline</v-icon>
                     </template>
                     </v-data-table>
-                </v-col>
-                <v-col cols="12" md="4" class="bg-gray">
-
-                </v-col>
-            </v-row>
-        </v-card>        
-    </v-container>
-
+                </v-col>    
 </template>
 
 <script setup>
-    import { ref } from 'vue';
     import { storeToRefs } from 'pinia';
     import { useOrderStore } from '../../stores/orderStore';
 
