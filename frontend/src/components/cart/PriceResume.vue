@@ -1,5 +1,5 @@
 <template>
-    <v-col cols="12" md="4">
+    <v-col cols="12" lg="4">
         <v-card class="fond-clair me-2 mb-2">
             <v-card-title>Résumé de votre commande</v-card-title>
             <v-divider></v-divider>
@@ -27,10 +27,18 @@
 <script setup>
     import { computed } from 'vue';
     import { useOrderStore } from '../../stores/orderStore';
+
     const orderStore = useOrderStore();
+
     const subTotal = computed(() => {
-        return orderStore.cartContent.reduce((sum, item) => sum + item.prix * item.quantity, 0);
+        return Number(orderStore.cartContent
+            .reduce((sum, item) => sum + item.prix * item.quantity, 0)
+            .toFixed(2)
+        );
     });
-    const tva = computed(() => subTotal.value * 0.2);
-    const total = computed(() => subTotal.value + tva.value);
+
+    const tva = computed(() => Number((subTotal.value * 0.2).toFixed(2)));
+
+    const total = computed(() => Number((subTotal.value + tva.value).toFixed(2)));
+    
 </script>

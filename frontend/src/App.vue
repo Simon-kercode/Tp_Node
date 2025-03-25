@@ -46,6 +46,7 @@ onMounted(async () => {
   await productStore.getListProducts();
   await productStore.getListCategories();
   await authStore.initializeAuth();
+  await orderStore.loadCart();
 
   store.allDataLoaded = true;
 })

@@ -154,9 +154,42 @@ export const useOrderStore = defineStore("orders", {
             return foundStatus ? foundStatus.color : 'gray';
         },
 
+        /* méthode de chargement du panier dans le localstorage
+         * Si la date actuelle est supérieure à la date d'expiration, on vide le panier.
+         */
+        async loadCart() {
+            const savedCart = localStorage.getItem("cart");
+            console.log(savedCart)
+            if (savedCart) {
+              const cartData = JSON.parse(savedCart);
+              // Si le panier a expiré, on le vide
+              if (Date.now() > cartData.expiry) {
+                localStorage.removeItem("cart");
+                this.cartContent = [];
+                this.quantityInCart = 0;
+              } else {
+                this.cartContent = cartData.items;
+                this.quantityInCart = this.cartContent.reduce((sum, item) => sum + item.quantity, 0);
+              }
+            }
+            console.log(this.cartContent)
+          },
+
+        /* Méthode d'enregistrement du panier dans le localstorage
+         * On définit un temps d'expiration du panier de 24h (expiration manuelle par la méthode de chargement)
+         */
+        saveCart() {
+            const cartData = {
+              items: this.cartContent,
+              expiry: Date.now() + 24 * 60 * 60 * 1000,
+            };
+            localStorage.setItem("cart", JSON.stringify(cartData)); 
+          },
+
         /* Méthode d'ajout au panier.
          * Vérifie si le produit existe déjà dans le panier. Si oui, incrémente la quantité
          * Si non, l'ajoute avec la quantité donnée.
+         * Appelle la fonction de sauvegarde
          */
         addProductToCart(product,quantity) {
             const existingProduct = this.cartContent.find(item => item.id_produit === product.id_produit);
@@ -171,11 +204,12 @@ export const useOrderStore = defineStore("orders", {
             }
             this.quantityInCart += quantity
             console.log(this.cartContent)
+            this.saveCart();
         },
-
         /* Méthode de déletion de produit du panier.
          * Décrémente de la quantité donnée
          * Supprime le produit si la quantité atteint 0
+         * Appelles la fonction de sauvegarde
          */
         deleteProductToCart(product, quantity) {
             const index = this.cartContent.findIndex(item => item.id_produit === product.id_produit);
@@ -188,8 +222,9 @@ export const useOrderStore = defineStore("orders", {
                     this.cartContent.splice(index, 1);
                 }
             }
+            this.saveCart();
         },
-        
+
         // Méthode de vérification de l'ajout du produit au panier
         verifyProductInCart(product, initialQuantity, quantity) {
             const store = useStore();
