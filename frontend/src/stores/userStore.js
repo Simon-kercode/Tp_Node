@@ -8,6 +8,8 @@ export const useUserStore = defineStore("user", {
         __listUsers: null,
         editUserModaleState: false,
         userToEdit: null,
+
+        editPasswordModaleState: false,
     }),
     actions: {
         async getAllUsers() {
@@ -78,6 +80,9 @@ export const useUserStore = defineStore("user", {
             if (index !== -1) {
                 this.__listUsers.splice(index, 1);
             }
+        },
+        toggleEditPasswordModale() {
+            this.editPasswordModaleState = !this.editPasswordModaleState;
         }
     }
 })

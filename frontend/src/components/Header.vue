@@ -26,7 +26,7 @@
                   </v-btn>
                 </template>
                 <v-list>
-                  <v-list-item>
+                  <v-list-item :to="`/profil/${authStore.user.id}`">
                     <v-list-item-title>Mon Profil</v-list-item-title>
                   </v-list-item>
                   <v-list-item @click="handleLogout(router)">
@@ -61,7 +61,7 @@
   </template>
   
   <script setup>
-  import { ref, computed } from 'vue'
+  import { ref, computed, useSSRContext } from 'vue'
   import { storeToRefs } from 'pinia';
   import { useDisplay } from 'vuetify'
   import { useAuthStore } from '../stores/authStore';

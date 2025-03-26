@@ -36,7 +36,6 @@ class UserController {
             if(user.id_user !== userId) {
                 return res.status(403).json({ message: "Accès interdit" });
             }
-
             res.json(user);
         } catch (error) {
             res.status(500).json({ message: `Erreur lors de la récupération de l'utilisateur`, error: error.message });

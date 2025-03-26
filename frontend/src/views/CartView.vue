@@ -1,6 +1,6 @@
 <template>
     <v-container class="my-5">
-        <v-card>
+        <v-card variant="text">
             <v-card-title class="text-center text-h4">Votre panier</v-card-title>
             <v-card-text>
                 <v-row v-if="orderStore.quantityInCart > 0">
