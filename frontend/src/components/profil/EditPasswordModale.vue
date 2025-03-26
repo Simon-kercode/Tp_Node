@@ -8,7 +8,7 @@
                         <v-col cols="12">
                             <v-text-field
                                 v-model="actualPassword"
-                                label="Mot de pass actuel"
+                                label="Mot de passe actuel"
                                 type="password"
                                 density="compact"
                                 :rules="[requiredRule, passwordRule]"
@@ -28,7 +28,7 @@
                         <v-col cols="12">
                             <v-text-field
                                 v-model="confirmNewPassword"
-                                label="Mot de pass actuel"
+                                label="Confirmer le nouveau mot de passe"
                                 type="password"
                                 density="compact"
                                 :rules="[requiredRule, passwordRule]"
@@ -60,7 +60,7 @@
     const confirmNewPassword = ref(null);
 
     function savePassword() {
-        const updated = userStore.update
+        // const updated = userStore.update
     }
     
     function close() {

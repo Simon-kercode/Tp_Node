@@ -15,6 +15,7 @@ exports.authMiddleware = (req, res, next) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         // Ajout des informations du token décodé à l'objet req (pour une utilisation dans les prochains middlewares/routes)
         req.user = decoded;
+        console.log(req.user)
         // Passe au middleware suivant ou au contrôleur
         next();
     } catch (error) {

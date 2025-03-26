@@ -159,7 +159,6 @@ export const useOrderStore = defineStore("orders", {
          */
         async loadCart() {
             const savedCart = localStorage.getItem("cart");
-            console.log(savedCart)
             if (savedCart) {
               const cartData = JSON.parse(savedCart);
               // Si le panier a expiré, on le vide

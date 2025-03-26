@@ -1,15 +1,16 @@
 <template>
 <v-card variant="text">
-  <v-card-title class="text-h6 font-weight-bold">Informations personnelles</v-card-title>
+  <v-card-title class="text-h6 font-weight-bold">Bienvenue  {{ user.firstname }}</v-card-title>
   
   <v-card-text>
     <v-list density="compact">
         <v-list-item>
             <v-row>
-                <v-col cols="4" class="font-weight bold">Nom : {{ user.name }}</v-col>
-                <v-col></v-col>
+                <v-col cols="4"><strong>Nom :</strong> {{ user.name }}</v-col>
+                <v-col cols="8"><strong>Prénom :</strong> {{ user.firstname }}</v-col>
             </v-row>
         </v-list-item>
+        <v-divider class="my-3"></v-divider>
       <!-- Email -->
       <v-list-item>
         <v-row class="d-flex align-center">
@@ -17,7 +18,7 @@
           <v-col cols="8">{{ user.email }}</v-col>
         </v-row>
       </v-list-item>
-      <v-divider></v-divider>
+      <v-divider class="my-3"></v-divider>
       <!-- Password -->
       <v-list-item>
         <v-row class="d-flex align-center">
