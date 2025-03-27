@@ -43,12 +43,33 @@ export const useUserStore = defineStore("user", {
                     withCredentials: true,
                     headers: {'X-CSRF-Token': csrfToken}
                 });
-                console.log(response);
+                console.log(response.data.user);
                 if (response.data.user) {
                     this.updateUserInList(response.data.user[0]);
+                    return true
                 }
             } catch(error) {
                 console.error("Erreur lors de la mise à jour utilisateur : ", error);
+                return false
+            }
+        },
+        async updatePassword(data) {
+            try {
+                const store = useStore();
+                const csrfToken = await store.getCsrfToken();
+
+                const response = await axios.put(`http://localhost:3000/users/${data.id}`, 
+                    data,
+                {
+                    withCredentials: true,
+                    headers: {'X-CSRF-Token': csrfToken}
+                });
+                if (response.data.user) {
+                    return true;
+                }
+            } catch (error) {
+                console.error("Erreur lors de la mise à jour du mot de passe :", error);
+                return false
             }
         },
         async deleteUser(user) {

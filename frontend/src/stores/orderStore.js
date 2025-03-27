@@ -243,6 +243,36 @@ export const useOrderStore = defineStore("orders", {
                     text: "Echec de l'ajout au panier."
                 })
             }
+        },
+
+        // TODO !!!!!!!!!!!!!!!!!!
+        async loadUserOrders() {
+            const store = useStore();
+            try {
+                const csrfToken = await store.getCsrfToken();
+                const response = await axios.get(`http://localhost:3000/commandes/`,
+                    {
+                        withCredentials: true,
+                        headers: {
+                            "X-CSRF-Token": csrfToken
+                        }
+                    });
+                    console.log(response);
+                    if (response.status === 200) {
+                        store.sendSnackBar({
+                            color: "success",
+                            text: "Commande supprimée avec succès !"
+                        });
+                        this.deleteOrderInList(order)
+                    }
+                    
+            } catch (error) {
+                console.error("Erreur lors de la suppression du produit : ", error)
+                store.sendSnackBar({
+                    color: "error",
+                    text: "Erreur lors de la suppression du produit !"
+                });
+            }
         }
     }
 });

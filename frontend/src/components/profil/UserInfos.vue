@@ -1,5 +1,5 @@
 <template>
-<v-card variant="text">
+<v-card variant="text" min-width="500">
   <v-card-title class="text-h6 font-weight-bold">Bienvenue  {{ user.firstname }}</v-card-title>
   
   <v-card-text>

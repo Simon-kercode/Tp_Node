@@ -1,4 +1,5 @@
 const { application } = require('express');
+const bcrypt = require("bcryptjs");
 const User = require('../models/User')
 
 class UserController {
@@ -69,11 +70,25 @@ class UserController {
 
     // Mettre à jour un utilisateur
     static async update(req, res) {
-        console.log("req dans le controlleur : ", req.body)
         try {
             const user = await User.getById(req.params.id);
             if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
             const data = req.body;
+            if (data.pwd && data.oldPassword) {
+                // Vérification de la complexité du mot de passe (majuscule, minuscule, chiffre, caractère spécial, minimum 8 caractères)
+                if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(data.pwd)) {
+                    return res.status(400).json({
+                        message: "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial."
+                    });
+                }
+                // Vérification du mot de passe
+                const isMatch = await bcrypt.compare(data.oldPassword, user[0].pwd);
+                console.log("ici aussi")
+                if (!isMatch) {
+                    return res.status(401).json({ message: "Mot de passe incorrect" });
+                }
+            }
+            
             const updatedUser = await User.update(req.params.id, data);
 
             res.json({ message: "Utilisateur mis à jour", user: updatedUser });

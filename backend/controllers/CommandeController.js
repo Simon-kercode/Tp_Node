@@ -25,6 +25,25 @@ class CommandeController {
             res.status(500).json({message: "Errur lors de la récupération des commandes avec produits.", error});
         }
     }
+    static async getAllUserOrders(req, res) {
+        try  {
+            const userId = req.user.id
+            const commandesData = await Commande.getAllUserOrders(userId);
+
+            if (!commandesData) return res.status(404).json({ message: "Aucune commande trouvée pour cet utilisateur"});
+
+            if (commandesData.every(commande => commande.id_user === userId)) {
+                res.json(commandesData)
+            }
+            else {
+                return res.status(403).json({ message : "Accès interdit"});
+            }
+            
+            
+        } catch (error) {
+            res.status(500).json({message: "Erreur lors de la récupération des commandes de l'utilisateur", error});
+        }
+    }
     /**
      * Récupère une commande spécifique par son ID.
      * Vérifie que l'utilisateur est bien celui qui a passé la commande, sinon envoie une erreur 403.

@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container class="d-flex flex-column align-center">
         <UserInfos />        
     </v-container>
 
