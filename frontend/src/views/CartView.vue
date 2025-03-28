@@ -4,7 +4,7 @@
             <v-card-title class="text-center text-h4">Votre panier</v-card-title>
             <v-card-text>
                 <v-row v-if="orderStore.quantityInCart > 0">
-                    <CartContent />
+                    <CartContent :isValidate="false"/>
                     <PriceResume />                  
                 </v-row>
                 <div v-else class="text-center mt-5">Votre panier est vide.</div>                

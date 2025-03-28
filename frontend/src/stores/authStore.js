@@ -91,7 +91,6 @@ export const useAuthStore = defineStore("auth", {
                 
             } catch (error) {
                 this.user = null;
-                console.error("Utilisateur non authentifié");
             }
         },
     async logout(router) {

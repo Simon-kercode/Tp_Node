@@ -18,7 +18,7 @@
                 </v-list>
             </v-card-text>
             <v-card-actions class="w-100">
-                <v-btn class="custom-btn w-100">Passer au paiement</v-btn>
+                <v-btn to="/commande" class="custom-btn w-100">Passer au paiement</v-btn>
             </v-card-actions>
         </v-card>
     </v-col>
