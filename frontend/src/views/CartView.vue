@@ -5,7 +5,7 @@
             <v-card-text>
                 <v-row v-if="orderStore.quantityInCart > 0">
                     <CartContent :isValidate="false"/>
-                    <PriceResume />                  
+                    <PriceResume :isValidate="false"/>                  
                 </v-row>
                 <div v-else class="text-center mt-5">Votre panier est vide.</div>                
             </v-card-text>

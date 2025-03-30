@@ -20,7 +20,7 @@
             <template v-slot:item.total="{ item }">
                 {{ (parseFloat(item.prix) * item.quantity).toFixed(2) + ' €' }}
             </template>
-            <template v-slot:item.actions="{ item }">
+            <template v-slot:item.actions="{ item }" v-if="!isValidate">
                 <v-icon color="red" @click="orderStore.deleteProductToCart(item, item.quantity)">mdi-trash-can-outline</v-icon>
             </template>
         </v-data-table>

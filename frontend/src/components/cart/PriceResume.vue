@@ -1,7 +1,7 @@
 <template>
-    <v-col cols="12" lg="4">
+    <v-col cols="12" :lg="isValidate ? 12 : 4">
         <v-card class="fond-clair me-2 mb-2">
-            <v-card-title>Résumé de votre commande</v-card-title>
+            <v-card-title>Montant de votre commande</v-card-title>
             <v-divider></v-divider>
             <v-card-text>
                 <v-list>
@@ -17,7 +17,7 @@
                     </v-list-item>
                 </v-list>
             </v-card-text>
-            <v-card-actions class="w-100">
+            <v-card-actions class="w-100" v-if="!isValidate">
                 <v-btn to="/commande" class="custom-btn w-100">Passer au paiement</v-btn>
             </v-card-actions>
         </v-card>
@@ -25,8 +25,12 @@
 </template>
 
 <script setup>
-    import { computed } from 'vue';
+    import { computed, defineProps } from 'vue';
     import { useOrderStore } from '../../stores/orderStore';
+
+    const props = defineProps({
+        isValidate: Boolean
+    });
 
     const orderStore = useOrderStore();
 
