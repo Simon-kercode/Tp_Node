@@ -25,13 +25,14 @@
 </template>
 
 <script setup>
-    import { computed, defineProps } from 'vue';
+    import { computed, onMounted, defineProps } from 'vue';
     import { useOrderStore } from '../../stores/orderStore';
 
     const props = defineProps({
         isValidate: Boolean
     });
-
+    const emits = defineEmits(["total"])
+    
     const orderStore = useOrderStore();
 
     const subTotal = computed(() => {
@@ -45,4 +46,7 @@
 
     const total = computed(() => Number((subTotal.value + tva.value).toFixed(2)));
     
+    onMounted(() => {
+        emits("total", total.value);
+    })
 </script>

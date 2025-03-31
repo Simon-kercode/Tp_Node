@@ -13,7 +13,7 @@ export const requiredRule = (fieldName = "Ce champ") => {
 export const minRule = (min) => { 
     // Retourne une fonction de validation qui vérifie si la longueur de la valeur est suffisante
     return (value) => {
-        return value.length >= min || `Ce champ doit contenir au moins ${min} caractères`;
+        return value?.length >= min || `Ce champ doit contenir au moins ${min} caractères`;
     };
 };
 

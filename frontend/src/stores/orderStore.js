@@ -66,6 +66,35 @@ export const useOrderStore = defineStore("orders", {
             console.log("Commandes : ", this.__ListOrders);
         },
 
+        // Méthode d'enregistrement de commande
+        async createOrder(order) {
+            const store = useStore();
+            try {
+                const csrfToken = await store.getCsrfToken();
+
+                const response = await axios.post("http://localhost:3000/commandes",
+                    order,
+                {
+                    withCredentials: true,
+                    headers: {
+                        "X-CSRF-Token": csrfToken,
+                    }   
+                })
+                if (response.status === 201 && response.data.order) {
+                    store.sendSnackBar({
+                        color: "success",
+                        text: "Votre commande a bien été enregistrée. Merci !"
+                    });
+                }
+            } catch (error) {
+                console.error("Erreur lors de la commande : ", error)
+                store.sendSnackBar({
+                    color: "error",
+                    text: "Erreur lors de l'enregistrement de la commande. Merci de contacter le support."
+                })
+            }
+        },
+
         async updateOrder(order) {
             const store = useStore();
             try{

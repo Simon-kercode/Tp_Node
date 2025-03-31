@@ -1,5 +1,5 @@
 <template>
-    <v-col cols="12" lg="8">
+    <v-col cols="12" :lg="isValidate? '12' : '8'">
         <v-data-table
             v-if="!isMobile"
             :items="cartContent"
@@ -43,7 +43,7 @@
                         <v-btn icon="mdi-plus" size="small" class="square-btn ms-1" @click="orderStore.addProductToCart(item, 1)"></v-btn>
                         <v-btn icon="mdi-trash-can-outline" color="red" variant="text" @click="orderStore.deleteProductToCart(item, item.quantity)"></v-btn>
                     </v-col>
-                    <v-col cols="12" sm="4" class="text-center text-sm-right" v-else>{{ item.quantity }}</v-col>
+                    <v-col cols="12" sm="4" class="text-right mb-2 text-sm-right" v-else>Quantité : {{ item.quantity }}</v-col>
                 </v-row>
                 <v-divider></v-divider>
             </v-list-item>

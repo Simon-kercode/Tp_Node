@@ -135,11 +135,11 @@ class Commande {
             if (data.produits.length) {
                 const queryProduit = `INSERT INTO contenir (id_produit, id_commande) VALUES ${data.produits.map(() => "(?, ?)").join(", ")}`;
                 const valuesProduit = data.produits.flatMap(produitId => [produitId, commandeId]);
-                const [resultsProduit] = await db.query(queryProduit, valuesProduit);
-
-                return {commande: resultsCommande, produit: resultsProduit};
+                await db.query(queryProduit, valuesProduit);
             }
-            else return {commande: resultsCommande};
+            const orderId = resultsCommande.insertId;
+            const newOrder = await this.getById(orderId);
+            return newOrder[0];
         }
         catch (error) {
             console.error("Erreur lors de la création de l'utilisateur : ", error);
