@@ -202,7 +202,7 @@ class Commande {
             const queryUpdatedOrder = `SELECT * FROM commande WHERE id_commande = ?`;
             const idCommande = [id]
             const updatedOrder = await db.query(queryUpdatedOrder, idCommande);
-
+            console.log(updatedOrder)
             return updatedOrder[0];
         }
         catch (error) {
