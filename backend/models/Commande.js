@@ -109,6 +109,18 @@ class Commande {
         }
     }
 
+    // Méthode pour récupérer toutes les commandes d'un utilisateur
+    static async getAllUserOrders(id) {
+        const db = getDB();
+        try {
+            const query = `SELECT * FROM commande where id_user = ?`;
+            const values = [id];
+            const [results] = await db.query(query, values);
+            return results;
+        } catch (error) {
+            console.error("Erreur lors de la récupération des commandes de l'utilisateur :", error);
+        }
+    }
     // Méthode pour créer une nouvelle commande
     static async create(data) {
         const db = getDB();
@@ -123,11 +135,11 @@ class Commande {
             if (data.produits.length) {
                 const queryProduit = `INSERT INTO contenir (id_produit, id_commande) VALUES ${data.produits.map(() => "(?, ?)").join(", ")}`;
                 const valuesProduit = data.produits.flatMap(produitId => [produitId, commandeId]);
-                const [resultsProduit] = await db.query(queryProduit, valuesProduit);
-
-                return {commande: resultsCommande, produit: resultsProduit};
+                await db.query(queryProduit, valuesProduit);
             }
-            else return {commande: resultsCommande};
+            const orderId = resultsCommande.insertId;
+            const newOrder = await this.getById(orderId);
+            return newOrder[0];
         }
         catch (error) {
             console.error("Erreur lors de la création de l'utilisateur : ", error);

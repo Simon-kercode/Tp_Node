@@ -91,7 +91,6 @@ export const useAuthStore = defineStore("auth", {
                 
             } catch (error) {
                 this.user = null;
-                console.error("Utilisateur non authentifié");
             }
         },
     async logout(router) {
@@ -104,8 +103,8 @@ export const useAuthStore = defineStore("auth", {
                     });
                 this.user = null;
                 
-                // Redirige vers l'accueil si la page actuelle était le back office
-                if (router.currentRoute.value.path === '/admin') router.push('/')
+                // redirection vers l'accueil
+                router.push('/')
             } catch (error) {
                 console.error("Erreur lors de la déconnexion :", error.response?.data?.message);
             }

@@ -29,7 +29,7 @@ exports.login = async (req, res) => {
         
         // Création du token
         const token = jwt.sign(
-            { id: user.id_user, email: user.mail, role: user.isAdmin },
+            { id: user.id_user, name: user.nom, firstname: user.prenom, email: user.mail, role: user.isAdmin },
             process.env.JWT_SECRET,
             { expiresIn: "2h" }
         );

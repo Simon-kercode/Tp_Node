@@ -23,7 +23,7 @@
             <v-img :src="`/uploads/productsImages/${product.illustration}`" height="200px" cover></v-img>
             <v-card-title>{{ product.produit_nom }}</v-card-title>
             <v-card-text>
-              <div>{{ product.description }}</div>
+              <div class="truncate-text">{{ product.description }}</div>
               <div class="mt-2 text-h6 font-weight-bold">{{ product.prix }} €</div>
             </v-card-text>
           </v-card>
@@ -86,3 +86,19 @@ function addToCart(product) {
 }
 
 </script>
+
+<style scoped>
+.truncate-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+   /* Ajout de la propriété standard pour compatibilité future */
+  line-clamp: 3; 
+  box-orient: vertical;
+
+  height: 60px;
+}
+</style>

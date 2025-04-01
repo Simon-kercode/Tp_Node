@@ -12,6 +12,6 @@ router.post("/logout", csrfMiddleware, logout)
 // Route GET protégée pour afficher le profil de l'utilisateur
 router.get("/profil", authMiddleware, (req, res) => {
     // Cette route est protégée par le middleware d'authentification, donc l'utilisateur doit être connecté
-    res.json({ message: "Bienvenue sur ton profil.", user: {email: req.user.email, role: req.user.role}});
+    res.json({ message: "Bienvenue sur ton profil.", user: {id: req.user.id, name: req.user.name, firstname: req.user.firstname, email: req.user.email, role: req.user.role}});
 });
 module.exports = router;
