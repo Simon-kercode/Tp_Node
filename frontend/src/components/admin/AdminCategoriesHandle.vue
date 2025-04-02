@@ -27,7 +27,7 @@
             class="elevation-1"
           >
             <template v-slot:item.products_count="{ item }">
-              <span>{{ item.products ? item.products.length : 0 }}</span>
+              <span>{{ countProducts(item) }}</span>
             </template>
             <template v-slot:item.actions="{ item }">
               <v-icon color="blue" @click="editCategory(item)" class="me-5">mdi-pencil</v-icon>
@@ -80,6 +80,16 @@ async function deleteCategory(category) {
   const confirmation = await this.store.getConfirmation();
   if (!confirmation) return;
   productStore.deleteCategory(category);
+}
+
+function countProducts(category) {
+  let counter = 0;
+  productStore.__ListProducts.forEach(product => {
+    if (product.id_categories.includes(category.id_categorie)) {
+      counter++;
+    }
+  })
+  return counter;
 }
 
 </script>
