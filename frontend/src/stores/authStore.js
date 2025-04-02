@@ -87,10 +87,13 @@ export const useAuthStore = defineStore("auth", {
                 });
 
                 this.user = response.data.user;
-                console.log(this.user);
+                
+                console.log("User connecté : ", this.user);
+                return true
                 
             } catch (error) {
                 this.user = null;
+                return false
             }
         },
     async logout(router) {

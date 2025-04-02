@@ -19,7 +19,7 @@ const routes = [
     { path: '/produit/:id', component: ProductDetailView, name: 'ProductDetail' },
     { path: '/panier', component: CartView, name: 'Cart' },
     { path: '/profil/:id', component: ProfileView, name: 'Profil' },
-    { path: '/commande', component: OrderView, name: 'Commande' },
+    { path: '/commande', component: OrderView, name: 'Commande', meta: {requiresAuth: true} },
     { path: '/', component: HomeView, name: 'Home'},
 ];
 
@@ -32,6 +32,12 @@ router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore(); // Récupère l'état d'authentification
   if (!authStore.user) {
     await authStore.initializeAuth(); 
+  }
+  if (to.meta.requiresAuth && !authStore.user) {
+    next('login');
+  }
+  else {
+    next()
   }
   const isAdmin = authStore.user?.role === 1; // Vérifie le rôle
   

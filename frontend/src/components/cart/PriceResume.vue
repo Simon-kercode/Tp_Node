@@ -18,7 +18,7 @@
                 </v-list>
             </v-card-text>
             <v-card-actions class="w-100" v-if="!isValidate">
-                <v-btn to="/commande" class="custom-btn w-100">Passer au paiement</v-btn>
+                <v-btn @click="redirectToPaiement" class="custom-btn w-100">Passer au paiement</v-btn>
             </v-card-actions>
         </v-card>
     </v-col>
@@ -27,7 +27,13 @@
 <script setup>
     import { computed, onMounted, defineProps } from 'vue';
     import { useOrderStore } from '../../stores/orderStore';
+    import { useAuthStore } from '../../stores/authStore';
+    import { useStore } from '../../stores/store';
+    import { useRouter } from 'vue-router';
 
+    const store = useStore();
+    const authStore = useAuthStore();
+    const router = useRouter();
     const props = defineProps({
         isValidate: Boolean
     });
@@ -49,4 +55,17 @@
     onMounted(() => {
         emits("total", total.value);
     })
+
+    async function redirectToPaiement() {
+        if (!authStore.user) {
+            store.sendSnackBar({
+                color: "error",
+                text: "Pour passer commande, merci de vous connecter ou de vous créer un compte."
+            })
+            router.push({name: 'Login'})
+        }
+        else {
+            router.push({name: "commande"});
+        }
+    }
 </script>

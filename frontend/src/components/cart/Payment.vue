@@ -115,6 +115,7 @@
     import { requiredRule } from '../../utils/formRules';
     import { useOrderStore } from '../../stores/orderStore';
     import { useAuthStore } from '../../stores/authStore';
+    import { useRouter } from 'vue-router';
 
     const orderStore = useOrderStore();
     const authStore = useAuthStore();
@@ -126,6 +127,8 @@
     const securityCode = ref(null);
 
     const total = ref(0);
+
+    const router = useRouter();
 
     const formatCardNumber = () => {
          // Supprime tout sauf les chiffres et limite à 16 chiffres
@@ -179,15 +182,24 @@
             date_commande: new Date(),
             moyen_paiement: "CB",
             id_user: authStore.user?.id,
-            produits: orderStore.cartContent.map(produit => produit.id_produit),
+            produits: orderStore.cartContent.map(produit => {
+                return {
+                    id_produit: produit.id_produit,
+                    quantite: produit.quantity
+                }
+            })
         }
-
+        console.log("commande validée front : ", newOrder)
         const creation = await orderStore.createOrder(newOrder);
 
         if (creation) {
             orderStore.cartContent = [];
             orderStore.quantityInCart = 0;
             orderStore.saveCart();
+            window.setTimeout(() => {
+               router.push({name: 'Home'}) 
+            }, 2000)
+            
         }
     }
 

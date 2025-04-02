@@ -44,8 +44,8 @@ const { __ListProducts, __ListCategories } = productStore;
 const products = ref([...__ListProducts]);
 
 // Gestion des catégories et animaux
-const categories = ref([...__ListCategories.filter(category => category.nom !== "Chien" && category.nom !== "Chat")]);
-const animals = ref([...__ListCategories.filter(category => category.nom == "Chien" || category.nom == "Chat")]);
+const categories = ref([...__ListCategories.filter(category => category.id_categorie !== 6 && category.id_categorie !== 7)]);
+const animals = ref([...__ListCategories.filter(category => category.id_categorie == 6 || category.id_categorie == 7)]);
 
 const selectedCategory = ref(
   productStore.activFilter && categories.value.some(category => category.nom === productStore.activFilter)

@@ -20,8 +20,8 @@
                 {{ item.statut }}
                 </v-chip>
             </template>
-            <template v-slot:item.id_produits="{ item }">
-                {{ item.nom_produits ? item.id_produits.length : 0 }}
+            <template v-slot:item.nom_produits="{ item }">
+                {{ countTotalProducts(item) }}
             </template>
             <template v-slot:item.actions="{ item }">
                 <v-icon color="blue" @click="editOrder(item)" class="me-5">mdi-pencil</v-icon>
@@ -54,7 +54,7 @@
             ...commande,
             date_commande: new Date(commande.date_commande).toLocaleDateString("fr-FR"),
             total: commande.total + ' €',
-            nom_produits: commande.nom_produits.join(', ')            
+            // nom_produits: commande.nom_produits.join(', ')            
         }));
     })
 
@@ -68,11 +68,24 @@
             { key: 'date_commande', title: 'Date' },
             { key: 'total', title: 'Total' },
             { key: 'statut', title: 'Statut'},
-            { key: 'id_produits', title: 'Nombre de produits'},
+            { key: 'nom_produits', title: 'Nombre de produits'},
             { key: 'user_email', title: 'Destinataire' },
             { key: "actions", title: "", sortable: false }
         ]
     );
+
+    function countTotalProducts(order) {
+        if (order.nom_produits && order.nom_produits.length > 0) {
+            let count = 0;
+            order.nom_produits.forEach(produit => {
+                for (let i = 0; i < produit.quantite; i++) {
+                    count++
+                }
+            });
+            return count;
+        }
+        return 0;
+    }
 
     function editOrder(order) {
         orderStore.isEditingOrder = true;

@@ -52,8 +52,8 @@
                     <v-col cols="12">
                         <h4 class="text-h6 mb-2">Produits de la commande</h4>
                         <v-chip-group>
-                            <v-chip v-for="product in orderProducts" :key="product" color="primary">
-                                {{ product }}
+                            <v-chip v-for="product in orderModel.nom_produits" :key="product" color="primary">
+                                {{ concatChip(product) }}
                             </v-chip>
                         </v-chip-group>
                     </v-col>
@@ -79,9 +79,17 @@
 
     const orderModel = ref({...orderStore.orderToEdit});
     const initialOrder = ref({id: orderModel.value.id_commande, statut: orderModel.value.statut});
-    const orderProducts = computed(() => 
-        orderModel.value.nom_produits ? orderModel.value.nom_produits.split(', ') : []
-    );
+    // const orderProducts = computed(() => 
+    //     orderModel.value.nom_produits ? orderModel.value.nom_produits.split(', ') : []
+    // );
+
+    function concatChip(product) {
+        if (product.quantite > 1) {
+            return `${product.nom} x${product.quantite}`
+        }
+        return product.nom
+    }
+
     async function updateOrder() {
         const orderData = {
             id: orderModel.value.id_commande,

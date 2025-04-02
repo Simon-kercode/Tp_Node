@@ -83,8 +83,9 @@ export const useOrderStore = defineStore("orders", {
                 if (response.status === 201 && response.data.order) {
                     store.sendSnackBar({
                         color: "success",
-                        text: "Votre commande a bien été enregistrée. Merci !"
+                        text: "Votre commande a bien été enregistrée. Merci ! Vous allez être redirigé vers l'accueil."
                     });
+                    return true
                 }
             } catch (error) {
                 console.error("Erreur lors de la commande : ", error)
@@ -92,6 +93,7 @@ export const useOrderStore = defineStore("orders", {
                     color: "error",
                     text: "Erreur lors de l'enregistrement de la commande. Merci de contacter le support."
                 })
+                return false
             }
         },
 

@@ -73,7 +73,7 @@ class Commande {
                     commande.*,
                     u.mail AS user_email,
                     GROUP_CONCAT(p.id_produit) AS id_produits,
-                    GROUP_CONCAT(p.nom) AS nom_produits
+                    CONCAT('[', GROUP_CONCAT(JSON_OBJECT('nom', p.nom, 'quantite', c.quantite)), ']') AS nom_produits
                 FROM commande
                 JOIN _user u ON u.id_user = commande.id_user
                 JOIN contenir c ON c.id_commande = commande.id_commande
@@ -87,7 +87,7 @@ class Commande {
             return results.map(commande => ({
                 ...commande,
                 id_produits: commande.id_produits ? commande.id_produits.split(",").map(Number) : [],
-                nom_produits: commande.nom_produits ? commande.nom_produits.split(",") : []
+                nom_produits: commande.nom_produits ? JSON.parse(commande.nom_produits) : []
             }));
         } catch (error) {
             console.error("Erreur lors de la récupération des commandes avec produits : ", error);
@@ -133,8 +133,9 @@ class Commande {
             const commandeId = resultsCommande.insertId;
 
             if (data.produits.length) {
-                const queryProduit = `INSERT INTO contenir (id_produit, id_commande) VALUES ${data.produits.map(() => "(?, ?)").join(", ")}`;
-                const valuesProduit = data.produits.flatMap(produitId => [produitId, commandeId]);
+                console.log(data.produits)
+                const queryProduit = `INSERT INTO contenir (id_produit, id_commande, quantite) VALUES ${data.produits.map(() => "(?, ?, ?)").join(", ")}`;
+                const valuesProduit = data.produits.flatMap(produit => [produit.id_produit, commandeId, produit.quantite]);
                 await db.query(queryProduit, valuesProduit);
             }
             const orderId = resultsCommande.insertId;
