@@ -54,7 +54,7 @@ JWT_SECRET
 ```sh
 # Démarrer le backend
 cd backend
-npm run dev
+npm start
 
 # Démarrer le frontend
 cd ../frontend
@@ -74,7 +74,7 @@ Le projet sera disponible sur `http://localhost:3000/`.
 
 - `GET /api/users` : Récupérer tous les utilisateurs(admin)
 - `GET /api/users/:id` : Récupérer un utilisateur par ID
-- `POST /api/users` : Ajouter un utilisateur (admin)
+- `POST /api/users` : Ajouter un utilisateur
 - `PUT /api/users/:id` : Modifier un utilisateur
 - `DELETE /api/users/login/:id` : Supprimer un utilisateur (admin)
 
