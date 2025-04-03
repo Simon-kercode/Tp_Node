@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/', authMiddleware, roleMiddleware(1), UserController.getAll);
 router.get('/:id', authMiddleware, UserController.getById)
 router.post('/', csrfMiddleware, roleMiddleware(1), UserController.create);
-router.put('/:id',csrfMiddleware, authMiddleware, roleMiddleware(1), UserController.update);
+router.put('/:id',csrfMiddleware, authMiddleware, UserController.update);
 router.delete('/:id',csrfMiddleware, authMiddleware, roleMiddleware(1), UserController.delete);
 
 
