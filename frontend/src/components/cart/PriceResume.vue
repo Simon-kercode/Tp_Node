@@ -65,7 +65,7 @@
             router.push({name: 'Login'})
         }
         else {
-            router.push({name: "commande"});
+            router.push({name: "Commande"});
         }
     }
 </script>
