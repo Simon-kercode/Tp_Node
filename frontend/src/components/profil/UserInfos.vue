@@ -1,6 +1,6 @@
 <template>
 <v-card variant="text" min-width="50%">
-  <v-card-title class="text-h6 font-weight-bold">Bienvenue  {{ user.firstname }}</v-card-title>
+  <h1 class="text-h6 font-weight-bold">Bienvenue  {{ user.firstname }}</h1>
   
   <v-card-text>
     <v-list density="compact">

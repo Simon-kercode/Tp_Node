@@ -1,5 +1,5 @@
 <template>
-    <v-footer class="bg-footer d-flex flex-column">
+    <v-footer class="bg-footer d-flex flex-column" :height="isMobile ? 500 : 300">
         <v-container class="d-flex align-center justify-space-between">
             <v-row>
                 <v-col cols="12" sm="6" md="4">
@@ -51,21 +51,26 @@
 </template>
 
 <script setup>
-      import logo from '../assets/images/logo.png';
+    import { computed } from 'vue';
+    import logo from '../assets/images/logo.png';
+    import { useDisplay } from 'vuetify'
+    
+    const { mobile } = useDisplay() // Détecte si on est sur mobile
+    const isMobile = computed(() => mobile.value) // Variable réactive pour mobile
 
-      const networks= [
+    const networks= [
         'mdi-facebook',
         'mdi-twitter',
         'mdi-linkedin',
         'mdi-instagram',
-        ];
+    ];
 </script>
 
 <style scoped>
     .bg-footer{
         background-color: #3A3330;
         max-height: 450px;
-        height: auto;
+        height: 200;
     }
     .card-footer {
         background-color: #3A3330;
