@@ -37,6 +37,9 @@ class CategorieController {
     static async create(req, res) {
         try {
             const { nom } = req.body;
+            if (nom !== undefined && typeof(nom) !== "string" || nom.trim().length < 2 || nom.trim().length > 30) {
+                res.status(400).json({message: "Nom de catégorie invalide."})
+            }
             const category = await Categorie.create(nom);
             res.status(201).json({message: "Catégorie bien enregistrée", category: category});
         } catch (error) {
@@ -53,6 +56,9 @@ class CategorieController {
             const categorie = await Categorie.getById(req.params.id);
             if (!categorie) return res.status(404).json({ message: "Catégorie non trouvée" });
             const data = req.body;
+            if (data.nom !== undefined  && typeof(data.nom) !== "string" || data.nom.trim().length < 2 || data.nom.trim().length > 30) {
+                res.status(400).json({message: "Nom de catégorie invalide."});
+            }
             const updatedCategorie = await Categorie.update(req.params.id, data);
 
             res.json({ message: "Catégorie mise à jour", category: updatedCategorie });
