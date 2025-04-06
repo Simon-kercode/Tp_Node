@@ -12,7 +12,16 @@ exports.login = async (req, res) => {
         if (!mail || !pwd) {
             return res.status(400).json({ message: "Email et mot de passe requis" });
         }
-        
+        // Validation de l'adresse e-mail avec une expression régulière
+        if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(mail)) {
+            return res.status(400).json({ message: "L'adresse e-mail est invalide." });
+        }
+        // Vérification de la complexité du mot de passe (majuscule, minuscule, chiffre, caractère spécial, minimum 8 caractères)
+        if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(pwd)) {
+            return res.status(400).json({
+                message: "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial."
+            });
+        }
         // Vérification de l'utilisateur
         const user = await User.getByEmail(mail);
 

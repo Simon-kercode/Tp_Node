@@ -1,7 +1,7 @@
 :root {
   --bg-orange: #F69946;
   --bg-beige: #FCF9F4;
-  --bg-sombre: #3A3330
+  --bg-sombre: #3A3330;
 }
 html, body, #app {
   height: 100%;
