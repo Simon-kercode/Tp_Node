@@ -61,7 +61,7 @@ cd ../frontend
 npm run dev
 ```
 
-Le projet sera disponible sur `http://localhost:3000/`.
+Le frontend (interface utilisateur) sera accessible sur `http://localhost:5173/`.
 
 ## 📖 API Endpoints
 
