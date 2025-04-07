@@ -43,8 +43,10 @@
 <script setup>
     import { ref, onMounted } from 'vue';
     import { useOrderStore } from '../../stores/orderStore';
+    import { useProductStore } from '../../stores/productStore';
     
     const orderStore = useOrderStore();
+    const productStore = useProductStore();
     const orders = ref([]);
 
     onMounted(async () => {
@@ -59,8 +61,12 @@
         return product.nom
     }
     function rebuy(order) {
-        order.id_produits.forEach(produit => {
-            orderStore.addProductToCart(product, order.nom_produits)
-        })
+        order.nom_produits.forEach(produit => {
+            const foundProduct = productStore.__ListProducts.find(product => product.id_produit === produit.id);
+            if (foundProduct) {
+                const quantity = produit.quantite
+                orderStore.addProductToCart(produit, quantity);
+            }
+        });
     }
 </script>

@@ -118,7 +118,7 @@ class Commande {
                     commande.*,
                     u.mail AS user_email,
                     GROUP_CONCAT(p.id_produit) AS id_produits,
-                    CONCAT('[', GROUP_CONCAT(JSON_OBJECT('nom', p.nom, 'quantite', c.quantite)), ']') AS nom_produits
+                    CONCAT('[', GROUP_CONCAT(JSON_OBJECT('id', p.id_produit, 'nom', p.nom, 'quantite', c.quantite)), ']') AS nom_produits
                 FROM commande
                 JOIN _user u ON u.id_user = commande.id_user
                 JOIN contenir c ON c.id_commande = commande.id_commande
