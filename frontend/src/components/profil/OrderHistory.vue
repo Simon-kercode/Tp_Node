@@ -65,7 +65,7 @@
             const foundProduct = productStore.__ListProducts.find(product => product.id_produit === produit.id);
             if (foundProduct) {
                 const quantity = produit.quantite
-                orderStore.addProductToCart(produit, quantity);
+                orderStore.addProductToCart(foundProduct, quantity);
             }
         });
     }

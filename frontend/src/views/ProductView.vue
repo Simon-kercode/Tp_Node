@@ -1,6 +1,6 @@
 <template>
-  <v-container v-if="product">
-    <v-row class="d-flex justify-center">
+  <v-container v-if="product" min-height="70vh" class="d-flex">
+    <v-row class="d-flex justify-center align-center">
       <v-col cols="12" md="4">
         <v-img 
           :src="`/uploads/productsImages/${product.illustration}`" 
