@@ -1,5 +1,6 @@
 import {defineStore} from 'pinia';
 import { useStore } from './store';
+import { useAuthStore } from './authStore';
 import axios from 'axios';
 
 export const useOrderStore = defineStore("orders", {
@@ -276,12 +277,13 @@ export const useOrderStore = defineStore("orders", {
             }
         },
 
-        // TODO !!!!!!!!!!!!!!!!!!
         async loadUserOrders() {
             const store = useStore();
+            const authStore = useAuthStore();
             try {
+                const userId = authStore.user.id;
                 const csrfToken = await store.getCsrfToken();
-                const response = await axios.get(`http://localhost:3000/commandes/`,
+                const response = await axios.get(`http://localhost:3000/commandes/user/${userId}`,
                     {
                         withCredentials: true,
                         headers: {
@@ -289,20 +291,15 @@ export const useOrderStore = defineStore("orders", {
                         }
                     });
                     console.log(response);
-                    if (response.status === 200) {
-                        store.sendSnackBar({
-                            color: "success",
-                            text: "Commande supprimée avec succès !"
-                        });
-                        this.deleteOrderInList(order)
-                    }
+                if (response && response.data) {
+                    return response.data;
+                }
+                if (response.status === 404) {
+                    return "Aucune commande dans votre historique."
+                }
                     
             } catch (error) {
-                console.error("Erreur lors de la suppression du produit : ", error)
-                store.sendSnackBar({
-                    color: "error",
-                    text: "Erreur lors de la suppression du produit !"
-                });
+                console.error("Erreur lors de la récupération des commandes de l'utilisateur : ", error)
             }
         }
     }

@@ -27,12 +27,12 @@ class CommandeController {
     }
     static async getAllUserOrders(req, res) {
         try  {
-            const userId = req.user.id
+            const userId = req.params.id
             const commandesData = await Commande.getAllUserOrders(userId);
 
             if (!commandesData) return res.status(404).json({ message: "Aucune commande trouvée pour cet utilisateur"});
-
-            if (commandesData.every(commande => commande.id_user === userId)) {
+            console.log(commandesData)
+            if (commandesData.every(commande => commande.id_user === parseInt(userId))) {
                 res.json(commandesData)
             }
             else {

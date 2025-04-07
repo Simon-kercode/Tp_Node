@@ -57,11 +57,11 @@
                             </v-chip>
                         </v-chip-group>
                     </v-col>
-                </v-row>                
+                </v-row>
             </v-card-text>
             <v-card-actions class="ms-3">
                 <v-btn color="success" variant="flat" type="submit">Sauvegarder</v-btn>
-                <v-btn @click="close" color="error" variant="tonal">Annuler</v-btn>                    
+                <v-btn @click="close" color="error" variant="tonal">Annuler</v-btn>
             </v-card-actions>
             </v-form>
         </v-card>

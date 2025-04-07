@@ -1,6 +1,7 @@
 <template>
     <v-container class="d-flex flex-column align-center">
-        <UserInfos />        
+        <UserInfos />
+        <OrderHistory />
     </v-container>
 
 </template>
@@ -10,6 +11,7 @@
     import { useAuthStore } from '../stores/authStore';
     import { useUserStore } from '../stores/userStore';
     import UserInfos from '../components/profil/UserInfos.vue';
+    import OrderHistory from '../components/profil/OrderHistory.vue';
 
     const authStore = useAuthStore();
     const userStore = useUserStore();
