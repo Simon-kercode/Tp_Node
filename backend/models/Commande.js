@@ -113,10 +113,26 @@ class Commande {
     static async getAllUserOrders(id) {
         const db = getDB();
         try {
-            const query = `SELECT * FROM commande where id_user = ?`;
+            const query = `
+                SELECT
+                    commande.*,
+                    u.mail AS user_email,
+                    GROUP_CONCAT(p.id_produit) AS id_produits,
+                    CONCAT('[', GROUP_CONCAT(JSON_OBJECT('id', p.id_produit, 'nom', p.nom, 'quantite', c.quantite)), ']') AS nom_produits
+                FROM commande
+                JOIN _user u ON u.id_user = commande.id_user
+                JOIN contenir c ON c.id_commande = commande.id_commande
+                JOIN produit p ON p.id_produit = c.id_produit
+                WHERE u.id_user = ?
+                GROUP BY commande.id_commande, u.mail;
+            `;
             const values = [id];
             const [results] = await db.query(query, values);
-            return results;
+            return results.map(commande => ({
+                ...commande,
+                id_produits: commande.id_produits ? commande.id_produits.split(",").map(Number) : [],
+                nom_produits: commande.nom_produits ? JSON.parse(commande.nom_produits) : []
+            }));
         } catch (error) {
             console.error("Erreur lors de la récupération des commandes de l'utilisateur :", error);
         }
