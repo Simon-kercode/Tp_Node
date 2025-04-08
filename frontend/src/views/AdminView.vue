@@ -1,6 +1,7 @@
 <template>
     <Sidebar />
     <AdminUsersHandle />
+    <AdminCategoriesHandle/>
     <AdminProductsHandle />
     <AdminOrdersHandle />
 </template>
@@ -12,6 +13,7 @@
     import AdminOrdersHandle from '../components/admin/AdminOrdersHandle.vue';
     import { onMounted } from 'vue';
     import { useAdminStore } from '../stores/adminStore';
+    import AdminCategoriesHandle from '../components/admin/AdminCategoriesHandle.vue';
 
     const adminStore = useAdminStore();
 

@@ -44,7 +44,7 @@ const isMobile = computed(() => mobile.value);
 const store = useStore();
 
 const searchQuery = ref("");
-const categories = ref([]);
+const categories = ref(productStore.__ListCategories);
 const newCategory = ref({ nom: "" });
 
 const headers = computed(() =>
@@ -61,18 +61,18 @@ const headers = computed(() =>
 );
 
 // Récupération des catégories
-fetchCategories();
+// fetchCategories();
 
-async function fetchCategories() {
-  try {
-    const response = await axios.get("http://localhost:3000/categories", {
-      withCredentials: true,
-    });
-    categories.value = response.data;
-  } catch (error) {
-    console.error("Erreur lors de la récupération des catégories:", error);
-  }
-}
+// async function fetchCategories() {
+//   try {
+//     const response = await axios.get("http://localhost:3000/categories", {
+//       withCredentials: true,
+//     });
+//     categories.value = response.data;
+//   } catch (error) {
+//     console.error("Erreur lors de la récupération des catégories:", error);
+//   }
+// }
 
 async function addCategory() {
   try {
