@@ -170,7 +170,10 @@ class Commande {
 
         try {
              const query = `DELETE FROM commande WHERE id_commande = ?`
+             const queryContenir = `DELETE FROM contenir WHERE id_commande = ?`
              const values = [id];
+             
+             await db.query(queryContenir, values);
 
              const [results] = await db.query(query, values);
              return results
