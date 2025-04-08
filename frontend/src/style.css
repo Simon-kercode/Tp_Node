@@ -1,13 +1,12 @@
 :root {
   --bg-orange: #F69946;
   --bg-beige: #FCF9F4;
-  --bg-sombre: #3A3330
+  --bg-sombre: #3A3330;
 }
 html, body, #app {
   height: 100%;
   margin: 0;
 }
-
 .detail-item {
   color: var(--bg-orange);
 }
@@ -32,8 +31,8 @@ a {
   background-color: #3A3330 !important;
 }
 .square-btn {
-  width: 35px !important;
-  height: 35px !important;
-  min-width: 35px !important;
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
   border-radius: 8px !important;
 }

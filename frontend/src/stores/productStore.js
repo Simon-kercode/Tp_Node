@@ -12,8 +12,11 @@ export const useProductStore = defineStore("product", {
 
         editProductModaleState: false,
         isEditingProduct: false,
-        productToEdit: null
+        productToEdit: null,
 
+        editCategoryModaleState: false,
+        isEditingCategory: false,
+        categoryToEdit: null,
     }),
     actions: {
         async getListProducts() {
@@ -173,8 +176,120 @@ export const useProductStore = defineStore("product", {
             console.log("Catégories : ", this.__ListCategories);
             
         },
+
         setSelectedCategorie(categorie) {
             this.selectedCategorie = categorie;
+        },
+
+        async updateCategory(category) {
+            const store = useStore();
+            try{
+                const csrfToken = await store.getCsrfToken();
+                const response = await axios.put(`http://localhost:3000/categories/${category.id_categorie}`, 
+                    category,
+                {
+                    withCredentials: true,
+                    headers: {
+                        "X-CSRF-Token": csrfToken,
+                    }
+                });
+                console.log(response.data.category);
+                if (response.status === 200 && response.data.category) {
+                    this.updateCategoryInList(response.data.category[0]);
+                    store.sendSnackBar({
+                        color: "success",
+                        text: "Catégorie mis à jour avec succès !"
+                    })
+                }
+            } catch(error) {
+                console.error("Erreur lors de la mise à jour de la catégorie : ", error.message);
+                store.sendSnackBar({
+                    color: "error",
+                    text: "Erreur lors de la mise à jour de la catégorie !"
+                })
+            }
+        },
+
+        updateCategoryInList(updatedCategory) {
+            const index = this.__ListCategories.findIndex(cat => cat.id_categorie === updatedCategory.id_categorie);
+            console.log(index);
+            // Si le produit existe, on met à jour la liste
+            if (index !== -1) {
+                this.__ListCategories[index] = updatedCategory;
+                console.log(this.__ListCategories)
+            }
+        },
+
+        async addCategory(category) {
+            const store = useStore();
+
+            try {
+                const csrfToken = await store.getCsrfToken();
+                const response = await axios.post(
+                    "http://localhost:3000/categories",
+                    category,
+                    {
+                        withCredentials: true,
+                        headers: {
+                            "X-CSRF-Token": csrfToken
+                        }
+                    }
+                );
+                if (response.status === 201 && response.data.category) {
+                    this.addCategoryInList(response.data.category)
+                    store.sendSnackBar({
+                        color: "success",
+                        text: "Catégorie créé avec succès !"
+                    });
+                }
+
+            } catch(error) {
+                console.error("Erreur lors de la création de la catégorie : ", error);
+                store.sendSnackBar({
+                    color: "error",
+                    text: "Erreur lors de la création de la catégorie !"
+                });
+            }
+        },
+
+        addCategoryInList(newCategory) {
+            this.__ListCategories.push(newCategory);
+        },
+
+        async deleteCategory(category) {
+            const store = useStore();
+            try {
+                const csrfToken = await store.getCsrfToken();
+                const response = await axios.delete(`http://localhost:3000/categories/${category.id_categorie}`,
+                    {
+                        withCredentials: true,
+                        headers: {
+                            "X-CSRF-Token": csrfToken
+                        }
+                    });
+                    if (response.status === 200) {
+                        store.sendSnackBar({
+                            color: "success",
+                            text: "Catégorie supprimée avec succès !"
+                        });
+                        this.deleteCategoryInList(category)
+                    }
+                    
+            } catch (error) {
+                console.error("Erreur lors de la suppression de la catégorie : ", error)
+                store.sendSnackBar({
+                    color: "error",
+                    text: "Erreur lors de la suppression de la catégorie !"
+                });
+            }
+        },
+
+        deleteCategoryInList(deletedCategory) {
+            const index = this.__ListCategories.findIndex(cat => cat.id_categorie === deletedCategory.id_categorie);
+            
+            if (index !== -1) {
+                this.__ListCategories.splice(index, 1);
+            }
         },
 
         setActiveFilter(filter) {
@@ -186,6 +301,11 @@ export const useProductStore = defineStore("product", {
         toggleEditProductModale(product) {
             this.productToEdit = product;
             this.editProductModaleState = !this.editProductModaleState;
+        },
+
+        toggleEditCategoryModale(category) {
+            this.categoryToEdit = category;
+            this.editCategoryModaleState = !this.editCategoryModaleState;
         }
     },
 });

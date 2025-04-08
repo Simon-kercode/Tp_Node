@@ -4,6 +4,7 @@
     <AdminCategoriesHandle/>
     <AdminProductsHandle />
     <AdminOrdersHandle />
+    <AdminCategoriesHandle />
 </template>
 
 <script setup>
@@ -11,6 +12,7 @@
     import AdminUsersHandle from '../components/admin/AdminUsersHandle.vue';
     import AdminProductsHandle from '../components/admin/AdminProductsHandle.vue';
     import AdminOrdersHandle from '../components/admin/AdminOrdersHandle.vue';
+    import AdminCategoriesHandle from '../components/admin/AdminCategoriesHandle.vue'
     import { onMounted } from 'vue';
     import { useAdminStore } from '../stores/adminStore';
     import AdminCategoriesHandle from '../components/admin/AdminCategoriesHandle.vue';

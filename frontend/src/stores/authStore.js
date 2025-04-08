@@ -1,6 +1,5 @@
 import {defineStore} from 'pinia';
 import { useStore } from './store';
-import { useRouter, useRoute } from 'vue-router';
 import axios from 'axios';
 
 export const useAuthStore = defineStore("auth", {
@@ -10,8 +9,6 @@ export const useAuthStore = defineStore("auth", {
 
     actions: {
         async login(email, password) {
-            console.log("Données envoyées au backend :", { mail: email, pwd: password });
-
             try {
                 const store = useStore();
                 const csrfToken = await store.getCsrfToken();
@@ -87,32 +84,34 @@ export const useAuthStore = defineStore("auth", {
                 });
 
                 this.user = response.data.user;
-                console.log(this.user);
+                
+                console.log("User connecté : ", this.user);
+                return true
                 
             } catch (error) {
                 this.user = null;
-                console.error("Utilisateur non authentifié");
+                return false
             }
         },
-    async logout(router) {
-            try {
-                const store = useStore();
-                const csrfToken = await store.getCsrfToken();
-                await axios.post("http://localhost:3000/auth/logout", {}, {
-                     withCredentials: true, 
-                     headers: {'X-CSRF-Token': csrfToken} 
-                    });
-                this.user = null;
-                
-                // Redirige vers l'accueil si la page actuelle était le back office
-                if (router.currentRoute.value.path === '/admin') router.push('/')
-            } catch (error) {
-                console.error("Erreur lors de la déconnexion :", error.response?.data?.message);
-            }
+        async logout(router) {
+                try {
+                    const store = useStore();
+                    const csrfToken = await store.getCsrfToken();
+                    await axios.post("http://localhost:3000/auth/logout", {}, {
+                        withCredentials: true, 
+                        headers: {'X-CSRF-Token': csrfToken} 
+                        });
+                    this.user = null;
+                    
+                    // redirection vers l'accueil
+                    router.push('/')
+                } catch (error) {
+                    console.error("Erreur lors de la déconnexion :", error.response?.data?.message);
+                }
+            },
+        async initializeAuth() {
+            await this.getUser();
         },
-    async initializeAuth() {
-        await this.getUser();
-    },
-    
+        
     },
 });

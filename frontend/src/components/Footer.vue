@@ -26,17 +26,29 @@
                 </v-col>
                 <v-col cols="12" sm="6" md="4">
                     <!-- TODO: catégories -->
+                     <v-card class="card-footer text-white" variant="text">
+                        <v-card-title>Plan du site</v-card-title>
+                        <v-card-text>
+                            <v-list class="card-footer w-md-75" density="compact">        
+                                <v-list-item to="/" active-color="white" active-class="custom-activ">Accueil</v-list-item>
+                                <v-list-item to="/boutique" active-color="white">Boutique</v-list-item>
+                                <v-list-item to="/contact" active-color="white">Contact</v-list-item>
+                                <v-list-item>Mentions légales</v-list-item>
+                                <v-list-item>Politique de confidentialité</v-list-item>
+                            </v-list>                                
+                        </v-card-text>
+                     </v-card>
                 </v-col>
                 <v-col cols="12" md="4">
                     <v-card class="card-footer" variant="text">
                         <v-card-title>Heures d'ouvertures :</v-card-title>
                         <v-card-text class="text-start w-75">
-                            <div class="d-flex justify-space-between">
-                                <span>Lun - Ven :</span>
+                            <div class="d-flex">
+                                <span class="me-4">Lun - Ven :</span>
                                 <span class="font-weight-bold">8h - 18h</span>
                             </div>
-                            <div class="d-flex justify-space-between">
-                                <span>Sam - Dim :</span>
+                            <div class="d-flex">
+                                <span class="me-4">Sam - Dim :</span>
                                 <span class="font-weight-bold">9h - 16h</span>
                             </div>
                         </v-card-text>
@@ -51,21 +63,25 @@
 </template>
 
 <script setup>
-      import logo from '../assets/images/logo.png';
+    import { computed } from 'vue';
+    import logo from '../assets/images/logo.png';
+    import { useDisplay } from 'vuetify'
+    
+    const { mobile } = useDisplay() // Détecte si on est sur mobile
+    const isMobile = computed(() => mobile.value) // Variable réactive pour mobile
 
-      const networks= [
+    const networks= [
         'mdi-facebook',
         'mdi-twitter',
         'mdi-linkedin',
         'mdi-instagram',
-        ];
+    ];
 </script>
 
 <style scoped>
     .bg-footer{
         background-color: #3A3330;
-        max-height: 450px;
-        height: auto;
+        max-height: auto;
     }
     .card-footer {
         background-color: #3A3330;

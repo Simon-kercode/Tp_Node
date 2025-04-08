@@ -7,7 +7,8 @@ const router = express.Router();
 router.get('/', authMiddleware, roleMiddleware(1), CommandeController.getAll);
 router.get('/produits', authMiddleware, roleMiddleware(1), CommandeController.getAllWithProducts);
 router.get('/:id', authMiddleware, CommandeController.getById)
-router.post('/', authMiddleware, csrfMiddleware, roleMiddleware(1), CommandeController.create);
+router.get('/user/:id', authMiddleware, CommandeController.getAllUserOrders)
+router.post('/', authMiddleware, csrfMiddleware, CommandeController.create);
 router.put('/:id', authMiddleware, csrfMiddleware, roleMiddleware(1), CommandeController.update);
 router.delete('/:id', authMiddleware, csrfMiddleware, roleMiddleware(1), CommandeController.delete);
 

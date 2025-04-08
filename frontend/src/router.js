@@ -7,6 +7,8 @@ import ContactView from './views/ContactView.vue';
 import AdminView from './views/AdminView.vue';
 import ProductDetailView from './views/ProductView.vue';
 import CartView from './views/CartView.vue';
+import ProfileView from './views/ProfileView.vue';
+import OrderView from './views/OrderView.vue';
 
 
 const routes = [
@@ -16,6 +18,8 @@ const routes = [
     { path: '/admin', component: AdminView, name: 'Admin', meta: {requiresAdmin: true} },
     { path: '/produit/:id', component: ProductDetailView, name: 'ProductDetail' },
     { path: '/panier', component: CartView, name: 'Cart' },
+    { path: '/profil/:id', component: ProfileView, name: 'Profil' },
+    { path: '/commande', component: OrderView, name: 'Commande', meta: {requiresAuth: true} },
     { path: '/', component: HomeView, name: 'Home'},
 ];
 
@@ -29,8 +33,13 @@ router.beforeEach(async (to, from, next) => {
   if (!authStore.user) {
     await authStore.initializeAuth(); 
   }
+  if (to.meta.requiresAuth && !authStore.user) {
+    next('login');
+  }
+  else {
+    next()
+  }
   const isAdmin = authStore.user?.role === 1; // Vérifie le rôle
-  console.log(isAdmin);
   
   if (to.meta.requiresAdmin && !isAdmin) {
       next("/"); // Redirige vers l'accueil si l'utilisateur n'est pas admin

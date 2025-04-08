@@ -36,7 +36,6 @@ class Categorie {
             throw error;
         }
     }
-
     // Récupérer une catégorie par son ID
     static async getById(id) {
         const db = getDB();
@@ -61,7 +60,9 @@ class Categorie {
             const values = [nom];
 
             const [results] = await db.query(query, values);
-            return results;
+            const categoryId = results.insertId;
+            const newCategory = await this.getById(categoryId);
+            return newCategory[0];
         }
         catch (error) {
             console.error("Erreur lors de la création de la catégorie : ", error);
@@ -88,7 +89,6 @@ class Categorie {
 
     // Mettre à jour une catégorie
     static async update(id, data) {
-
         const db = getDB();
 
         try {
@@ -101,9 +101,13 @@ class Categorie {
 
             values.push(id);
             const query = `UPDATE categorie SET nom = ? WHERE id_categorie = ?`;
-            const results = await db.query(query, values);
+            await db.query(query, values);
 
-            return results
+            const queryUpdatedCategory = `SELECT * FROM categorie WHERE id_categorie = ?`;
+            const idCategory = [id]
+            const updatedCategory = await db.query(queryUpdatedCategory, idCategory);
+            
+            return updatedCategory[0];
         }
         catch (error) {
             console.error("Erreur lors de la mise à jour de l'utilisateur : ", error);

@@ -1,6 +1,6 @@
 <template>
-  <v-container v-if="product">
-    <v-row class="d-flex justify-center">
+  <v-container v-if="product" min-height="70vh" class="d-flex">
+    <v-row class="d-flex justify-center align-center">
       <v-col cols="12" md="4">
         <v-img 
           :src="`/uploads/productsImages/${product.illustration}`" 
@@ -16,7 +16,7 @@
         <v-divider class="mb-4"></v-divider>
         <p class="text-h5 mb-4">Prix : {{ product.prix }} €</p>
         <v-row>
-          <v-col cols="12" sm="4" class="d-flex">
+          <v-col cols="4" sm="4" class="d-flex">
             <v-btn 
               icon="mdi-minus"
               @click="decrement"
@@ -25,6 +25,8 @@
 
             <v-text-field
               class="mx-1 text-center"
+              min-width="50"
+              max-width="100"
               type="number"
               v-model="quantity"
               density="compact"

@@ -25,6 +25,25 @@ class CommandeController {
             res.status(500).json({message: "Errur lors de la récupération des commandes avec produits.", error});
         }
     }
+    static async getAllUserOrders(req, res) {
+        try  {
+            const userId = req.params.id
+            const commandesData = await Commande.getAllUserOrders(userId);
+
+            if (!commandesData) return res.status(404).json({ message: "Aucune commande trouvée pour cet utilisateur"});
+            console.log(commandesData)
+            if (commandesData.every(commande => commande.id_user === parseInt(userId))) {
+                res.json(commandesData)
+            }
+            else {
+                return res.status(403).json({ message : "Accès interdit"});
+            }
+            
+            
+        } catch (error) {
+            res.status(500).json({message: "Erreur lors de la récupération des commandes de l'utilisateur", error});
+        }
+    }
     /**
      * Récupère une commande spécifique par son ID.
      * Vérifie que l'utilisateur est bien celui qui a passé la commande, sinon envoie une erreur 403.
@@ -54,9 +73,8 @@ class CommandeController {
         
         try {
             const { statut, total, date_commande, moyen_paiement, id_user, produits } = req.body;
-            const commande = new Commande(statut, total, date_commande, moyen_paiement,id_user);
-            await Commande.create({statut, total, date_commande, moyen_paiement, id_user, produits});
-            res.status(201).json(commande);
+            const order = await Commande.create({statut, total, date_commande, moyen_paiement, id_user, produits});
+            res.status(201).json({message: "Commande bien enregistrée !", order: order});
         } catch (error) {
             res.status(500).json({ message: "Erreur lors de la création de la commande.", error });
         }

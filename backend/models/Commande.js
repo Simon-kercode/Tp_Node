@@ -73,7 +73,7 @@ class Commande {
                     commande.*,
                     u.mail AS user_email,
                     GROUP_CONCAT(p.id_produit) AS id_produits,
-                    GROUP_CONCAT(p.nom) AS nom_produits
+                    CONCAT('[', GROUP_CONCAT(JSON_OBJECT('nom', p.nom, 'quantite', c.quantite)), ']') AS nom_produits
                 FROM commande
                 JOIN _user u ON u.id_user = commande.id_user
                 JOIN contenir c ON c.id_commande = commande.id_commande
@@ -87,7 +87,7 @@ class Commande {
             return results.map(commande => ({
                 ...commande,
                 id_produits: commande.id_produits ? commande.id_produits.split(",").map(Number) : [],
-                nom_produits: commande.nom_produits ? commande.nom_produits.split(",") : []
+                nom_produits: commande.nom_produits ? JSON.parse(commande.nom_produits) : []
             }));
         } catch (error) {
             console.error("Erreur lors de la récupération des commandes avec produits : ", error);
@@ -109,6 +109,34 @@ class Commande {
         }
     }
 
+    // Méthode pour récupérer toutes les commandes d'un utilisateur
+    static async getAllUserOrders(id) {
+        const db = getDB();
+        try {
+            const query = `
+                SELECT
+                    commande.*,
+                    u.mail AS user_email,
+                    GROUP_CONCAT(p.id_produit) AS id_produits,
+                    CONCAT('[', GROUP_CONCAT(JSON_OBJECT('id', p.id_produit, 'nom', p.nom, 'quantite', c.quantite)), ']') AS nom_produits
+                FROM commande
+                JOIN _user u ON u.id_user = commande.id_user
+                JOIN contenir c ON c.id_commande = commande.id_commande
+                JOIN produit p ON p.id_produit = c.id_produit
+                WHERE u.id_user = ?
+                GROUP BY commande.id_commande, u.mail;
+            `;
+            const values = [id];
+            const [results] = await db.query(query, values);
+            return results.map(commande => ({
+                ...commande,
+                id_produits: commande.id_produits ? commande.id_produits.split(",").map(Number) : [],
+                nom_produits: commande.nom_produits ? JSON.parse(commande.nom_produits) : []
+            }));
+        } catch (error) {
+            console.error("Erreur lors de la récupération des commandes de l'utilisateur :", error);
+        }
+    }
     // Méthode pour créer une nouvelle commande
     static async create(data) {
         const db = getDB();
@@ -121,13 +149,14 @@ class Commande {
             const commandeId = resultsCommande.insertId;
 
             if (data.produits.length) {
-                const queryProduit = `INSERT INTO contenir (id_produit, id_commande) VALUES ${data.produits.map(() => "(?, ?)").join(", ")}`;
-                const valuesProduit = data.produits.flatMap(produitId => [produitId, commandeId]);
-                const [resultsProduit] = await db.query(queryProduit, valuesProduit);
-
-                return {commande: resultsCommande, produit: resultsProduit};
+                console.log(data.produits)
+                const queryProduit = `INSERT INTO contenir (id_produit, id_commande, quantite) VALUES ${data.produits.map(() => "(?, ?, ?)").join(", ")}`;
+                const valuesProduit = data.produits.flatMap(produit => [produit.id_produit, commandeId, produit.quantite]);
+                await db.query(queryProduit, valuesProduit);
             }
-            else return {commande: resultsCommande};
+            const orderId = resultsCommande.insertId;
+            const newOrder = await this.getById(orderId);
+            return newOrder[0];
         }
         catch (error) {
             console.error("Erreur lors de la création de l'utilisateur : ", error);
@@ -190,7 +219,7 @@ class Commande {
             const queryUpdatedOrder = `SELECT * FROM commande WHERE id_commande = ?`;
             const idCommande = [id]
             const updatedOrder = await db.query(queryUpdatedOrder, idCommande);
-
+            console.log(updatedOrder)
             return updatedOrder[0];
         }
         catch (error) {
