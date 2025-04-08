@@ -110,3 +110,19 @@ Le frontend (interface utilisateur) sera accessible sur `http://localhost:5173/`
 - **Frontend** : Vue.js (Vuetify, Vite.js)
 - **Backend** : Node.js, Express.js
 - **Base de données** : MySQL
+
+## 🙋 Comptes de test
+
+Pour tester l'application, vous pouvez si vous le souhaitez, utiliser un des deux comptes de test ci-dessous, ou vous créer votre propre compte.
+
+**Compte utilisateur** :
+```
+email : user@gmail.com
+password : Pawshop123.
+```
+
+**Compte administrateur** :
+```
+email: admin@gmail.com
+password : Pawshop123.
+```

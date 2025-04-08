@@ -1,5 +1,6 @@
 import {defineStore} from 'pinia';
 import { useStore } from './store';
+import { useOrderStore } from './orderStore';
 import axios from 'axios';
 
 export const useAuthStore = defineStore("auth", {
@@ -11,6 +12,7 @@ export const useAuthStore = defineStore("auth", {
         async login(email, password) {
             try {
                 const store = useStore();
+                
                 const csrfToken = await store.getCsrfToken();
                 const response = await axios.post(
                     "http://localhost:3000/auth/login",
@@ -28,6 +30,10 @@ export const useAuthStore = defineStore("auth", {
                 if (response.status === 200) {
                     // Récupere l'utilisateur après connexion
                     await this.getUser();
+                    // Attribution ou suppression du panier
+                    const orderStore = useOrderStore();
+                    orderStore.synchronizeCartWithUser(this.user.id);
+                    
                     return true                  
                 }
             } catch (error) {

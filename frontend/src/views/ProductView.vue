@@ -25,7 +25,7 @@
 
             <v-text-field
               class="mx-1 text-center"
-              min-width="50"
+              min-width="80"
               max-width="100"
               type="number"
               v-model="quantity"

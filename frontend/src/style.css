@@ -36,3 +36,14 @@ a {
   min-width: 30px !important;
   border-radius: 8px !important;
 }
+
+/* Suppression des sélecteurs dans les input number */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}

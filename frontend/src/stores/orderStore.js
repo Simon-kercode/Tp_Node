@@ -132,7 +132,7 @@ export const useOrderStore = defineStore("orders", {
             const store = useStore();
             try {
                 const csrfToken = await store.getCsrfToken();
-                const response = await axios.delete(`http://localhost:3000/produits/${order.id_commande}`,
+                const response = await axios.delete(`http://localhost:3000/commandes/${order.id_commande}`,
                     {
                         withCredentials: true,
                         headers: {
@@ -149,10 +149,10 @@ export const useOrderStore = defineStore("orders", {
                     }
                     
             } catch (error) {
-                console.error("Erreur lors de la suppression du produit : ", error)
+                console.error("Erreur lors de la suppression de la commande : ", error)
                 store.sendSnackBar({
                     color: "error",
-                    text: "Erreur lors de la suppression du produit !"
+                    text: "Erreur lors de la suppression de la commande !"
                 });
             }
         },
@@ -190,39 +190,68 @@ export const useOrderStore = defineStore("orders", {
          * Si la date actuelle est supérieure à la date d'expiration, on vide le panier.
          */
         async loadCart() {
+            const authStore = useAuthStore();
             const savedCart = localStorage.getItem("cart");
-            if (savedCart) {
-              const cartData = JSON.parse(savedCart);
-              // Si le panier a expiré, on le vide
-              if (Date.now() > cartData.expiry) {
-                localStorage.removeItem("cart");
+            if (savedCart && savedCart.id_user === authStore.user.id) {
+                const cartData = JSON.parse(savedCart);
+                // Si le panier a expiré, on le vide
+                if (Date.now() > cartData.expiry) {
+                    localStorage.removeItem("cart");
+                    this.cartContent = [];
+                    this.quantityInCart = 0;
+                } else {
+                    this.cartContent = cartData.items;
+                    this.quantityInCart = this.cartContent.reduce((sum, item) => sum + item.quantity, 0);
+                }
+            }
+            else {
                 this.cartContent = [];
                 this.quantityInCart = 0;
-              } else {
-                this.cartContent = cartData.items;
-                this.quantityInCart = this.cartContent.reduce((sum, item) => sum + item.quantity, 0);
-              }
             }
             console.log(this.cartContent)
           },
 
         /* Méthode d'enregistrement du panier dans le localstorage
-         * On définit un temps d'expiration du panier de 24h (expiration manuelle par la méthode de chargement)
+         * On définit un temps d'expiration du panier de 24h
          */
-        saveCart() {
+        saveCart(id_user) {
             const cartData = {
-              items: this.cartContent,
-              expiry: Date.now() + 24 * 60 * 60 * 1000,
+                id_user: id_user,
+                items: this.cartContent,
+                expiry: Date.now() + 24 * 60 * 60 * 1000,
             };
             localStorage.setItem("cart", JSON.stringify(cartData)); 
-          },
+        },
 
+        deleteCart() {
+            localStorage.removeItem("cart");
+            this.cartContent = [];
+            this.quantityInCart = 0;
+        },
+
+        /* Methode pour synchroniser le panier avec un utilisateur
+         * Lorsqu'un utilisateur se connecte, on vérifie si un panier existe dans le localstorage
+         * S'il s'agit d'un panier anonyme, on le lui attribue, sinon on le vide.
+         */
+        synchronizeCartWithUser(id_user) {
+            const cart = JSON.parse(localStorage.getItem("cart"));
+            if (cart) {
+                if (!cart.id_user) {
+                    cart.id_user = id_user;
+                    localStorage.setItem("cart", JSON.stringify(cart));                            
+                }
+                else if (cart.id_user && cart.id_user !== id_user) {
+                    this.deleteCart();
+                }
+            }
+        },
         /* Méthode d'ajout au panier.
          * Vérifie si le produit existe déjà dans le panier. Si oui, incrémente la quantité
          * Si non, l'ajoute avec la quantité donnée.
          * Appelle la fonction de sauvegarde
          */
         addProductToCart(product,quantity) {
+            const authStore = useAuthStore();
             const existingProduct = this.cartContent.find(item => item.id_produit === product.id_produit);
             if (existingProduct) {
                 const initialQuantity = existingProduct.quantity;
@@ -235,7 +264,7 @@ export const useOrderStore = defineStore("orders", {
             }
             this.quantityInCart += quantity
             console.log(this.cartContent)
-            this.saveCart();
+            this.saveCart(authStore.user?.id || null);
         },
         /* Méthode de déletion de produit du panier.
          * Décrémente de la quantité donnée
@@ -243,6 +272,7 @@ export const useOrderStore = defineStore("orders", {
          * Appelles la fonction de sauvegarde
          */
         deleteProductToCart(product, quantity) {
+            const authStore = useAuthStore();
             const index = this.cartContent.findIndex(item => item.id_produit === product.id_produit);
         
             if (index !== -1) {
@@ -253,7 +283,7 @@ export const useOrderStore = defineStore("orders", {
                     this.cartContent.splice(index, 1);
                 }
             }
-            this.saveCart();
+            this.saveCart(authStore.user?.id || null);
         },
 
         // Méthode de vérification de l'ajout du produit au panier

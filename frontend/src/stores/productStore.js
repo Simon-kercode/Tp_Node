@@ -127,7 +127,7 @@ export const useProductStore = defineStore("product", {
                 });
             }
         },
-        // Met à jour la liste des utilisateurs dans le store (pour éviter de recharger toute la liste des users)
+        // Met à jour la liste des produits dans le store (pour éviter de recharger toute la liste des produits)
         updateProductInList(updatedProduct) {
             const index = this.__ListProducts.findIndex(product => product.id_produit === updatedProduct.id_produit);
             console.log(index);

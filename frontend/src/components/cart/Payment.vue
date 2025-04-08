@@ -195,7 +195,7 @@
         if (creation) {
             orderStore.cartContent = [];
             orderStore.quantityInCart = 0;
-            orderStore.saveCart();
+            orderStore.saveCart(authStore.user?.id || null);
             window.setTimeout(() => {
                router.push({name: 'Home'}) 
             }, 2000)
