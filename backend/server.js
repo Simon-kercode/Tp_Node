@@ -26,7 +26,7 @@ app.get("/csrf-token", (req, res) => {
     res.cookie("csrfToken", csrfToken, {
         httpOnly: false, // Doit être accessible par le frontend
         secure: true, // Active en HTTPS
-        sameSite: "Strict"
+        sameSite: "Strict" // Cookie envoyé que si la requête provient du même site que celui du cookie
     });
     res.json({ csrfToken });
 });
