@@ -192,7 +192,7 @@ export const useOrderStore = defineStore("orders", {
         async loadCart() {
             const authStore = useAuthStore();
             const savedCart = localStorage.getItem("cart");
-            if (savedCart && savedCart.id_user === authStore.user.id) {
+            if (savedCart && authStore.user && savedCart.id_user === authStore.user.id) {
                 const cartData = JSON.parse(savedCart);
                 // Si le panier a expiré, on le vide
                 if (Date.now() > cartData.expiry) {
