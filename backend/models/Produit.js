@@ -77,7 +77,6 @@ class Produit {
                     GROUP BY p.id_produit
                 `;
                 const [results] = await db.query(query);
-                console.log("resultats getAllWithCategories:", results);  
                 // On renvoit les données formatées 
                 return results.map(product => ({
                     ...product,
