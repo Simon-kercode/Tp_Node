@@ -1,7 +1,7 @@
 {
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "nodemon ./backend/server.js"
   },
   "keywords": [],
@@ -20,5 +20,11 @@
     "node": "^20.18.1",
     "nodemon": "^3.1.9",
     "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "jest": "^30.0.0"
+  },
+  "jest": {
+    "testMatch": ["**/test/**/*.test.js"]
   }
 }
