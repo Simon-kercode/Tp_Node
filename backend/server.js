@@ -1,4 +1,4 @@
-(async () =>  {
+// (async () =>  {
 require ('dotenv');
 const express = require('express');
 const cors = require('cors');
@@ -8,7 +8,7 @@ const crypto = require("crypto");
 const { initDB }  = require('./config/db')
 
 const app = express();
-const port = process.env.PORT;
+// const port = process.env.PORT;
 
 app.use(express.json());
 // Permet à express de bien lire les données envoyées en multipart/form-data
@@ -50,13 +50,16 @@ app.use('/commandes', commandeRoutes);
 app.use('/auth', authRoutes);
 app.use('/admin', adminRoutes);
 
-try {
-    await initDB();
+// try {
+//     await initDB();
     
-    app.listen(port, () => {
-        console.log(`Serveur démarré sur le port ${port}`);
-    });
-} catch (error) {
-    console.error('Erreur lors de l\'initialisation de l\'application:', error);
-}
-})();
+//     app.listen(port, () => {
+//         console.log(`Serveur démarré sur le port ${port}`);
+//     });
+// } catch (error) {
+//     console.error('Erreur lors de l\'initialisation de l\'application:', error);
+// }
+// })();
+module.exports = {app, initDB}
+
+
