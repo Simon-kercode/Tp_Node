@@ -16,7 +16,7 @@ describe("POST /users", () => {
   // Après tous les tests, on nettoie la BDD en supprimant l'utilisateur de test et on ferme la connexion
   afterAll(async () => {
     const db = getDB();
-    await db.query("DELETE FROM _user WHERE mail = ?", ["test@mail.com"]);
+    await db.query("DELETE FROM _user WHERE mail = ?", ["igor@mail.com"]);
     await db.end();
   });
 
@@ -28,9 +28,9 @@ describe("POST /users", () => {
       .set("Cookie", cookies) // Ajoute les cookies de session
       .set("X-CSRF-Token", csrfToken) // Ajoute le token CSRF pour la sécurité
       .send({
-        nom: "Test",
-        prenom: "User",
-        mail: "test@mail.com",
+        nom: "igor",
+        prenom: "Mages",
+        mail: "igor@mail.com",
         pwd: "Password123!"
       });
 

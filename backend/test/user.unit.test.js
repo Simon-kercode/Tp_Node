@@ -19,7 +19,7 @@ describe("User.create", () => {
     const data = {
       nom: "Igor",
       prenom: "Mages",
-      mail: "Igor@mail.com",
+      mail: "igor@mail.com",
       pwd: "Password123!"
     };
 
