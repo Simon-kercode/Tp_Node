@@ -1,11 +1,6 @@
-// On fait appel au dotenv pour saisir les variables d'environnement 
 // Importation de mysql2 avec support des promesses pour gérer la base de données MySQL
 
-const dotenv = require('dotenv');
 const mysql = require('mysql2/promise')
-
-// Chargement des variables d'environnement définies dans le fichier .env
-dotenv.config();
 
 let connection;
 

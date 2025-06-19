@@ -1,19 +1,18 @@
+# Image Node officielle
 FROM node:20
 
-# Crée un répertoire de travail
+# Dossier de travail
 WORKDIR /app
 
-# Copie les fichiers package.json et package-lock.json
+# Copie des dépendances
 COPY package*.json ./
-
-# Installe les dépendances
 RUN npm install
 
-# Copie tout le reste (dont .env s'il est nécessaire en local)
+# Copie du code source
 COPY . .
 
-# Expose le port (à adapter selon .env)
+# Variables d'environnement lues automatiquement si passées via docker-compose
 EXPOSE 3000
 
-# Démarre l'application
-CMD ["node", "server.js"]
+# Lancement de l'app
+CMD ["node", "index.js"]
