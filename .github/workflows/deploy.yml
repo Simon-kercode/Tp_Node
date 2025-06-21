@@ -28,7 +28,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_KEY }}
           script: |
-            echo "${{ secrets.ENV_PRODUCTION }}" > ~/pawshop/.env
+            echo "${{ secrets.PROD_ENV }}" > ~/pawshop/.env
 
       - name: Lancer docker-compose sur le VPS
         uses: appleboy/ssh-action@master
