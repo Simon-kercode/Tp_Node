@@ -21,6 +21,15 @@ jobs:
           source: "."
           target: "~/pawshop"
 
+      - name: 📝 Créer le fichier .env à partir du secret
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_KEY }}
+          script: |
+            echo "${{ secrets.ENV_PRODUCTION }}" > ~/pawshop/.env
+
       - name: Lancer docker-compose sur le VPS
         uses: appleboy/ssh-action@master
         with:
@@ -29,8 +38,6 @@ jobs:
           key: ${{ secrets.VPS_KEY }}
           script: |
             cd ~/pawshop
-            echo "${{ secrets.PROD_ENV_CONTENT }}" > .env.production
-            cp .env.production .env
             docker compose down --remove-orphans
             docker compose build --no-cache
             docker compose up -d
