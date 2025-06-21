@@ -1,0 +1,35 @@
+name: CI/CD Pipeline
+on:
+  push:
+    branches:
+      - cicd
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔁 Cloner le dépôt
+        uses: actions/checkout@v4
+
+      - name: 📂 Copier les fichiers sur le VPS
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_KEY }}
+          source: "."
+          target: "~/mon-projet"
+
+      - name: 🚀 Lancer docker-compose sur le VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_KEY }}
+          script: |
+            cd ~/mon-projet
+            export $(cat .env.production | xargs)
+            docker compose -f docker-compose.yml down
+            docker compose -f docker-compose.yml up -d --build
