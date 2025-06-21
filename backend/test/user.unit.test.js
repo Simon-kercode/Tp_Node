@@ -31,7 +31,7 @@ describe("User.create", () => {
     // on vérifie que la requête SQL a été appelée avec les bons paramètres, dont le mot de passe haché
     expect(mockQuery).toHaveBeenCalledWith(
       `INSERT INTO _user (nom, prenom, mail, pwd) VALUES (?, ?, ?, ?)`,
-      ["Igor", "Mages", "Igor@mail.com", "motdepasse_haché"]
+      ["Igor", "Mages", "igor@mail.com", "motdepasse_haché"]
     );
     // on vérifie que la méthode retourne bien l'insertId attendu
     expect(result).toEqual({ insertId: 1 });
