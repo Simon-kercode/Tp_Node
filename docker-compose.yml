@@ -22,7 +22,7 @@ services:
       DB_USER: ${DB_USER}         
       DB_PASSWORD: ${DB_PASSWORD} 
       DB_NAME: ${DB_NAME}         
-      PORT: ${PORT}               
+      PORT: ${BACKEND_PORT}               
       JWT_SECRET: ${JWT_SECRET}   # Secret pour les tokens JWT
     depends_on:
       - db # lance le backend seulement après la base de données
