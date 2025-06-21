@@ -23,7 +23,7 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install backend dependencies
-        run: npm install
+        run: npm install --include=dev
         working-directory: ./backend
 
       - name: Upload backend for other jobs
