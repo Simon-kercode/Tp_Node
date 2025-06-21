@@ -5,37 +5,187 @@ on:
       - cicd
 
 jobs:
-  deploy:
+  setup-backend:
+    name: Setup Backend (checkout + install + cache)
     runs-on: ubuntu-latest
+    outputs:
+      cache-hit: ${{ steps.cache-deps.outputs.cache-hit }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache npm modules
+        id: cache-deps
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('backend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install backend dependencies
+        run: npm install
+        working-directory: ./backend
+
+      - name: Upload backend for other jobs
+        uses: actions/upload-artifact@v3
+        with:
+          name: backend-folder
+          path: ./backend
+
+  lint-backend:
+    name: Lint Backend
+    runs-on: ubuntu-latest
+    needs: setup-backend
+    steps:
+      - name: Download backend artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: backend-folder
+          path: ./backend
+
+      - name: Run ESLint on backend
+        run: npm run lint
+        working-directory: ./backend
+    
+  lint-frontend:
+    name: Lint Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install frontend dependencies
+        run: npm install
+        working-directory: ./frontend
+
+      - name: Run ESLint on frontend
+        run: npm run lint
+        working-directory: ./frontend
+
+  test-unit:
+    name: Test Unitaire Backend
+    runs-on: ubuntu-latest
+    needs: setup-backend
+    steps:
+      - name: Download backend artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: backend-folder
+          path: ./backend
+
+      - name: Lancer les tests unitaires
+        run: npm run test-unit
+        working-directory: ./backend
+
+  test-integration:
+    name: Test d'Intégration Backend
+    runs-on: ubuntu-latest
+    needs: test-unit
+    steps:
+      - name: Download backend artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: backend-folder
+          path: ./backend
+
+      - name: Lancer les tests d'intégration
+        run: npm run test-integration
+        working-directory: ./backend
+
+  # setup-node:
+  #   name: Setup Node.js
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: '20'
+
+  # lint-backend:
+  #   name: Lint Backend
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+
+  #     - name: Install backend dependencies
+  #       run: npm install
+  #       working-directory: ./backend
+
+  #     - name: Run ESLint on backend
+  #       run: npm run lint
+  #       working-directory: ./backend
+
+  # lint-frontend:
+  #   name: Lint Frontend
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+
+  #     - name: Install frontend dependencies
+  #       run: npm install
+  #       working-directory: ./frontend
+
+  #     - name: Run ESLint on frontend
+  #       run: npm run lint
+  #       working-directory: ./frontend
+
+  # test-unit:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Installer les dépendances backend
+  #       run: npm install
+  #       working-directory: ./backend
+  #     - name: Lancer les tests unitaires
+  #       run: npm run test-unit
+  #       working-directory: ./backend
+
+  # test-integration:
+  #   needs: test-unit
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Installer les dépendances backend
+  #       run: npm install
+  #       working-directory: ./backend
+  #     - name: Lancer les tests d'intégration
+  #       run: npm run test-integration
+  #       working-directory: ./backend
+
+  deploy:
+    needs: [test-integration, lint-backend, lint-frontend] # Dépend des tests et des lints 
+    runs-on: ubuntu-latest # Utilise une VM Ubuntu
 
     steps:
       - name: Cloner le dépôt
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # Récupère le code source du dépôt GitHub
 
       - name: Copier les fichiers sur le VPS
-        uses: appleboy/scp-action@master
+        uses: appleboy/scp-action@master # Utilise SCP pour transférer les fichiers
         with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_KEY }}
-          source: "."
-          target: "~/pawshop"
+          host: ${{ secrets.VPS_HOST }}      # Adresse IP ou nom du VPS (stocké dans les secrets GitHub)
+          username: ${{ secrets.VPS_USER }}  # Nom d'utilisateur SSH (secret)
+          key: ${{ secrets.VPS_KEY }}        # Clé privée SSH (secret)
+          source: "."                        # Tout le contenu du repo local
+          target: "~/pawshop"                # Dossier cible sur le VPS
 
-      - name: 📝 Créer le fichier .env à partir du secret
-        uses: appleboy/ssh-action@master
+      - name: Créer le fichier .env à partir du secret
+        uses: appleboy/ssh-action@master # Se connecte en SSH pour créer le .env
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_KEY }}
           script: |
-            echo "${{ secrets.PROD_ENV }}" > ~/pawshop/.env
+            echo "${{ secrets.PROD_ENV }}" > ~/pawshop/.env # Écrit le contenu du secret PROD_ENV dans .env
 
       - name: Lancer docker-compose sur le VPS
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@master # Se connecte en SSH pour lancer le déploiement
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_KEY }}
+          # Exécute les commandes pour déployer l'application
           script: |
             cd ~/pawshop
             docker compose down --remove-orphans
