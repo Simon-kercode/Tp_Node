@@ -28,6 +28,8 @@ services:
       - db # lance le backend seulement après la base de données
     volumes:
       - ./backend:/app # Monte le dossier backend local dans /app du conteneur
+      - /app/node_modules
+      
     working_dir: /app
     command: node index.js
 
@@ -40,7 +42,6 @@ services:
       - backend # Lance le frontend seulement après le backend
     volumes:
       - ./frontend:/app # Monte le dossier frontend local dans /app du conteneur
-      - /app/node_modules
 
 volumes:
   db_data: # Déclaration d'un volume nommé

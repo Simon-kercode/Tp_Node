@@ -10,6 +10,8 @@ RUN npm install \
  && chmod +x ./node_modules/.bin/jest \
  && chmod -R 755 node_modules
 
+RUN chmod -R +x node_modules/.bin
+
 # Copie du code source
 COPY . .
 
