@@ -65,6 +65,9 @@ jobs:
       - name: Créer le fichier .env.test à partir du secret
         run: echo "${{ secrets.ENV_TEST }}" > .env
 
+      - name: Afficher le contenu du .env
+        run: cat .env
+
       - name: Démarrer les services de test
         run: docker compose up -d --build db backend
 
@@ -77,6 +80,11 @@ jobs:
       - name: Lancer les tests d'intégration
         run: docker compose exec backend npm run test-integration
 
+      - name: Logs backend
+        if: failure()
+        run: docker compose logs backend
+      - name: Test DNS dans le conteneur backend
+        run: docker compose exec backend ping -c 2 db
       - name: Nettoyer les services après tests
         if: always()
         run: docker compose down --volumes
