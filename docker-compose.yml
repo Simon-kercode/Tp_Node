@@ -26,10 +26,7 @@ services:
       JWT_SECRET: ${JWT_SECRET}   # Secret pour les tokens JWT
     depends_on:
       - db # lance le backend seulement après la base de données
-    volumes:
-      - ./backend:/app # Monte le dossier backend local dans /app du conteneur
-      - /app/node_modules
-      
+
     working_dir: /app
     command: node index.js
 
