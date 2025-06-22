@@ -84,15 +84,17 @@ jobs:
         run: docker compose exec backend npm run test-integration
 
       - name: Logs backend
+        if: always()
         run: docker compose logs backend
 
       - name: Logs db
+        if: always()
         run: docker compose logs db
 
-
-
       - name: Test DNS dans le conteneur backend
+        if: always()
         run: docker compose exec backend ping -c 2 db
+
       - name: Nettoyer les services après tests
         if: always()
         run: docker compose down --volumes
