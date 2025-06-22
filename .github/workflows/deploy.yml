@@ -5,6 +5,76 @@ on:
       - cicd
 
 jobs:
+  # lint-backend:
+  #   name: Lint Backend
+  #   runs-on: ubuntu-latest
+  #   needs: setup-backend
+  #   steps:
+  #     - uses: actions/checkout@v4
+
+  #     - name: Installer les dépendances backend
+  #       run: npm install
+  #       working-directory: ./backend
+
+  #     - name: Run ESLint on backend
+  #       run: npm run lint
+  #       working-directory: ./backend
+    
+  # lint-frontend:
+  #   name: Lint Frontend
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+
+  #     - name: Install frontend dependencies
+  #       run: npm install
+  #       working-directory: ./frontend
+
+  #     - name: Run ESLint on frontend
+  #       run: npm run lint
+  #       working-directory: ./frontend
+
+  # test-unit:
+  #   name: Test Unitaire Backend
+  #   runs-on: ubuntu-latest
+  #   needs: setup-backend
+  #   steps:
+  #     - uses: actions/checkout@v4
+
+  #     - name: Installer les dépendances backend
+  #       run: npm install
+  #       working-directory: ./backend
+
+  #     - name: Lancer les tests unitaires
+  #       run: npm run test-unit
+  #       working-directory: ./backend
+
+  # test-integration:
+  #   name: Test d'Intégration Backend
+  #   runs-on: ubuntu-latest
+  #   needs: test-unit
+  #   steps:
+  #     - uses: actions/checkout@v4
+
+  #     - name: Installer les dépendances backend
+  #       run: npm install
+  #       working-directory: ./backend
+
+  #     - name: Lancer les tests d'intégration
+  #       run: npm run test-integration
+  #       working-directory: ./backend
+
+  # setup-node:
+  #   name: Setup Node.js
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: '20'
+
   lint-backend:
     name: Lint Backend
     runs-on: ubuntu-latest
