@@ -38,8 +38,8 @@ jobs:
         working-directory: ./frontend
 
   test-unit:
+    needs: lint-backend
     name: Test Unitaire Backend
-    depends: lint-backend
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -56,8 +56,8 @@ jobs:
         working-directory: ./backend
 
   test-integration:
+    needs: [lint-backend, test-unit]
     name: Test d'Intégration Backend (Docker)
-    depends: [lint-backend, test-unit]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
