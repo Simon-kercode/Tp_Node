@@ -1,6 +1,6 @@
 module.exports = [
   {
-    files: ["**/*.js", "*.vue"],
+    files: ["**/*.js"],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
