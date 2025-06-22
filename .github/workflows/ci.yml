@@ -71,29 +71,14 @@ jobs:
       - name: Démarrer les services de test
         run: docker compose up -d --build db backend
 
-
-
       - name: Afficher l'état des conteneurs
         run: docker compose ps
 
       - name: Attendre que MySQL soit prêt dans le réseau Docker
-        # run: docker compose exec backend npx wait-port db:3306 -t 60000
-        run: sleep 20
+        run: docker compose exec backend npx wait-port db:3306 -t 60000
 
       - name: Lancer les tests d'intégration
         run: docker compose exec backend npm run test-integration
-
-      - name: Logs backend
-        if: always()
-        run: docker compose logs backend
-
-      - name: Logs db
-        if: always()
-        run: docker compose logs db
-
-      - name: Test DNS dans le conteneur backend
-        if: always()
-        run: docker compose exec backend ping -c 2 db
 
       - name: Nettoyer les services après tests
         if: always()
