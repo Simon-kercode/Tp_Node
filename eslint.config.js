@@ -4,15 +4,17 @@ module.exports = [
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
-      globals: { require: true, module: true },
-    },
-    env: {
-      node: true,
-      es2021: true,
+      globals: {
+        require: true,
+        module: true,
+        process: true,
+        __dirname: true,
+
+      },
     },
     plugins: {},
     rules: {
-      // Ajoute tes règles ici
+
     },
   },
 ];
