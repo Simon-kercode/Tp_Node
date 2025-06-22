@@ -5,39 +5,12 @@ on:
       - cicd
 
 jobs:
-  setup-backend:
-    name: Setup Backend (checkout + install + cache)
-    runs-on: ubuntu-latest
-    outputs:
-      cache-hit: ${{ steps.cache-deps.outputs.cache-hit }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache npm modules
-        id: cache-deps
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('backend/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Upload backend for other jobs
-        uses: actions/upload-artifact@v4
-        with:
-          name: backend-folder
-          path: ./backend
-
   lint-backend:
     name: Lint Backend
     runs-on: ubuntu-latest
     needs: setup-backend
     steps:
-      - name: Download backend artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: backend-folder
-          path: ./backend
+      - uses: actions/checkout@v4
 
       - name: Installer les dépendances backend
         run: npm install
@@ -66,11 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: setup-backend
     steps:
-      - name: Download backend artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: backend-folder
-          path: ./backend
+      - uses: actions/checkout@v4
 
       - name: Installer les dépendances backend
         run: npm install
@@ -85,16 +54,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: test-unit
     steps:
-      - name: Download backend artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: backend-folder
-          path: ./backend
+      - uses: actions/checkout@v4
 
       - name: Installer les dépendances backend
         run: npm install
         working-directory: ./backend
-        
+
       - name: Lancer les tests d'intégration
         run: npm run test-integration
         working-directory: ./backend
