@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Créer le fichier .env.test à partir du secret
         run: echo "${{ secrets.ENV_TEST }}" > .env.test
 
@@ -70,8 +70,11 @@ jobs:
 
       - name: Attendre que la base soit prête
         run: sleep 15
+        
+      - name: Fix jest permissions
+        run: chmod +x ./backend/node_modules/.bin/jest
 
-      - name: Lancer les tests d’intégration
+      - name: Lancer les tests d'intégration
         run: docker compose exec backend npm run test-integration
 
       - name: Nettoyer les services après tests
