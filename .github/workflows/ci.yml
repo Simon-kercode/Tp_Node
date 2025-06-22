@@ -39,7 +39,7 @@ jobs:
 
   test-unit:
     needs: lint-backend
-    name: Test Unitaire Backend
+    name: Test Unitaire
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -57,13 +57,13 @@ jobs:
 
   test-integration:
     needs: [lint-backend, test-unit]
-    name: Test d'Intégration Backend (Docker)
+    name: Test d'Intégration
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Copier .env.test
-        run: cp .env.test .env
+      
+      - name: Créer le fichier .env.test à partir du secret
+        run: echo "${{ secrets.ENV_TEST }}" > .env.test
 
       - name: Démarrer les services de test
         run: docker compose up -d --build db backend
