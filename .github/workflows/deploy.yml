@@ -46,7 +46,7 @@ jobs:
         run: npm run test-unit
         working-directory: ./backend
 
-  test-integration-docker:
+  test-integration:
     name: Test d'intégration dans Docker
     runs-on: ubuntu-latest
     steps:
