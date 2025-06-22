@@ -71,9 +71,6 @@ jobs:
       - name: Démarrer les services de test
         run: docker compose up -d --build db backend
 
-      - name: Attendre que MySQL soit prêt
-        run: npx wait-port localhost:3307 -t 60000
-
       - name: Fix jest permissions
         run: chmod +x ./backend/node_modules/.bin/jest
 
