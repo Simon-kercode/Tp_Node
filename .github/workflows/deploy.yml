@@ -110,6 +110,8 @@ jobs:
       - name: Installer les dépendances backend
         run: npm install
         working-directory: ./backend
+      - name: Fix jest permissions
+        run: chmod +x ./backend/node_modules/.bin/jest
       - name: Lancer les tests unitaires
         run: npm run test-unit
         working-directory: ./backend
@@ -122,6 +124,8 @@ jobs:
       - name: Installer les dépendances backend
         run: npm install
         working-directory: ./backend
+      - name: Fix jest permissions
+        run: chmod +x ./backend/node_modules/.bin/jest
       - name: Lancer les tests d'intégration
         run: npm run test-integration
         working-directory: ./backend
