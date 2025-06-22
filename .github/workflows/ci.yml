@@ -1,0 +1,79 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - cicd
+  pull_request:
+    branches:
+      - cicd
+
+jobs:
+  lint-backend:
+    name: Lint Backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install backend dependencies
+        run: npm install
+        working-directory: ./backend
+
+      - name: Run ESLint on backend
+        run: npm run lint
+        working-directory: ./backend
+
+  lint-frontend:
+    name: Lint Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install frontend dependencies
+        run: npm install
+        working-directory: ./frontend
+
+      - name: Run ESLint on frontend
+        run: npm run lint
+        working-directory: ./frontend
+
+  test-unit:
+    name: Test Unitaire Backend
+    depends: lint-backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Installer les dépendances backend
+        run: npm install
+        working-directory: ./backend
+
+      - name: Fix jest permissions
+        run: chmod +x ./backend/node_modules/.bin/jest
+
+      - name: Lancer les tests unitaires
+        run: npm run test-unit
+        working-directory: ./backend
+
+  test-integration:
+    name: Test d'Intégration Backend (Docker)
+    depends: [lint-backend, test-unit]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Copier .env.test
+        run: cp .env.test .env
+
+      - name: Démarrer les services de test
+        run: docker compose up -d --build db backend
+
+      - name: Attendre que la base soit prête
+        run: sleep 15
+
+      - name: Lancer les tests d’intégration
+        run: docker compose exec backend npm run test-integration
+
+      - name: Nettoyer les services après tests
+        if: always()
+        run: docker compose down --volumes

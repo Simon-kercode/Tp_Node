@@ -1,107 +1,44 @@
-name: CI/CD Pipeline
+name: Deploy
+
 on:
-  push:
-    branches:
-      - cicd
+  workflow_run:
+    workflows: ["CI Pipeline"]
+    types:
+      - completed
 
 jobs:
-  lint-backend:
-    name: Lint Backend
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install backend dependencies
-        run: npm install
-        working-directory: ./backend
-
-      - name: Run ESLint on backend
-        run: npm run lint
-        working-directory: ./backend
-
-  lint-frontend:
-    name: Lint Frontend
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install frontend dependencies
-        run: npm install
-        working-directory: ./frontend
-
-      - name: Run ESLint on frontend
-        run: npm run lint
-        working-directory: ./frontend
-
-  test-unit:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Installer les dépendances backend
-        run: npm install
-        working-directory: ./backend
-      - name: Fix jest permissions
-        run: chmod +x ./backend/node_modules/.bin/jest
-      - name: Lancer les tests unitaires
-        run: npm run test-unit
-        working-directory: ./backend
-
-  test-integration:
-    name: Test d'intégration dans Docker
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Copier .env.test
-        run: cp .env.test .env
-
-      - name: Démarrer les services de test
-        run: docker compose up -d --build db backend
-
-      - name: Attendre que la base soit prête
-        run: sleep 15
-
-      - name: Lancer les tests d’intégration
-        run: docker compose exec backend npm run test-integration
-
-      - name: Nettoyer les services après tests
-        if: always()
-        run: docker compose down --volumes
-
   deploy:
-    needs: [test-integration, lint-backend, lint-frontend] # Dépend des tests et des lints 
-    runs-on: ubuntu-latest # Utilise une VM Ubuntu
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
 
     steps:
       - name: Cloner le dépôt
-        uses: actions/checkout@v4 # Récupère le code source du dépôt GitHub
+        uses: actions/checkout@v4
 
       - name: Copier les fichiers sur le VPS
-        uses: appleboy/scp-action@master # Utilise SCP pour transférer les fichiers
+        uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.VPS_HOST }}      # Adresse IP ou nom du VPS (stocké dans les secrets GitHub)
-          username: ${{ secrets.VPS_USER }}  # Nom d'utilisateur SSH (secret)
-          key: ${{ secrets.VPS_KEY }}        # Clé privée SSH (secret)
-          source: "."                        # Tout le contenu du repo local
-          target: "~/pawshop"                # Dossier cible sur le VPS
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_KEY }}
+          source: "."
+          target: "~/pawshop"
 
       - name: Créer le fichier .env à partir du secret
-        uses: appleboy/ssh-action@master # Se connecte en SSH pour créer le .env
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_KEY }}
           script: |
-            echo "${{ secrets.PROD_ENV }}" > ~/pawshop/.env # Écrit le contenu du secret PROD_ENV dans .env
+            echo "${{ secrets.PROD_ENV }}" > ~/pawshop/.env
 
       - name: Lancer docker-compose sur le VPS
-        uses: appleboy/ssh-action@master # Se connecte en SSH pour lancer le déploiement
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_KEY }}
-          # Exécute les commandes pour déployer l'application
           script: |
             cd ~/pawshop
             docker compose down --remove-orphans
