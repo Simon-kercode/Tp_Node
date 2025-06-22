@@ -22,10 +22,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: Install backend dependencies
-        run: npm install --include=dev
-        working-directory: ./backend
-
       - name: Upload backend for other jobs
         uses: actions/upload-artifact@v4
         with:
@@ -42,6 +38,10 @@ jobs:
         with:
           name: backend-folder
           path: ./backend
+
+      - name: Installer les dépendances backend
+        run: npm install
+        working-directory: ./backend
 
       - name: Run ESLint on backend
         run: npm run lint
@@ -72,6 +72,10 @@ jobs:
           name: backend-folder
           path: ./backend
 
+      - name: Installer les dépendances backend
+        run: npm install
+        working-directory: ./backend
+
       - name: Lancer les tests unitaires
         run: npm run test-unit
         working-directory: ./backend
@@ -87,6 +91,10 @@ jobs:
           name: backend-folder
           path: ./backend
 
+      - name: Installer les dépendances backend
+        run: npm install
+        working-directory: ./backend
+        
       - name: Lancer les tests d'intégration
         run: npm run test-integration
         working-directory: ./backend
