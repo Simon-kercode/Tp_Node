@@ -40,8 +40,6 @@ class ProduitController {
     static async getAllWithCategories(req, res) {
         try {
             const produitsData = await Produit.getAllWithCategories();
-            console.log("Produits récupérés :", produitsData);
-
             res.json(produitsData);
         }
         catch (error) {
