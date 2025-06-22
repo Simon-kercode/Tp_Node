@@ -40,6 +40,7 @@ services:
       - backend # Lance le frontend seulement après le backend
     volumes:
       - ./frontend:/app # Monte le dossier frontend local dans /app du conteneur
+      - /app/node_modules
 
 volumes:
   db_data: # Déclaration d'un volume nommé
