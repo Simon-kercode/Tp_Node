@@ -9,7 +9,7 @@ let connection;
  * Vérifie si une connexion existe déjà avant d'en créer une nouvelle.
  */
 
-const initDB = async (retries = 10, delay = 3000) => {
+const initDB = async (retries = 20, delay = 3000) => {
   if (!connection) {
     for (let i = 0; i < retries; i++) {
       try {

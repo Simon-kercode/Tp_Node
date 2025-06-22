@@ -28,7 +28,7 @@ services:
       - db # lance le backend seulement après la base de données
       
     working_dir: /app
-    command: node index.js
+    command: sh -c "npx wait-port db:3306 -t 60000 && node index.js"
 
   frontend:
     build: ./frontend # Construit l'image à partir du Dockerfile dans ./frontend

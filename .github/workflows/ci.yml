@@ -74,6 +74,9 @@ jobs:
       - name: Fix jest permissions
         run: chmod +x ./backend/node_modules/.bin/jest
 
+      - name: Attendre que MySQL soit prêt dans le réseau Docker
+        run: docker compose exec backend npx wait-port db:3306 -t 60000
+
       - name: Lancer les tests d'intégration
         run: docker compose exec backend npm run test-integration
 
