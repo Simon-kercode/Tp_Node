@@ -77,7 +77,8 @@ jobs:
         run: docker compose ps
 
       - name: Attendre que MySQL soit prêt dans le réseau Docker
-        run: docker compose exec backend npx wait-port db:3306 -t 60000
+        # run: docker compose exec backend npx wait-port db:3306 -t 60000
+        run: sleep 20
 
       - name: Lancer les tests d'intégration
         run: docker compose exec backend npm run test-integration
