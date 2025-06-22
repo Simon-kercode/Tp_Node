@@ -6,11 +6,11 @@ WORKDIR /app
 
 # Copie des dépendances
 COPY package*.json ./
-RUN npm install \
- && chmod +x ./node_modules/.bin/jest \
- && chmod -R 755 node_modules
 
-RUN chmod -R +x node_modules/.bin
+# Installation des dépendances et droits d'exécution pour jest
+RUN npm install && \
+    chmod -R 755 node_modules && \
+    chmod +x node_modules/.bin/jest
 
 # Copie du code source
 COPY . .
